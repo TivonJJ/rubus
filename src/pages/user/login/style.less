@@ -1,0 +1,36 @@
+@import '~@/styles/theme';
+
+.container {
+    position: relative;
+    width: 460px;
+    margin: auto;
+    background: hsla(0, 0%, 100%, .5) border-box;
+    border-radius: .3em;
+    box-shadow: 0 0 0 1px hsla(0, 0%, 100%, .5) inset, 0 .5em 1em rgba(0, 0, 0, 0.6);
+    animation: focus ease-out 1s;
+}
+
+.logo {
+    display: block;
+    width: 230px;
+    margin: 0 auto;
+}
+
+.loginForm {
+    margin: 36px 12px 0 12px;
+}
+
+.error {
+    margin-bottom: @design-gutter_lg;
+}
+
+@keyframes focus {
+    0%{
+        transform: scale(2);
+        filter: blur(20px);
+    }
+    100%{
+        transform: scale(1);
+        filter: blur(0);
+    }
+}

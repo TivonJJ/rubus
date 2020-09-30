@@ -1,0 +1,101 @@
+@import "./theme";
+
+* {
+    word-wrap: break-word
+}
+
+body {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// utils
+.gutter {
+    margin: @design-gutter;
+}
+
+.gutter-lg {
+    margin: @design-gutter_lg;
+}
+.gutter-xl {
+    margin: @design-gutter_xl;
+}
+.gutter-xxl {
+    margin: @design-gutter_xxl;
+}
+.gutter-sm {
+    margin: @design-gutter_sm;
+}
+.gutter-xs {
+    margin: @design-gutter_xs;
+}
+.gutter-xxs {
+    margin: @design-gutter_xxs;
+}
+.gutter-v {
+    margin-top: @design-gutter;
+    margin-bottom: @design-gutter;
+}
+.gutter-v_lg {
+    margin-top: @design-gutter_lg;
+    margin-bottom: @design-gutter_lg;
+}
+.gutter-h {
+    margin-right: @design-gutter;
+    margin-left: @design-gutter;
+}
+.gutter-h_lg {
+    margin-right: @design-gutter_lg;
+    margin-left: @design-gutter_lg;
+}
+.gutter-left {
+    margin-left: @design-gutter;
+}
+.gutter-right {
+    margin-right: @design-gutter;
+}
+.gutter-top {
+    margin-top: @design-gutter;
+}
+.gutter-bottom {
+    margin-bottom: @design-gutter;
+}
+// text
+.text-sm {
+    font-size: @font-size-sm;
+}
+.text-base {
+    font-size: @font-size-base;
+}
+.text-lg {
+    font-size: @font-size-lg;
+}
+.text-left{
+    text-align: left;
+}
+.text-center {
+    text-align: center;
+}
+.text-right {
+    text-align: right;
+}
+.text-middle {
+    display: inline-block;
+    vertical-align: middle;
+}
+.text-danger {
+    color: @error-color;
+}
+.text-primary {
+    color: @primary-color !important;
+}
+.text-warning {
+    color: @warning-color;
+}
+.text-success {
+    color: @success-color;
+}
+.text-muted {
+    color: @text-color-secondary;
+}
