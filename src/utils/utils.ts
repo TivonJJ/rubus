@@ -46,8 +46,8 @@ export function removeEmptyProperty(obj: { [key:string]:any }, options:{ignores?
 }
 /**
  * 移除对象中指定的属性
- * @param obj
- * @param shouldRemoveProps
+ * @param obj 操作对象
+ * @param shouldRemoveProps 需要移除的字段
  */
 export const removeProperties = (obj:AnyObject, shouldRemoveProps:string[]=[]):AnyObject => {
     const props = Array.isArray(shouldRemoveProps) ? shouldRemoveProps : [shouldRemoveProps];
@@ -76,7 +76,11 @@ export function isPromise(obj:any):boolean {
         typeof obj.then === 'function'
     );
 }
-// 部署到非根目录时,通过这个方法获取静态资源的完整的路径
+
+/**
+ * 部署到非根目录时,通过这个方法获取静态资源的完整的路径
+ * @param path 相对路径
+ */
 export function getResourcePath(path:string):string {
     return joinPath(AppStartArgs.basePath, path);
 }
@@ -88,7 +92,12 @@ export function durationDate(pre:MomentInput,next:MomentInput):string|null {
     if(pre.isSame(next))return null;// 前后时间相等返回空
     return pre.to(next,true);
 }
-// 补零
+
+/**
+ * 补零
+ * @param text 需要补零的参数
+ * @param count 补零位数
+ */
 export function zeroize(text:string,count:number):string|null{
     if(text==null)return null;
     return (Array(count).join('0') + text).slice(-count);
@@ -138,4 +147,42 @@ export function createPagination(props:DefaultPaginationProps = {}) {
         total,
         data,
     };
+}
+
+export interface ObjectProsMappingConfig{
+    keepOriginalProp?: boolean,
+    deep?: boolean,
+}
+export type ObjectProsMappingMap = {[key:string]:string}
+/**
+ * 对象字段名映射转换
+ * @param source
+ * @param mapping
+ * @param config
+ */
+export function objectPropsMapping(source:AnyObject|AnyObject[],mapping:ObjectProsMappingMap,config:ObjectProsMappingConfig = {}):AnyObject{
+    const {keepOriginalProp=false,deep=false} = config;
+    if(Array.isArray(source)){
+        source.forEach((sourceItem)=>{
+            objectPropsMapping(sourceItem,mapping,config);
+        })
+    }else {
+        Object.keys(source).forEach((key:string)=>{
+            const val:any = source[key];
+            if(deep && typeof val === 'object'){
+                if(Array.isArray(val)){
+                    val.forEach((item)=>objectPropsMapping(item,mapping,config))
+                }else {
+                    objectPropsMapping(val,mapping,config);
+                }
+            }else if(key in mapping) {
+                const newKey = mapping[key];
+                source[newKey] = val;
+                if(!keepOriginalProp){
+                    delete source[key];
+                }
+            }
+        })
+    }
+    return source;
 }

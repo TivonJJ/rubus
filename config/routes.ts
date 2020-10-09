@@ -11,16 +11,20 @@ const routes = [
         ],
     },
     {
-        path: '/',
         component: '../layouts/SecurityLayout',
         routes: [
             {
-                path: '/',
+                path:'/',
                 component: '../layouts/BasicLayout',
-                authority: ['admin', 'user'],
-            },
-            {
-                component: './404',
+                routes:[
+                    {
+                        path: 'home',
+                        component: './home',
+                    },
+                    {
+                        component: './404',
+                    },
+                ]
             },
         ],
     },

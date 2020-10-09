@@ -33,6 +33,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
             }, (err: ErrorEvent) => {
                 err.preventDefault();
                 setError(err.message);
+                verifySliderRef.current.reset();
             })
         },(err:ErrorEvent)=>{
             setError(err.message)
@@ -73,9 +74,10 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                     <Input type="password" placeholder="密码" prefix={<LockOutlined />} />
                 </Form.Item>
                 <div className="gutter-bottom">
-                    <Checkbox checked={catchUsername} onChange={e=>{
-                        setCatchUsername(e.target.checked)
-                    }}>
+                    <Checkbox
+                        checked={catchUsername}
+                        onChange={e=>{setCatchUsername(e.target.checked)}}
+                    >
                         记住密码
                     </Checkbox>
                 </div>

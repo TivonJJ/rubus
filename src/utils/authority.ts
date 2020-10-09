@@ -30,3 +30,4 @@ export function setAuthority(authority: string | string[]): void {
     // auto reload
     reloadAuthorized();
 }
+

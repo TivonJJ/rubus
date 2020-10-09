@@ -7,7 +7,7 @@ type DefaultSettings = ProSettings & {
 };
 
 const proSettings: DefaultSettings = {
-    navTheme: 'dark',
+    navTheme: 'light',
     // 拂晓蓝
     primaryColor: Theme.primaryColor,
     layout: 'side',
