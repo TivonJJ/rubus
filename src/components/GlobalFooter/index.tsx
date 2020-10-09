@@ -5,14 +5,12 @@ export interface GlobalFooterProps extends FooterProps{}
 
 const GlobalFooter: React.FC<GlobalFooterProps> = props => {
     return (
-        <>
-            <DefaultFooter
-                copyright={props.copyright}
-                links={props.links}
-                style={props.style}
-                className={props.className}
-            />
-        </>
+        <DefaultFooter
+            copyright={props.copyright}
+            links={props.links}
+            style={props.style}
+            className={props.className}
+        />
     );
 };
 

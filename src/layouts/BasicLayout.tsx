@@ -7,16 +7,16 @@ import ProLayout, {
     MenuDataItem,
     BasicLayoutProps as ProLayoutProps,
     Settings,
-    DefaultFooter,
 } from '@ant-design/pro-layout';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { Link, useIntl, connect, Dispatch, history } from 'umi';
-import { GithubOutlined } from '@ant-design/icons';
 import { Result, Button } from 'antd';
 import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
 import { getMatchMenu } from '@umijs/route-utils';
+import GlobalFooter from '@/components/GlobalFooter';
+import { UserModel } from '@/models/user';
 import logo from '../assets/logo.png';
 
 const noMatch = (
@@ -41,6 +41,7 @@ export interface BasicLayoutProps extends ProLayoutProps {
     };
     settings: Settings;
     dispatch: Dispatch;
+    currentUser: UserModel;
 }
 
 export type BasicLayoutContext = { [K in 'location']: BasicLayoutProps[K] } & {
@@ -48,45 +49,6 @@ export type BasicLayoutContext = { [K in 'location']: BasicLayoutProps[K] } & {
         [path: string]: MenuDataItem;
     };
 };
-/**
- * use Authorized check all menu item
- */
-
-const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
-    menuList.map((item) => {
-        const localItem = {
-            ...item,
-            children: item.children ? menuDataRender(item.children) : undefined,
-        };
-        return Authorized.check(item.authority, localItem, null) as MenuDataItem;
-    });
-
-const defaultFooterDom = (
-    <DefaultFooter
-        copyright={`${new Date().getFullYear()} 蚂蚁集团体验技术部出品`}
-        links={[
-            {
-                key: 'Ant Design Pro',
-                title: 'Ant Design Pro',
-                href: 'https://pro.ant.design',
-                blankTarget: true,
-            },
-            {
-                key: 'github',
-                title: <GithubOutlined />,
-                href: 'https://github.com/ant-design/ant-design-pro',
-                blankTarget: true,
-            },
-            {
-                key: 'Ant Design',
-                title: 'Ant Design',
-                href: 'https://ant.design',
-                blankTarget: true,
-            },
-        ]}
-    />
-);
-
 const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
     const {
         dispatch,
@@ -96,16 +58,22 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
             pathname: '/',
         },
     } = props;
-
+    const { formatMessage } = useIntl();
     const menuDataRef = useRef<MenuDataItem[]>([]);
 
-    useEffect(() => {
-        if (dispatch) {
-            dispatch({
-                type: 'user/fetchCurrent',
-            });
-        }
-    }, []);
+    const menuDataRender = (menus=props.currentUser.menu || []): MenuDataItem[] => {
+        return menus.map((menu) => {
+            return {
+                icon: menu.icon,
+                name: menu.name,
+                locale: false,
+                key: menu.dnaStr,
+                path: menu.path,
+                children: menu.children ? menuDataRender(menu.children) : undefined,
+                hideInMenu: menu.type !== 'Menu' && menu.type !== 'Folder'
+            } as MenuDataItem;
+        });
+    };
     /**
      * init variables
      */
@@ -120,14 +88,13 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
     };
     // get children authority
     const authorized = useMemo(
-        () =>
-            getMatchMenu(location.pathname || '/', menuDataRef.current).pop() || {
+        () => {
+            return getMatchMenu(location.pathname || '/', menuDataRef.current).pop() || {
                 authority: undefined,
-            },
+            };
+        },
         [location.pathname],
     );
-
-    const { formatMessage } = useIntl();
 
     return (
         <ProLayout
@@ -156,8 +123,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
                     <span>{route.breadcrumbName}</span>
                 );
             }}
-            footerRender={() => defaultFooterDom}
-            menuDataRender={menuDataRender}
+            footerRender={() => <GlobalFooter />}
+            menuDataRender={() => menuDataRender()}
             rightContentRender={() => <RightContent />}
             postMenuData={(menuData) => {
                 menuDataRef.current = menuData || [];
@@ -173,7 +140,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
     );
 };
 
-export default connect(({ global, settings }: ConnectState) => ({
+export default connect(({ global, settings, user }: ConnectState) => ({
     collapsed: global.collapsed,
     settings,
+    currentUser: user.currentUser,
 }))(BasicLayout);

@@ -20,6 +20,8 @@ const routes = [
                     {
                         path: 'home',
                         component: './home',
+                        name:'admin',
+                        locale: false
                     },
                     {
                         component: './404',

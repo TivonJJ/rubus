@@ -3,15 +3,18 @@ import Theme from './theme';
 
 type DefaultSettings = ProSettings & {
     pwa: boolean;
-    primaryColor?: string
+    primaryColor?: string;
+    siderWidth?: number;
 };
 
 const proSettings: DefaultSettings = {
-    navTheme: 'light',
+    navTheme: 'dark',
     // 拂晓蓝
     primaryColor: Theme.primaryColor,
-    layout: 'side',
+    layout: 'mix',
     contentWidth: 'Fluid',
+    // siderWidth: 280,
+    splitMenus: true,
     fixedHeader: false,
     fixSiderbar: true,
     colorWeak: false,

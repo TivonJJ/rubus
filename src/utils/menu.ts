@@ -1,5 +1,6 @@
 import joinPath from 'join-path';
 import _ from 'lodash';
+import { getLocale } from 'umi';
 
 export type MenuTypes = 'Folder' | 'Menu' | 'Action' | 'StatusBar';
 export interface MenuItem {
@@ -17,7 +18,12 @@ export type MenuList = MenuItem[] & {
     pathMap?: {[path:string]:MenuItem},
     dnaMap?: {[dna:string]:MenuItem},
 }
-// 遍历菜单树或菜单数组
+
+/**
+ * 遍历菜单树或菜单数组
+ * @param menu
+ * @param callback
+ */
 export function each(menu:MenuList,callback:(item:MenuItem,index:number,parent:MenuItem|undefined,arr:MenuList)=>void){
     function doEach(data:MenuList, parent?:MenuItem) {
         data.forEach((item, index, arr) => {
@@ -83,19 +89,30 @@ export function recombineTreesDNA(menus:MenuList){
     })
     return menus;
 }
-
 /**
- * 扩展完整的Menu数据，比如完全的path,pathMap,dnaMap等属性
+ * 转换资源数据菜单的数据
  * @param menus
  */
-export function intactMenus(menus:MenuList){
-    const routeMap:AnyObject = {};
-    const dnaMap:AnyObject = {};
+export function convertResourceMenu(menus:MenuList):MenuList{
+    const local = getLocale();
     each(menus,(menu,index,parent)=>{
         const path = parent?joinPath('/',parent.path,menu.path):joinPath('/',menu.path);
-        routeMap[path] = menu;
-        dnaMap[menu.dnaStr] = menu;
         menu.path = path;
+        const name = JSON.parse(menu.name) || {};
+        menu.name = name[local];
+    })
+    return menus;
+}
+/**
+ * 扩展菜单资源Map映射
+ * @param menus
+ */
+export function extendMenuMapping(menus:MenuList):MenuList{
+    const routeMap:AnyObject = {};
+    const dnaMap:AnyObject = {};
+    each(menus,(menu)=>{
+        routeMap[menu.path||''] = menu;
+        dnaMap[menu.dnaStr] = menu;
     })
     menus.pathMap = routeMap;
     menus.dnaMap = dnaMap;

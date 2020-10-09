@@ -1,7 +1,7 @@
 import {Effect,Reducer} from 'umi';
 import {login} from "@/services/user";
 import { md5 } from '@/utils/utils';
-import { MenuList, intactMenus } from '@/utils/menu';
+import { MenuList, convertResourceMenu, extendMenuMapping } from '@/utils/menu';
 import CookieStore from '@/utils/CookieStore';
 
 export interface UserModel {
@@ -41,7 +41,7 @@ const UserModel: UserModelType = {
         currentUser: (()=>{
             const user = userCookieStore.get();
             if(!user)return null;
-            intactMenus(user.menu || []);
+            extendMenuMapping(user.menu || []);
             return user;
         })(),
     },
@@ -52,7 +52,8 @@ const UserModel: UserModelType = {
                 ...payload,
                 password: signPassword(payload.username,payload.password)
             });
-            intactMenus(user.menu || []);
+            convertResourceMenu(user.menu || []);
+            extendMenuMapping(user.menu || []);
             yield put({
                 type: 'updateCurrentUser',
                 payload:user

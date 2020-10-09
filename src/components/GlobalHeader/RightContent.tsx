@@ -2,7 +2,7 @@ import { Settings as ProSettings } from '@ant-design/pro-layout';
 import React from 'react';
 import { connect, ConnectProps, SelectLang } from 'umi';
 import { ConnectState } from '@/models/connect';
-import Avatar from './AvatarDropdown';
+import Avatar from './Avatar';
 import styles from './index.less';
 
 export interface GlobalHeaderRightProps extends Partial<ConnectProps>, Partial<ProSettings> {
