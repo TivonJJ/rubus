@@ -18,6 +18,7 @@ import { getMatchMenu } from '@umijs/route-utils';
 import GlobalFooter from '@/components/GlobalFooter';
 import { UserModel } from '@/models/user';
 import logo from '../assets/logo.png';
+import { convertMenuToMenuRenderData } from '@/utils/menu';
 
 const noMatch = (
     <Result
@@ -57,26 +58,10 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
         location = {
             pathname: '/',
         },
+        currentUser,
     } = props;
     const { formatMessage } = useIntl();
     const menuDataRef = useRef<MenuDataItem[]>([]);
-
-    const menuDataRender = (menus=props.currentUser.menu || []): MenuDataItem[] => {
-        return menus.map((menu) => {
-            return {
-                icon: menu.icon,
-                name: menu.name,
-                locale: false,
-                key: menu.dnaStr,
-                path: menu.path,
-                children: menu.children ? menuDataRender(menu.children) : undefined,
-                hideInMenu: menu.type !== 'Menu' && menu.type !== 'Folder'
-            } as MenuDataItem;
-        });
-    };
-    /**
-     * init variables
-     */
 
     const handleMenuCollapse = (payload: boolean): void => {
         if (dispatch) {
@@ -124,7 +109,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
                 );
             }}
             footerRender={() => <GlobalFooter />}
-            menuDataRender={() => menuDataRender()}
+            menuDataRender={() => convertMenuToMenuRenderData(currentUser.menu || [])}
             rightContentRender={() => <RightContent />}
             postMenuData={(menuData) => {
                 menuDataRef.current = menuData || [];

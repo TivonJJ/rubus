@@ -3,8 +3,8 @@
  * https://pro.ant.design/docs/deploy
  */
 export default {
-    '/api/': {
-        target: 'http://omp.wangtest.cn/',
-        changeOrigin: true,
-    },
+    // '/api/': {
+    //     target: 'http://omp.wangtest.cn/',
+    //     changeOrigin: true,
+    // },
 };

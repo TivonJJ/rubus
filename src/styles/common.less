@@ -1,4 +1,5 @@
 @import "./theme";
+@import "./utils";
 
 * {
     word-wrap: break-word
@@ -15,55 +16,52 @@ body {
 }
 
 // utils
-.gutter {
-    margin: @design-gutter;
+.margin-xss{
+    .margin(@margin-xss);
 }
-
-.gutter-lg {
-    margin: @design-gutter_lg;
+.margin-xs{
+    .margin(@margin-xs);
 }
-.gutter-xl {
-    margin: @design-gutter_xl;
+.margin-sm{
+    .margin(@margin-sm);
 }
-.gutter-xxl {
-    margin: @design-gutter_xxl;
+.margin-md{
+    .margin(@margin-md);
 }
-.gutter-sm {
-    margin: @design-gutter_sm;
+.margin-lg{
+    .margin(@margin-lg);
 }
-.gutter-xs {
-    margin: @design-gutter_xs;
+@dv: top,bottom;
+.margin-xss_v {
+    .margin(@margin-xss,@dv)
 }
-.gutter-xxs {
-    margin: @design-gutter_xxs;
+.margin-xs_v {
+    .margin(@margin-xs,@dv)
 }
-.gutter-v {
-    margin-top: @design-gutter;
-    margin-bottom: @design-gutter;
+.margin-sm_v {
+    .margin(@margin-sm,@dv)
 }
-.gutter-v_lg {
-    margin-top: @design-gutter_lg;
-    margin-bottom: @design-gutter_lg;
+.margin-md_v {
+    .margin(@margin-md,@dv)
 }
-.gutter-h {
-    margin-right: @design-gutter;
-    margin-left: @design-gutter;
+.margin-lg_v {
+    .margin(@margin-lg,@dv)
 }
-.gutter-h_lg {
-    margin-right: @design-gutter_lg;
-    margin-left: @design-gutter_lg;
+@dh: left,right;
+.margin-xss_h {
+    .margin(@margin-xss,@dh)
 }
-.gutter-left {
-    margin-left: @design-gutter;
+.margin-xs_h {
+    .margin(@margin-xs,@dh)
 }
-.gutter-right {
-    margin-right: @design-gutter;
+.margin-sm_h {
+    .margin(@margin-sm,@dh)
 }
-.gutter-top {
-    margin-top: @design-gutter;
+.margin-md_h {
+    .margin(@margin-md,@dh)
 }
-.gutter-bottom {
-    margin-bottom: @design-gutter;
+.margin-lg_h {
+    .margin(@margin-lg,@dh)
 }
 // text
 .text-sm {

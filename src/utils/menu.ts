@@ -1,6 +1,7 @@
 import joinPath from 'join-path';
 import _ from 'lodash';
 import { getLocale } from 'umi';
+import { MenuDataItem } from '@ant-design/pro-layout';
 
 export type MenuTypes = 'Folder' | 'Menu' | 'Action' | 'StatusBar';
 export interface MenuItem {
@@ -117,4 +118,22 @@ export function extendMenuMapping(menus:MenuList):MenuList{
     menus.pathMap = routeMap;
     menus.dnaMap = dnaMap;
     return menus;
+}
+
+/**
+ * 转换菜单为渲染菜单配置项
+ * @param menus
+ */
+export function convertMenuToMenuRenderData(menus:MenuList):MenuDataItem[]{
+    return menus.map((menu) => {
+        return {
+            icon: menu.icon,
+            name: menu.name,
+            locale: false,
+            key: menu.dnaStr,
+            path: menu.path,
+            children: menu.children ? convertMenuToMenuRenderData(menu.children) : undefined,
+            hideInMenu: menu.type !== 'Menu' && menu.type !== 'Folder'
+        } as MenuDataItem;
+    });
 }
