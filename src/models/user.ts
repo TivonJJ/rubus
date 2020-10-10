@@ -1,4 +1,4 @@
-import {Effect,Reducer} from 'umi';
+import {Effect,Reducer,history} from 'umi';
 import {login} from "@/services/user";
 import { md5 } from '@/utils/utils';
 import { MenuList, convertResourceMenu, extendMenuMapping } from '@/utils/menu';
@@ -22,6 +22,7 @@ export interface UserModelType {
     state: UserModelState;
     effects: {
         login: Effect;
+        logout: Effect;
     };
     reducers: {
         updateCurrentUser: Reducer<UserModelState>;
@@ -60,11 +61,22 @@ const UserModel: UserModelType = {
             })
             return user;
         },
+        * logout(_, {put}){
+            yield put({
+                type: 'updateCurrentUser',
+                payload: null
+            });
+            history.push('/user/login');
+        }
     },
 
     reducers: {
         updateCurrentUser(state, {payload}) {
-            userCookieStore.set(payload);
+            if(payload){
+                userCookieStore.set(payload);
+            }else {
+                userCookieStore.clear();
+            }
             return {
                 ...state,
                 currentUser: payload

@@ -8,13 +8,13 @@ type DefaultSettings = ProSettings & {
 };
 
 const proSettings: DefaultSettings = {
-    navTheme: 'dark',
-    // 拂晓蓝
     primaryColor: Theme.primaryColor,
+    navTheme: 'light',
+    // headerTheme: 'light',
     layout: 'mix',
-    contentWidth: 'Fluid',
-    // siderWidth: 280,
     splitMenus: true,
+    contentWidth: 'Fluid',
+    siderWidth: 260,
     fixedHeader: false,
     fixSiderbar: true,
     colorWeak: false,

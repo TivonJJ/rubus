@@ -3,6 +3,12 @@ import { Request, Response } from 'express';
 const Menus = require('./menu.json');
 const fs = require('fs');
 
+Menus.forEach((menu:any)=>{
+    if(typeof menu.res_name === 'object'){
+        menu.res_name = JSON.stringify(menu.res_name)
+    }
+})
+
 export const mockUser = {
     'code': '0',
     'data': [{
@@ -143,7 +149,7 @@ export const mockResByRole = {
 export default {
     'POST /api/basis/user/login': (req:Request,res:Response)=>{
         const body = req.body;
-        if(body.username === 'admin' && body.password==="a66abb5684c45962d887564f08346e8d"){
+        if(body.username === 'admin' && body.password==="A66ABB5684C45962D887564F08346E8D"){
             setTimeout(()=>{
                 res.send(mockUser);
             },1000)

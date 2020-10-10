@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Card, Alert, Checkbox, Button } from 'antd';
 import {UserOutlined, LockOutlined} from '@ant-design/icons';
 import { ConnectProps, ConnectState } from '@/models/connect';
@@ -6,6 +6,7 @@ import {UserModel} from "@/models/user";
 import {connect, history} from "umi";
 import logo from '@/assets/login-logo.png';
 import styles from './style.less';
+import { getFirstAccessibleMenu } from '@/utils/menu';
 
 export interface LoginFormProps extends ConnectProps{
     currentUser?: UserModel
@@ -17,12 +18,31 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
     const [error, setError] = useState<String>();
     const [isCatchUserAcc, setIsCatchUserAcc] = useState<boolean>();
 
+    useEffect(()=>{
+        let lastUser = localStorage.getItem('last-login-user');
+        if(lastUser){
+            lastUser = JSON.parse(lastUser);
+            form.setFieldsValue(lastUser);
+            setIsCatchUserAcc(true);
+        }
+    },[])
+
     const login = (values:any) => {
         props.dispatch({
             type: 'user/login',
             payload: values,
         }).then((user: UserModel) => {
-            history.replace('/');
+            if(isCatchUserAcc){
+                localStorage.setItem('last-login-user',JSON.stringify({
+                    username: values.username,
+                    password: values.password,
+                }))
+            }else {
+                localStorage.removeItem('last-login-user')
+            }
+            const target = getFirstAccessibleMenu(user.menu||[],user.defaultRouteMenuId);
+            const to = target ? target.path : '/';
+            history.replace(to);
         }, (err: ErrorEvent) => {
             err.preventDefault();
             setError(err.message);
@@ -50,7 +70,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                 >
                     <Input type="password" placeholder="密码" prefix={<LockOutlined />} />
                 </Form.Item>
-                <div className="margin-sm_v">
+                <div className="margin-sm_bottom">
                     <Checkbox
                         checked={isCatchUserAcc}
                         onChange={e=>{setIsCatchUserAcc(e.target.checked)}}

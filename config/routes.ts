@@ -18,10 +18,8 @@ const routes = [
                 component: '../layouts/BasicLayout',
                 routes:[
                     {
-                        path: 'home',
-                        component: './home',
-                        name:'admin',
-                        locale: false
+                        path: 'wo/statistics',
+                        component: './wo/statistics',
                     },
                     {
                         component: './404',

@@ -16,53 +16,35 @@ body {
 }
 
 // utils
-.margin-xss{
-    .margin(@margin-xss);
+// --- margin utils ---
+@margin-size: margin-xss,margin-xs,margin-sm,margin-md,margin-lg;
+@margin-direction: left,top,right,bottom;
+//noinspection Stylelint
+@margin-both-direction:{
+    v: top,bottom;
+    h: left,right;
+};
+.gen-margins(){
+    each(@margin-size,{
+        .@{value}{
+            .margin(@@value)
+        }
+    });
 }
-.margin-xs{
-    .margin(@margin-xs);
+.gen-margins(@direction,@direction-name:@direction){
+    each(@margin-size,{
+        .@{value}_@{direction-name}{
+            .margin(@@value,@direction)
+        }
+    });
 }
-.margin-sm{
-    .margin(@margin-sm);
-}
-.margin-md{
-    .margin(@margin-md);
-}
-.margin-lg{
-    .margin(@margin-lg);
-}
-@dv: top,bottom;
-.margin-xss_v {
-    .margin(@margin-xss,@dv)
-}
-.margin-xs_v {
-    .margin(@margin-xs,@dv)
-}
-.margin-sm_v {
-    .margin(@margin-sm,@dv)
-}
-.margin-md_v {
-    .margin(@margin-md,@dv)
-}
-.margin-lg_v {
-    .margin(@margin-lg,@dv)
-}
-@dh: left,right;
-.margin-xss_h {
-    .margin(@margin-xss,@dh)
-}
-.margin-xs_h {
-    .margin(@margin-xs,@dh)
-}
-.margin-sm_h {
-    .margin(@margin-sm,@dh)
-}
-.margin-md_h {
-    .margin(@margin-md,@dh)
-}
-.margin-lg_h {
-    .margin(@margin-lg,@dh)
-}
+.gen-margins();
+each(@margin-direction,{
+    .gen-margins(@value)
+});
+each(@margin-both-direction,{
+    .gen-margins(@value,@key)
+});
 // text
 .text-sm {
     font-size: @font-size-sm;

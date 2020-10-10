@@ -1,7 +1,7 @@
 module.exports = {
     extends: [require.resolve('@umijs/fabric/dist/eslint')],
     rules: {
-        'eqeqeq': ["warn", "always", {"null": "ignore"}],
+        'eqeqeq': ["warn", "smart"],
         'no-param-reassign': ["warn", { "props": true }],
         'no-plusplus': 0,
     },

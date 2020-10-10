@@ -1,0 +1,33 @@
+@import '~@/styles/theme';
+
+.basicLayout{
+    &.mix{
+        :global{
+            .ant-pro-top-nav-header-main{
+                padding-left: 0;
+            }
+            .ant-pro-top-nav-header-main-left{
+                min-width: auto;
+            }
+            .ant-pro-top-nav-header-logo{
+                min-width: auto;
+            }
+        }
+    }
+}
+.mixTitle{
+    padding: 0 @margin-md;
+    overflow: hidden;
+    >h1{
+        opacity: 1;
+        transition: opacity .3s;
+    }
+    &.mixTitleCollapsed{
+        width: 48px;
+        padding: 0 @margin-sm;
+        transition: width .3s;
+        >h1{
+            opacity: 0;
+        }
+    }
+}

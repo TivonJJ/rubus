@@ -1,7 +1,7 @@
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Menu, Spin } from 'antd';
+import { LogoutOutlined } from '@ant-design/icons';
+import { Avatar, Menu } from 'antd';
 import React from 'react';
-import { history, ConnectProps, connect } from 'umi';
+import { ConnectProps, connect } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { UserModel } from '@/models/user';
 import HeaderDropdown from '../HeaderDropdown';
@@ -9,7 +9,6 @@ import styles from './index.less';
 
 export interface GlobalHeaderRightProps extends Partial<ConnectProps> {
     currentUser?: UserModel;
-    menu?: boolean;
 }
 
 class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
@@ -20,20 +19,14 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
         domEvent: React.MouseEvent<HTMLElement>;
     }) => {
         const { key } = event;
-
         if (key === 'logout') {
             const { dispatch } = this.props;
-
             if (dispatch) {
                 dispatch({
-                    type: 'login/logout',
+                    type: 'user/logout',
                 });
             }
-
-            return;
         }
-
-        history.push(`/account/${key}`);
     };
 
     render(): React.ReactNode {
@@ -42,48 +35,23 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
                 avatar: '',
                 name: '',
             },
-            menu,
         } = this.props;
         const menuHeaderDropdown = (
             <Menu className={styles.menu} selectedKeys={[]} onClick={this.onMenuClick}>
-                {menu && (
-                    <Menu.Item key="center">
-                        <UserOutlined />
-                        个人中心
-                    </Menu.Item>
-                )}
-                {menu && (
-                    <Menu.Item key="settings">
-                        <SettingOutlined />
-                        个人设置
-                    </Menu.Item>
-                )}
-                {menu && <Menu.Divider />}
-
                 <Menu.Item key="logout">
                     <LogoutOutlined />
                     退出登录
                 </Menu.Item>
             </Menu>
         );
-        return currentUser && currentUser.name ? (
+        return (
             <HeaderDropdown overlay={menuHeaderDropdown}>
-        <span className={`${styles.action} ${styles.account}`}>
-          <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
-          <span className={`${styles.name} anticon`}>{currentUser.name}</span>
-        </span>
+                <div className={`${styles.action} ${styles.account}`}>
+                    <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
+                    <span className={`${styles.name} anticon`}>{currentUser.name}</span>
+                </div>
             </HeaderDropdown>
-        ) : (
-            <span className={`${styles.action} ${styles.account}`}>
-        <Spin
-            size="small"
-            style={{
-                marginLeft: 8,
-                marginRight: 8,
-            }}
-        />
-      </span>
-        );
+        )
     }
 }
 
