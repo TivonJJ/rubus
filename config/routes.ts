@@ -18,8 +18,21 @@ const routes = [
                 component: '../layouts/BasicLayout',
                 routes:[
                     {
-                        path: 'wo/statistics',
-                        component: './wo/statistics',
+                        path: 'sys',
+                        routes:[
+                            {
+                                path: 'user/accounts',
+                                component: './system/user/accounts'
+                            },
+                            {
+                                path: 'user/menus',
+                                component: './system/user/menus'
+                            },
+                            {
+                                path: 'user/roles',
+                                component: './system/user/roles'
+                            }
+                        ]
                     },
                     {
                         component: './404',

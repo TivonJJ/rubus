@@ -1,7 +1,7 @@
 import request from '@/utils/request';
 import { UserModel } from '@/models/user';
 import { objectPropsMapping } from '@/utils/utils';
-import { planToTree, MenuList } from '@/utils/menu';
+import { planToTree, MenuList, MenuResPropsMap } from '@/utils/menu';
 
 export async function login(params:any): Promise<UserModel> {
     return request.post('basis/user/login', params).then((res)=>{
@@ -14,14 +14,7 @@ export async function login(params:any): Promise<UserModel> {
             status: data.status,
             roleId: data.role_id,
         };
-        const resList = objectPropsMapping(data.user_res_list,
-            {
-                'icon_url':'icon',
-                'res_name': 'name',
-                'res_type': 'type',
-                'res_url': 'path',
-                'dna': 'dnaStr',
-            }) as MenuList;
+        const resList = objectPropsMapping(data.user_res_list,MenuResPropsMap) as MenuList;
         user.menu = planToTree(resList);
         return user;
     });

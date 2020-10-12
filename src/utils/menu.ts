@@ -6,20 +6,31 @@ import { MenuDataItem } from '@ant-design/pro-layout';
 export type MenuTypes = 'Folder' | 'Menu' | 'Action' | 'StatusBar';
 
 export interface MenuItem {
-    id: number,
-    name: string,
-    type: MenuTypes,
-    dnaStr: string,
-    dna: number[],
-    icon?: string,
-    status?: number | boolean,
-    path?: string,
+    id: number
+    name: string
+    type: MenuTypes
+    dnaStr: string
+    dna: number[]
+    icon?: string
+    status?: number | boolean
+    path?: string
     children?: MenuItem[]
 }
 
 export type MenuList = MenuItem[] & {
-    pathMap?: { [path: string]: MenuItem },
-    dnaMap?: { [dna: string]: MenuItem },
+    pathMap?: { [path: string]: MenuItem }
+    dnaMap?: { [dna: string]: MenuItem }
+}
+/**
+ *  菜单资源字段转换映射，使字段名一致
+ */
+export const MenuResPropsMap = {
+    'res_id': 'id',
+    'icon_url':'icon',
+    'res_name': 'name',
+    'res_type': 'type',
+    'res_url': 'path',
+    'dna': 'dnaStr',
 }
 export const IconMap = {
     path: 'ss'
@@ -29,11 +40,11 @@ export const IconMap = {
  * @param menu
  * @param callback
  */
-export function each(menu: MenuList, callback: (item: MenuItem, index: number, parent: MenuItem | undefined) => boolean|void) {
+export function loop(menu: MenuList, callback: (item: MenuItem, index: number, parent: MenuItem | undefined,arr:MenuItem[]) => boolean|void) {
     function doEach(data: MenuList, parent?: MenuItem) {
         for(let i=0;i<data.length;i++){
             const item = data[i];
-            const rs = callback(item, i, parent);
+            const rs = callback(item, i, parent,data);
             if(rs===false){
                 break;
             }
@@ -81,7 +92,7 @@ export function planToTree(tileData: MenuList): MenuList {
  */
 export function treeToPlan(menus: MenuList): MenuList {
     const list: MenuList = [];
-    each(menus, (item) => {
+    loop(menus, (item) => {
         const cloneItem = _.cloneDeep(item);
         delete cloneItem.children;
         list.push(cloneItem);
@@ -94,7 +105,7 @@ export function treeToPlan(menus: MenuList): MenuList {
  * @param menus
  */
 export function recombineTreesDNA(menus: MenuList) {
-    each(menus, (item, index, parent) => {
+    loop(menus, (item, index, parent) => {
         const dna = parent ? parent.dna : [];
         dna.push(index);
         item.dna = dna;
@@ -109,7 +120,7 @@ export function recombineTreesDNA(menus: MenuList) {
  */
 export function convertResourceMenu(menus: MenuList): MenuList {
     const local = getLocale();
-    each(menus, (menu, index, parent) => {
+    loop(menus, (menu, index, parent) => {
         const path = parent ? joinPath('/', parent.path, menu.path) : joinPath('/', menu.path);
         menu.path = path;
         const name = JSON.parse(menu.name) || {};
@@ -125,7 +136,7 @@ export function convertResourceMenu(menus: MenuList): MenuList {
 export function extendMenuMapping(menus: MenuList): MenuList {
     const routeMap: AnyObject = {};
     const dnaMap: AnyObject = {};
-    each(menus, (menu) => {
+    loop(menus, (menu) => {
         routeMap[menu.path || ''] = menu;
         dnaMap[menu.dnaStr] = menu;
     });
@@ -158,7 +169,7 @@ export function convertMenuToMenuRenderData(menus: MenuList): MenuDataItem[] {
  */
 export function getFirstAccessibleMenu(menus: MenuList, menuId?: number|string): MenuItem | null {
     let foundMenu: MenuItem | null = null;
-    each(menus, (item) => {
+    loop(menus, (item) => {
         if (item.status == true && item.type === 'Folder') {
             if (menuId) {
                 if (menuId == item.id) {

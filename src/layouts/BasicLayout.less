@@ -1,5 +1,10 @@
 @import '~@/styles/theme';
 
+// Fix Pro-layout sider menu transition
+:global(.ant-layout-has-sider .ant-layout-sider) {
+    transition: all .3s;
+}
+
 .basicLayout{
     &.mix{
         :global{

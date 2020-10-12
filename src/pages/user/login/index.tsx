@@ -5,8 +5,8 @@ import { ConnectProps, ConnectState } from '@/models/connect';
 import {UserModel} from "@/models/user";
 import {connect, history} from "umi";
 import logo from '@/assets/login-logo.png';
-import styles from './style.less';
 import { getFirstAccessibleMenu } from '@/utils/menu';
+import styles from './style.less';
 
 export interface LoginFormProps extends ConnectProps{
     currentUser?: UserModel
