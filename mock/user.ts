@@ -182,7 +182,7 @@ export default {
     'POST /api/resource/list':mockResource,
     'POST /api/basis/resource/list':mockResource,
     'POST /api/basis/role/detail':mockResByRole,
-    'POST /api/resource/addOrUpdate':(req:Request,res:Response)=>{
+    'POST /api/basis/resource/addOrUpdate':(req:Request,res:Response)=>{
         const list = req.body.res_list;
         fs.writeFile(require('path').join(__dirname,'menu.json'),
             JSON.stringify(list), (err:any)=> {

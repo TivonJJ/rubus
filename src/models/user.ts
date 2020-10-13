@@ -1,7 +1,7 @@
 import {Effect,Reducer,history} from 'umi';
 import {login} from "@/services/user";
 import { md5 } from '@/utils/utils';
-import { MenuList, convertResourceMenu, extendMenuMapping } from '@/utils/menu';
+import { MenuList, convertResourceMenu } from '@/utils/menu';
 import CookieStore from '@/utils/CookieStore';
 
 export interface UserModel {
@@ -42,7 +42,7 @@ const UserModel: UserModelType = {
         currentUser: (()=>{
             const user = userCookieStore.get();
             if(!user)return null;
-            extendMenuMapping(user.menu || []);
+            convertResourceMenu(user.menu || []);
             return user;
         })(),
     },
@@ -53,8 +53,8 @@ const UserModel: UserModelType = {
                 ...payload,
                 password: signPassword(payload.username,payload.password)
             });
+            userCookieStore.set(user);
             convertResourceMenu(user.menu || []);
-            extendMenuMapping(user.menu || []);
             yield put({
                 type: 'updateCurrentUser',
                 payload:user
@@ -66,17 +66,13 @@ const UserModel: UserModelType = {
                 type: 'updateCurrentUser',
                 payload: null
             });
+            userCookieStore.clear();
             history.push('/user/login');
         }
     },
 
     reducers: {
         updateCurrentUser(state, {payload}) {
-            if(payload){
-                userCookieStore.set(payload);
-            }else {
-                userCookieStore.clear();
-            }
             return {
                 ...state,
                 currentUser: payload

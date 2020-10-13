@@ -1,0 +1,22 @@
+@import "~@/styles/theme";
+
+.toolbar{
+    margin-bottom: @margin-lg;
+    .search{
+        max-width: 260px;
+    }
+}
+.treeItemTitle{
+    display: inline-block;
+    vertical-align: middle;
+    .treeItemBar{
+        display: inline-block;
+        margin-left: @margin-md;
+        :global{
+            .anticon{
+                margin-right: @margin-xs;
+                color: @primary-color;
+            }
+        }
+    }
+}

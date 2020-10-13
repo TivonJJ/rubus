@@ -2,12 +2,8 @@
 
 .container {
     position: relative;
-    width: 460px;
-    margin: auto;
-    background: hsla(0, 0%, 100%, .5) border-box;
-    border-radius: .3em;
-    box-shadow: 0 0 0 1px hsla(0, 0%, 100%, .5) inset, 0 .5em 1em rgba(0, 0, 0, 0.6);
-    animation: focus ease-out 1s;
+    width: 100%;
+    background: transparent;
 }
 
 .logo {
@@ -32,5 +28,16 @@
     100%{
         transform: scale(1);
         filter: blur(0);
+    }
+}
+
+@media (min-width: @screen-md-min) {
+    .container{
+        width: 460px;
+        margin: auto;
+        background: hsla(0, 0%, 100%, .5) border-box;
+        border-radius: .3em;
+        box-shadow: 0 0 0 1px hsla(0, 0%, 100%, .5) inset, 0 .5em 1em rgba(0, 0, 0, 0.6);
+        animation: focus ease-out 1s;
     }
 }

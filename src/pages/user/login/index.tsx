@@ -15,7 +15,7 @@ export interface LoginFormProps extends ConnectProps{
 
 const LoginForm: React.FC<LoginFormProps> = (props) => {
     const [form] = Form.useForm();
-    const [error, setError] = useState<String>();
+    const [error, setError] = useState<string>();
     const [isCatchUserAcc, setIsCatchUserAcc] = useState<boolean>();
 
     useEffect(()=>{

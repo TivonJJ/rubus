@@ -149,40 +149,70 @@ export function createPagination(props:DefaultPaginationProps = {}) {
     };
 }
 
+export const reverseObjectKeyValue=(obj:AnyObject):AnyObject=>{
+    const keys = Object.keys(obj);
+    const reverseObj = {};
+    keys.forEach(key=>{
+        const value = obj[key]
+        reverseObj[value] = key
+    });
+    return reverseObj
+}
+
 export interface ObjectProsMappingConfig{
     keepOriginalProp?: boolean,
     deep?: boolean,
+    reverse?: boolean
 }
-export type ObjectProsMappingMap = {[key:string]:string}
 /**
  * 对象字段名映射转换
  * @param source
  * @param mapping
  * @param config
  */
-export function objectPropsMapping(source:AnyObject|AnyObject[],mapping:ObjectProsMappingMap,config:ObjectProsMappingConfig = {}):AnyObject{
-    const {keepOriginalProp=false,deep=false} = config;
-    if(Array.isArray(source)){
-        source.forEach((sourceItem)=>{
-            objectPropsMapping(sourceItem,mapping,config);
-        })
-    }else {
-        Object.keys(source).forEach((key:string)=>{
-            const val:any = source[key];
-            if(deep && typeof val === 'object'){
-                if(Array.isArray(val)){
-                    val.forEach((item)=>objectPropsMapping(item,mapping,config))
-                }else {
-                    objectPropsMapping(val,mapping,config);
-                }
-            }else if(key in mapping) {
-                const newKey = mapping[key];
-                source[newKey] = val;
-                if(!keepOriginalProp){
-                    delete source[key];
-                }
-            }
-        })
+export function objectPropsMapping(source:AnyObject|AnyObject[],mapping:AnyObject,config:ObjectProsMappingConfig = {}):AnyObject{
+    const {keepOriginalProp=false,deep=false,reverse=false} = config;
+    if(reverse){
+        mapping = reverseObjectKeyValue(mapping);
     }
-    return source;
+    // eslint-disable-next-line no-shadow
+    const doMapping=(source:AnyObject|AnyObject[],mapping:AnyObject)=>{
+        if(Array.isArray(source)){
+            source.forEach((sourceItem)=>{
+                doMapping(sourceItem,mapping);
+            })
+        }else {
+            Object.keys(source).forEach((key:string)=>{
+                const val:any = source[key];
+                if(deep && typeof val === 'object'){
+                    if(Array.isArray(val)){
+                        val.forEach((item)=>doMapping(item,mapping))
+                    }else {
+                        doMapping(val,mapping);
+                    }
+                }else if(key in mapping) {
+                    const newKey = mapping[key];
+                    source[newKey] = val;
+                    if(!keepOriginalProp){
+                        delete source[key];
+                    }
+                }
+            })
+        }
+        return source;
+    }
+    return doMapping(source,mapping);
+}
+
+export const parseJSONSafe=(json:string|AnyObject,defaultValue?:any)=>{
+    if(typeof json==='string'){
+        try {
+            return JSON.parse(json);
+        }catch (e){
+            console.warn(e);
+            return defaultValue;
+        }
+    }
+    if(json==null)return defaultValue;
+    return json
 }

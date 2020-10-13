@@ -13,3 +13,10 @@ export async function getMenus(params?:any):Promise<MenuList> {
         return planToTree(resList);
     })
 }
+
+export async function setMenus(params:any){
+    return request.post(
+        'basis/resource/addOrUpdate',
+        {res_list:objectPropsMapping(params,MenuResPropsMap,{reverse:true})}
+    )
+}

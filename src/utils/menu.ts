@@ -1,19 +1,23 @@
+import React from 'react';
 import joinPath from 'join-path';
 import _ from 'lodash';
 import { getLocale } from 'umi';
 import { MenuDataItem } from '@ant-design/pro-layout';
+import { parseJSONSafe } from '@/utils/utils';
+import { IconMap } from '@/constants/menu';
 
 export type MenuTypes = 'Folder' | 'Menu' | 'Action' | 'StatusBar';
 
 export interface MenuItem {
     id: number
-    name: string
+    name: string | AnyObject
     type: MenuTypes
     dnaStr: string
     dna: number[]
     icon?: string
     status?: number | boolean
     path?: string
+    description?: string
     children?: MenuItem[]
 }
 
@@ -32,15 +36,12 @@ export const MenuResPropsMap = {
     'res_url': 'path',
     'dna': 'dnaStr',
 }
-export const IconMap = {
-    path: 'ss'
-}
 /**
  * 遍历菜单树或菜单数组
  * @param menu
  * @param callback
  */
-export function loop(menu: MenuList, callback: (item: MenuItem, index: number, parent: MenuItem | undefined,arr:MenuItem[]) => boolean|void) {
+export function loop(menu: MenuList, callback: (item: MenuItem, index: number, parent: MenuItem | undefined,arr:MenuItem[]) => boolean|void):MenuList {
     function doEach(data: MenuList, parent?: MenuItem) {
         for(let i=0;i<data.length;i++){
             const item = data[i];
@@ -55,6 +56,7 @@ export function loop(menu: MenuList, callback: (item: MenuItem, index: number, p
     }
 
     doEach(menu);
+    return menu;
 }
 
 /**
@@ -107,33 +109,31 @@ export function treeToPlan(menus: MenuList): MenuList {
 export function recombineTreesDNA(menus: MenuList) {
     loop(menus, (item, index, parent) => {
         const dna = parent ? parent.dna : [];
-        dna.push(index);
-        item.dna = dna;
-        item.dnaStr = dna.join('-');
+        const newDna = [...dna,index]
+        item.dna = newDna;
+        item.dnaStr = newDna.join('-');
     });
-    return menus;
+    return extendResourceMenuMapping(menus);
 }
 
 /**
- * 转换资源数据菜单的数据
+ * 转换资源数据菜单的数据并扩展映射
  * @param menus
  */
 export function convertResourceMenu(menus: MenuList): MenuList {
-    const local = getLocale();
     loop(menus, (menu, index, parent) => {
         const path = parent ? joinPath('/', parent.path, menu.path) : joinPath('/', menu.path);
         menu.path = path;
-        const name = JSON.parse(menu.name) || {};
-        menu.name = name[local];
+        menu.name = parseJSONSafe(menu.name,{});
     });
-    return menus;
+    return extendResourceMenuMapping(menus);
 }
 
 /**
- * 扩展菜单资源Map映射
+ * 扩展menu的Map映射
  * @param menus
  */
-export function extendMenuMapping(menus: MenuList): MenuList {
+export function extendResourceMenuMapping(menus: MenuList): MenuList{
     const routeMap: AnyObject = {};
     const dnaMap: AnyObject = {};
     loop(menus, (menu) => {
@@ -144,16 +144,24 @@ export function extendMenuMapping(menus: MenuList): MenuList {
     menus.dnaMap = dnaMap;
     return menus;
 }
-
 /**
  * 转换菜单为渲染菜单配置项
  * @param menus
  */
 export function convertMenuToMenuRenderData(menus: MenuList): MenuDataItem[] {
     return menus.map((menu) => {
+        const IconComp:React.ComponentClass|string = menu.icon ? IconMap[menu.icon] || menu.icon : null;
+        let icon;
+        if(IconComp){
+            if (typeof IconComp === 'string') {
+                icon = IconComp;
+            } else {
+                icon = React.createElement(IconComp);
+            }
+        }
         return {
-            icon: menu.icon,
-            name: menu.name,
+            icon,
+            name: menu.name[getLocale()] || menu.name,
             locale: false,
             path: menu.path,
             children: menu.children ? convertMenuToMenuRenderData(menu.children) : undefined,

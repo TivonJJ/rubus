@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
-import { connect } from 'umi';
-import { Input, Tree as AntTree } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { connect,getLocale } from 'umi';
+import { Modal, Tree as AntTree } from 'antd';
 import { ConnectProps, ConnectState } from '@/models/connect';
-import { loop, MenuItem, MenuList } from '@/utils/menu';
+import { loop, MenuItem, MenuList, recombineTreesDNA } from '@/utils/menu';
 import { DataNode } from 'antd/lib/tree';
 import debounce from 'lodash/debounce'
+import {
+    FolderOpenOutlined,
+    LinkOutlined,
+    PlayCircleOutlined,
+    NotificationOutlined,
+    PlusCircleOutlined,
+} from '@ant-design/icons';
 import {SysUserMenusModelState} from './model';
+import TreeItem from './TreeItem';
 
 type IConnectState = ConnectState & {
     sysUserMenusModel: SysUserMenusModelState
@@ -13,6 +21,14 @@ type IConnectState = ConnectState & {
 
 export interface TreeProps extends ConnectProps{
     sysUserMenusModel: SysUserMenusModelState;
+    onSelect:(menu:MenuItem,key:string)=>void
+}
+
+const TypesIconMap = {
+    'Folder': <FolderOpenOutlined />,
+    'Menu': <LinkOutlined />,
+    'Action': <PlayCircleOutlined />,
+    'StatusBar': <NotificationOutlined />,
 }
 
 const loopMenu = (data:MenuList, key:string, callback:(item:MenuItem,index:number,arr:MenuList)=>void) => {
@@ -29,15 +45,46 @@ const loopMenu = (data:MenuList, key:string, callback:(item:MenuItem,index:numbe
 };
 
 const Tree:React.FC<TreeProps>=(props)=>{
-    const {sysUserMenusModel:{menus,selectedMenu}} = props;
+    const {sysUserMenusModel:{menus,selectedMenu,searchValue}} = props;
     const [expandedKeys,setExpandedKeys] = useState<string[]>();
     const [autoExpandParent,setAutoExpandParent] = useState<boolean>();
-    const [searchValue,setSearchValue] = useState<string>();
+    const local = getLocale();
+    const onInsert = (level:number,to?:MenuItem)=>{
+        props.dispatch({
+            type: 'sysUserMenusModel/insertMenu',
+            payload: {
+                level,
+                to
+            }
+        })
+        if(to?.dnaStr){
+            // @ts-ignore
+            setExpandedKeys([...expandedKeys,to.dnaStr])
+        }
+    }
+    const onDel=(menu:MenuItem)=>{
+        Modal.confirm({
+            title: '确定移除？',
+            onOk:()=>{
+                props.dispatch({
+                    type: 'sysUserMenusModel/delMenu',
+                    payload: menu
+                })
+            }
+        })
+    }
     const adaptMenuData=(data:MenuList):DataNode[]=>{
         return data.map((item)=>{
             return {
                 key: item.dnaStr,
-                title: item.name,
+                title:
+                    <TreeItem
+                        menu={item}
+                        highlight={searchValue}
+                        onInsert={onInsert}
+                        onDel={onDel}
+                    />,
+                icon: TypesIconMap[item.type],
                 children: adaptMenuData(item.children||[])
             }
         })
@@ -79,14 +126,15 @@ const Tree:React.FC<TreeProps>=(props)=>{
         });
         props.dispatch({
             type: 'sysUserMenusModel/updateMenus',
-            payload: data,
+            payload: recombineTreesDNA(data),
         })
     }
-    const search = debounce((value)=>{
+    const searchTree = debounce(()=>{
         const keys:string[] = [];
-        if(value){
+        if(searchValue){
             loop(menus,(item)=>{
-                if(item.name && item.name.indexOf(value) !== -1 && item.dna.length>1){
+                const name = item.name && item.name[local];
+                if(name && name.indexOf(searchValue) !== -1 && item.dna.length>1){
                     keys.push(item.dnaStr);
                 }
             })
@@ -94,40 +142,36 @@ const Tree:React.FC<TreeProps>=(props)=>{
         setExpandedKeys(keys);
         setAutoExpandParent(true);
     },800)
+    useEffect(()=>{
+        searchTree()
+    },[searchValue])
     const onSelect=(keys:any[])=>{
         const curKey = keys[0];
         loopMenu(menus,curKey,(menu)=>{
-            props.dispatch({
-                type: 'sysUserMenusModel/selectMenu',
-                payload: menu
-            })
+            props.onSelect(menu,curKey);
         })
     }
     return (
         <div>
-            <Input.Search
-                placeholder="快速查找"
-                onChange={e=>{
-                    setSearchValue(e.target.value);
-                    search(e.target.value)
-                }}
-                value={searchValue}
-                allowClear
-            />
-            <AntTree
-                draggable
-                blockNode
-                autoExpandParent={autoExpandParent}
-                onDrop={onDrop}
-                treeData={treeData}
-                expandedKeys={expandedKeys}
-                onExpand={(keys)=>{
-                    setExpandedKeys(keys as string[]);
-                    setAutoExpandParent(false);
-                }}
-                selectedKeys={selectedMenu?[selectedMenu.dnaStr]:[]}
-                onSelect={onSelect}
-            />
+            {treeData.length>0?
+                <AntTree
+                    draggable
+                    blockNode
+                    showIcon
+                    autoExpandParent={autoExpandParent}
+                    onDrop={onDrop}
+                    treeData={treeData}
+                    expandedKeys={expandedKeys}
+                    onExpand={(keys)=>{
+                        setExpandedKeys(keys as string[]);
+                        setAutoExpandParent(false);
+                    }}
+                    selectedKeys={selectedMenu?[selectedMenu.dnaStr]:[]}
+                    onSelect={onSelect}
+                />
+                :
+                <PlusCircleOutlined onClick={()=>onInsert(0)} />
+            }
         </div>
     )
 }
