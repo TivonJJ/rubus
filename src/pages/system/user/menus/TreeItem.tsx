@@ -11,7 +11,7 @@ type IConnectState = ConnectState & {
     sysUserMenusModel: SysUserMenusModelState
 };
 
-export interface TreeItemProps extends ConnectProps{
+export interface ITreeItemProps extends ConnectProps{
     menu:MenuItem
     highlight?:string
     sysUserMenusModel: SysUserMenusModelState
@@ -19,7 +19,7 @@ export interface TreeItemProps extends ConnectProps{
     onDel: (menu:MenuItem)=>void
 }
 
-const TreeItem:React.FC<TreeItemProps> = (props)=>{
+const TreeItem:React.FC<ITreeItemProps> = (props)=>{
     const {menu,highlight,sysUserMenusModel:{selectedMenu},onInsert=()=>null,onDel=()=>null} = props;
     const name:string = menu.name?menu.name[getLocale()] || '' : '';
     let renderName:React.ReactNode = name;

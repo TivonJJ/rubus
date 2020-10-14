@@ -19,7 +19,7 @@ type IConnectState = ConnectState & {
     sysUserMenusModel: SysUserMenusModelState
 };
 
-export interface TreeProps extends ConnectProps{
+export interface ITreeProps extends ConnectProps{
     sysUserMenusModel: SysUserMenusModelState;
     onSelect:(menu:MenuItem,key:string)=>void
 }
@@ -44,7 +44,7 @@ const loopMenu = (data:MenuList, key:string, callback:(item:MenuItem,index:numbe
     }
 };
 
-const Tree:React.FC<TreeProps>=(props)=>{
+const Tree:React.FC<ITreeProps>=(props)=>{
     const {sysUserMenusModel:{menus,selectedMenu,searchValue}} = props;
     const [expandedKeys,setExpandedKeys] = useState<string[]>();
     const [autoExpandParent,setAutoExpandParent] = useState<boolean>();
@@ -58,8 +58,7 @@ const Tree:React.FC<TreeProps>=(props)=>{
             }
         })
         if(to?.dnaStr){
-            // @ts-ignore
-            setExpandedKeys([...expandedKeys,to.dnaStr])
+            setExpandedKeys([...expandedKeys||[],to.dnaStr])
         }
     }
     const onDel=(menu:MenuItem)=>{

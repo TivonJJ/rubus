@@ -19,6 +19,7 @@ export interface MenuItem {
     path?: string
     description?: string
     children?: MenuItem[]
+    updateTime?: string
 }
 
 export type MenuList = MenuItem[] & {

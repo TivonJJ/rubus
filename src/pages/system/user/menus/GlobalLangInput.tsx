@@ -4,13 +4,13 @@ import { getLocale } from 'umi';
 
 const SupportedLangs = ['en-US','zh-CN'];
 
-export interface GlobalLangInputProps{
+export interface IGlobalLangInputProps{
     value?: any
     placeholder?: string
     onChange?: (values:any)=>void
 }
 
-const GlobalLangInput:React.FC<GlobalLangInputProps> = (props)=>{
+const GlobalLangInput:React.FC<IGlobalLangInputProps> = (props)=>{
     const {value,onChange,placeholder} = props;
     const [form] = Form.useForm();
     const [modalVisible,setModalVisible] = useState<boolean>();

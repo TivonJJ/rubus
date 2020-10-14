@@ -1,24 +1,32 @@
 import React, { useEffect, useRef } from 'react';
 import { Card, Col, message, Row, Spin } from 'antd';
 import { ConnectProps, ConnectState } from '@/models/connect';
-import { connect } from 'umi';
+import { connect, Prompt } from 'umi';
 import { MenuItem } from '@/utils/menu';
+import { SysUserMenusModelState } from './model';
 import MenuTree from './Tree';
-import MenuForm from './Form';
+import MenuForm, { IImperativeHandle } from './Form';
 import Toolbar from './Toolbar';
 
 type PropsType = ConnectProps & {
     fetching?: boolean
     saving?: boolean
+    menuChanged?: boolean
 }
+
+type IConnectState = ConnectState & {
+    sysUserMenusModel: SysUserMenusModelState
+};
+
 
 const Menus:React.FC<PropsType> = (props)=>{
     const {
         fetching = false,
         saving = false,
-        dispatch
+        dispatch,
+        menuChanged
     } = props;
-    const formRef = useRef<any>();
+    const formRef = useRef<IImperativeHandle>();
     const fetchMenus=()=>{
         dispatch({
             type: 'sysUserMenusModel/fetchMenus'
@@ -33,8 +41,8 @@ const Menus:React.FC<PropsType> = (props)=>{
         }
     },[]);
     const onTreeSelect=(menu:MenuItem)=>{
-        formRef.current.validate().then(()=>{
-            formRef.current.syncForm2Store();
+        formRef.current?.validate().then(()=>{
+            formRef.current?.syncForm2Store();
             props.dispatch({
                 type: 'sysUserMenusModel/selectMenu',
                 payload: menu
@@ -44,8 +52,8 @@ const Menus:React.FC<PropsType> = (props)=>{
         })
     }
     const onSave=()=>{
-        formRef.current.validate().then(()=>{
-            formRef.current.syncForm2Store();
+        formRef.current?.validate().then(()=>{
+            formRef.current?.syncForm2Store();
             props.dispatch({
                 type: 'sysUserMenusModel/save',
             }).then(()=>{
@@ -57,6 +65,7 @@ const Menus:React.FC<PropsType> = (props)=>{
     }
     return (
         <Card bordered={false}>
+            <Prompt message="数据未保存，离开页面后当前修改的信息会丢失，是否确定离开" when={menuChanged} />
             <Spin spinning={fetching || saving}>
                 <Toolbar onSave={onSave} />
                 <Row gutter={12}>
@@ -72,7 +81,8 @@ const Menus:React.FC<PropsType> = (props)=>{
     )
 }
 
-export default connect(({loading}:ConnectState)=>({
+export default connect(({loading,sysUserMenusModel}:IConnectState)=>({
     fetching: loading.effects['sysUserMenusModel/fetchMenus'],
     saving: loading.effects['sysUserMenusModel/save'],
+    menuChanged: sysUserMenusModel.menuChanged,
 }))(Menus);

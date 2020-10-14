@@ -10,17 +10,22 @@ type IConnectState = ConnectState & {
     sysUserMenusModel: SysUserMenusModelState
 };
 
-export interface FormProps extends ConnectProps{
+export interface IFormProps extends ConnectProps{
     sysUserMenusModel: SysUserMenusModelState,
     wrappedComponentRef?: any,
 }
 
-const Form:React.FC<FormProps>=(props)=>{
+export interface IImperativeHandle{
+    validate:()=>Promise<AnyObject>
+    syncForm2Store:()=>void
+}
+
+const Form:React.FC<IFormProps>=(props)=>{
     const {sysUserMenusModel:{selectedMenu},wrappedComponentRef} = props;
     const [form] = AntForm.useForm();
     const [dirty,setDirty] = useState<boolean>();
 
-    useImperativeHandle(wrappedComponentRef,()=>({
+    useImperativeHandle<any,IImperativeHandle>(wrappedComponentRef,()=>({
         validate:()=>{
             return form.validateFields();
         },
