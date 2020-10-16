@@ -1,4 +1,4 @@
-import { BellOutlined, DashboardOutlined, TeamOutlined } from '@ant-design/icons';
+import { BellOutlined, DashboardOutlined, TeamOutlined, FileTextOutlined, SafetyCertificateOutlined, SolutionOutlined } from '@ant-design/icons';
 
 export const Types = {
     Folder: '功能分区',
@@ -11,4 +11,7 @@ export const IconMap = {
     Bell: BellOutlined,
     Dashboard: DashboardOutlined,
     Team: TeamOutlined,
+    FileText: FileTextOutlined,
+    SafetyCertificate: SafetyCertificateOutlined,
+    SolutionOut: SolutionOutlined,
 }

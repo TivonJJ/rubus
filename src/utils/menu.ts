@@ -1,6 +1,6 @@
 import React from 'react';
 import joinPath from 'join-path';
-import _ from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import { getLocale } from 'umi';
 import { MenuDataItem } from '@ant-design/pro-layout';
 import { parseJSONSafe } from '@/utils/utils';
@@ -96,7 +96,7 @@ export function planToTree(tileData: MenuList): MenuList {
 export function treeToPlan(menus: MenuList): MenuList {
     const list: MenuList = [];
     loop(menus, (item) => {
-        const cloneItem = _.cloneDeep(item);
+        const cloneItem = cloneDeep(item);
         delete cloneItem.children;
         list.push(cloneItem);
     });

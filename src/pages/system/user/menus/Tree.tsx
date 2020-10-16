@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { connect,getLocale } from 'umi';
 import { Modal, Tree as AntTree } from 'antd';
 import { ConnectProps, ConnectState } from '@/models/connect';
@@ -47,7 +47,7 @@ const loopMenu = (data:MenuList, key:string, callback:(item:MenuItem,index:numbe
 const Tree:React.FC<ITreeProps>=(props)=>{
     const {sysUserMenusModel:{menus,selectedMenu,searchValue}} = props;
     const [expandedKeys,setExpandedKeys] = useState<string[]>();
-    const [autoExpandParent,setAutoExpandParent] = useState<boolean>();
+    const [autoExpandParent,setAutoExpandParent] = useState<boolean>(false);
     const local = getLocale();
     const onInsert = (level:number,to?:MenuItem)=>{
         props.dispatch({
@@ -141,7 +141,7 @@ const Tree:React.FC<ITreeProps>=(props)=>{
         setExpandedKeys(keys);
         setAutoExpandParent(true);
     },800)
-    useEffect(()=>{
+    useMemo(()=>{
         searchTree()
     },[searchValue])
     const onSelect=(keys:any[])=>{

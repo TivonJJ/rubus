@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { PrivateDvaInstance } from '@/types/global';
 import { getDvaApp, getLocale } from 'umi';
 import joinPath from 'join-path';
 
@@ -15,7 +14,7 @@ export interface ResponseError {
 }
 
 function getStore() {
-    const app: PrivateDvaInstance = getDvaApp();
+    const app = getDvaApp();
     // eslint-disable-next-line no-underscore-dangle
     return app._store;
 }

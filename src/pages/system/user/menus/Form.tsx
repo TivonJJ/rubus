@@ -1,8 +1,9 @@
-import React, { useEffect, useImperativeHandle, useState } from 'react';
+import React, { useImperativeHandle, useMemo, useState } from 'react';
 import { Form as AntForm, Input, Radio, Select, Switch } from 'antd';
 import { connect } from 'umi';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { IconMap, Types } from '@/constants/menu';
+import FormItemInterceptor from '@/components/FormItemInterceptor';
 import { SysUserMenusModelState } from './model';
 import GlobalLangInput from './GlobalLangInput';
 
@@ -23,7 +24,8 @@ export interface IImperativeHandle{
 const Form:React.FC<IFormProps>=(props)=>{
     const {sysUserMenusModel:{selectedMenu},wrappedComponentRef} = props;
     const [form] = AntForm.useForm();
-    const [dirty,setDirty] = useState<boolean>();
+    const [dirty,setDirty] = useState<boolean>(false);
+    const isSplitMenu = true;
 
     useImperativeHandle<any,IImperativeHandle>(wrappedComponentRef,()=>({
         validate:()=>{
@@ -42,13 +44,10 @@ const Form:React.FC<IFormProps>=(props)=>{
         }
     }));
 
-    useEffect(()=>{
+    useMemo(()=>{
         if(selectedMenu){
             form.resetFields();
-            form.setFieldsValue({
-                ...selectedMenu,
-                status: selectedMenu.status == 1
-            });
+            form.setFieldsValue(selectedMenu);
         }else {
             form.resetFields();
             setDirty(false)
@@ -73,6 +72,9 @@ const Form:React.FC<IFormProps>=(props)=>{
             sm: { span: 18 }
         }
     };
+    const currentLevel = selectedMenu?.dna.length;
+    const requireIcon = form.getFieldValue('type') === 'StatusBar'
+        || currentLevel === (isSplitMenu ? 2 : 1);
     return (
         <AntForm
             form={form}
@@ -112,6 +114,7 @@ const Form:React.FC<IFormProps>=(props)=>{
                     <AntForm.Item
                         label="图标"
                         name="icon"
+                        rules={[{ required: requireIcon }]}
                     >
                         <Select
                             placeholder="选择资源的图标，菜单图标会展示在名字上"
@@ -142,7 +145,11 @@ const Form:React.FC<IFormProps>=(props)=>{
                         name="status"
                         valuePropName="checked"
                     >
-                        <Switch/>
+                        <FormItemInterceptor
+                            pipes={FormItemInterceptor.Pipes.Bool2Number(1,2)}
+                        >
+                            <Switch />
+                        </FormItemInterceptor>
                     </AntForm.Item>
                 </>
             }

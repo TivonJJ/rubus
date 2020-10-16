@@ -48,9 +48,11 @@
   ],
   "dependencies": {
     "@ant-design/icons": "^4.0.0",
+    "@ant-design/pro-card": "^1.2.3",
     "@ant-design/pro-descriptions": "^1.0.16",
+    "@ant-design/pro-form": "^1.0.2",
     "@ant-design/pro-layout": "^6.5.0",
-    "@ant-design/pro-table": "^2.9.1",
+    "@ant-design/pro-table": "^2.9.3",
     "@umijs/route-utils": "^1.0.32",
     "antd": "^4.6.3",
     "axios": "^0.20.0",

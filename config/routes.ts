@@ -22,7 +22,7 @@ const routes = [
                         routes:[
                             {
                                 path: 'user/accounts',
-                                component: './system/user/accounts'
+                                component: './system/user/accounts',
                             },
                             {
                                 path: 'user/menus',

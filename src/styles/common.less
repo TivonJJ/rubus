@@ -13,82 +13,123 @@ body {
 
 // utils
 // --- margin utils ---
-@margin-size: margin-xss,margin-xs,margin-sm,margin-md,margin-lg;
-@margin-direction: left,top,right,bottom;
+@margin-size: margin-xss, margin-xs, margin-sm, margin-md, margin-lg;
+@margin-direction: left, top, right, bottom;
 //noinspection Stylelint
-@margin-both-direction:{
-    v: top,bottom;
-    h: left,right;
+@margin-both-direction: {
+    v: top, bottom;
+    h: left, right;
 };
-.gen-margins(){
-    each(@margin-size,{
-        .@{value}{
+.gen-margins() {
+    each(@margin-size, {
+        .@{value} {
             .margin(@@value)
         }
     });
 }
-.gen-margins(@direction,@direction-name:@direction){
-    each(@margin-size,{
-        .@{value}_@{direction-name}{
-            .margin(@@value,@direction)
+
+.gen-margins(@direction,@direction-name:@direction) {
+    each(@margin-size, {
+        .@{value}_@{direction-name} {
+            .margin(@@value, @direction)
         }
     });
 }
+
 .gen-margins();
-each(@margin-direction,{
+each(@margin-direction, {
     .gen-margins(@value)
 });
-each(@margin-both-direction,{
-    .gen-margins(@value,@key)
+each(@margin-both-direction, {
+    .gen-margins(@value, @key)
 });
 // text
 .text-sm {
     font-size: @font-size-sm;
 }
+
 .text-base {
     font-size: @font-size-base;
 }
+
 .text-lg {
     font-size: @font-size-lg;
 }
-.text-left{
+
+.text-left {
     text-align: left;
 }
+
 .text-center {
     text-align: center;
 }
+
 .text-right {
     text-align: right;
 }
+
 .text-middle {
     display: inline-block;
     vertical-align: middle;
 }
+
 .text-danger {
     color: @error-color;
 }
+
 .text-primary {
     color: @primary-color !important;
 }
+
 .text-warning {
     color: @warning-color;
 }
+
 .text-success {
     color: @success-color;
 }
+
 .text-muted {
     color: @text-color-secondary;
 }
+
 // display
-.inline{
+.inline {
     display: inline;
 }
-.inline-block{
+
+.inline-block {
     display: inline-block;
 }
-.block{
+
+.block {
     display: block;
 }
-.hidden{
+
+.hidden {
     display: none;
+}
+
+// card
+.card-group {
+    .ant-card:not(:last-child) {
+        margin-bottom: @margin-md;
+    }
+}
+
+.button-radios {
+    .ant-radio-wrapper {
+        margin-right: @margin-sm;
+        border: 0;
+        border-radius: 4px;
+
+        .ant-radio-inner{
+            display: none;
+        }
+
+        &.ant-radio-wrapper-checked {
+            color: #fff;
+            background-color: #108ee9;
+        }
+    }
 }
