@@ -24,35 +24,53 @@ export declare type RuColumns<T = any> = ProColumns<T>;
 export type RuColumnType<T = unknown> = ProColumnType<T>;
 export type RuColumnsState = ProColumnsState;
 export interface RuTableProp<T extends {}, U extends ParamsType> extends ProTableProps<T, U> {
-    id?: string
-    onRequest?: (params: U & {
-        pageSize?: number;
-        current?: number;
-        keyword?: string;
-    }, sort: {
-        [key: string]: SortOrder;
-    }, filter: {
-        [key: string]: React.ReactText[];
-    }) => any
-    onResponse?: (data:any) => RequestData<T>
-    removeRequestParamsEmptyAttribute?: boolean
+    id?: string;
+    onRequest?: (
+        params: U & {
+            pageSize?: number;
+            current?: number;
+            keyword?: string;
+        },
+        sort: {
+            [key: string]: SortOrder;
+        },
+        filter: {
+            [key: string]: React.ReactText[];
+        },
+    ) => any;
+    onResponse?: (data: any) => RequestData<T>;
+    removeRequestParamsEmptyAttribute?: boolean;
 }
 
-export type RuTableInstance = {
-    actionRef?: RuTableActionType;
-    formRef?: FormInstance;
-} | undefined | null
+export type RuTableInstance =
+    | {
+          actionRef?: RuTableActionType;
+          formRef?: FormInstance;
+      }
+    | undefined
+    | null;
 
-const tableInstanceSet: {[name:string]:RuTableInstance} = {};
+const tableInstanceSet: { [name: string]: RuTableInstance } = {};
 
-const RuTable = <T extends {}, U extends ParamsType>(
-    props: RuTableProp<T, U>,
-) => {
-    const { actionRef, formRef,request,onRequest,onResponse,removeRequestParamsEmptyAttribute, ...rest } = props;
+/**
+ * 高级 Table表格
+ * @param props
+ * @constructor
+ */
+const RuTable = <T extends {}, U extends ParamsType>(props: RuTableProp<T, U>) => {
+    const {
+        actionRef,
+        formRef,
+        request,
+        onRequest,
+        onResponse,
+        removeRequestParamsEmptyAttribute,
+        ...rest
+    } = props;
     const insideActionRef = useRef();
     const insideFormRef = useRef();
     useEffect(() => {
-        if(props.id && tableInstanceSet[props.id]){
+        if (props.id && tableInstanceSet[props.id]) {
             throw new Error(`${props.id} is already exist`);
         }
         if (actionRef) {
@@ -82,20 +100,19 @@ const RuTable = <T extends {}, U extends ParamsType>(
             }
         };
     }, []);
-    const wrapRequest = request ?
-        (params: any, sort: any, filter: any) => {
-            if (removeRequestParamsEmptyAttribute) {
-                params = removeEmptyProperty(params);
-            }
-            if (onRequest) {
-                params = onRequest(params, sort, filter);
-            }
-            return request(params, sort, filter).then((res) => {
-                return onResponse ? onResponse(res) : res;
-            });
-        }
-        :
-        undefined;
+    const wrapRequest = request
+        ? (params: any, sort: any, filter: any) => {
+              if (removeRequestParamsEmptyAttribute) {
+                  params = removeEmptyProperty(params);
+              }
+              if (onRequest) {
+                  params = onRequest(params, sort, filter);
+              }
+              return request(params, sort, filter).then((res) => {
+                  return onResponse ? onResponse(res) : res;
+              });
+          }
+        : undefined;
     return (
         <ProTable<T, U>
             actionRef={insideActionRef}
@@ -107,39 +124,46 @@ const RuTable = <T extends {}, U extends ParamsType>(
 };
 
 RuTable.defaultProps = {
-    onRequest:(params:any)=>{
+    onRequest: (params: any) => {
         // 自定义转换请求数据，把分页字段改成和接口一致
         const newParams = {
             ...params,
             page_num: params.current,
             page_size: params.pageSize,
         };
-        delete newParams.current
-        delete newParams.pageSize
+        delete newParams.current;
+        delete newParams.pageSize;
         return newParams;
     },
-    onResponse:(res:any={}):RequestData<any>=>{
+    onResponse: (res: any = {}): RequestData<any> => {
         // 可以在这里自定义转换返回数据
         return {
             data: res.data,
             total: res.total,
             success: true,
-            ...res
-        }
+            ...res,
+        };
     },
-    onRequestError:(err:Error)=>{
-        message.error(err.message,5)
+    onRequestError: (err: Error) => {
+        message.error(err.message, 5);
     },
-    removeRequestParamsEmptyAttribute: true
+    removeRequestParamsEmptyAttribute: true,
 };
 
-RuTable.getTable=(name:string):RuTableInstance=>{
-    return tableInstanceSet[name];
-}
-
-RuTable.getTables = (name?: string[]):RuTableInstance[] => {
-    if (!name) return Object.values(tableInstanceSet);
-    return name.map(item => item ? tableInstanceSet[item] : null).filter(ref => ref != null);
+/**
+ * 获取Table实列
+ * @param id Table的id
+ */
+RuTable.getTable = (id: string): RuTableInstance => {
+    return tableInstanceSet[id];
+};
+/**
+ * 获取一组Table实列
+ * @param id Table的id数组
+ */
+RuTable.getTables = (id?: string[]): RuTableInstance[] => {
+    if (!id) return Object.values(tableInstanceSet);
+    return id.map((item) => (item ? tableInstanceSet[item] : null)).filter((ref) => ref != null);
 };
 
 export default RuTable;

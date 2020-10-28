@@ -7,6 +7,7 @@ import { RoleType } from './model';
 import styles from './style.less';
 import Upsert from './Upsert';
 import AssignAccounts from './AssignAccounts';
+import Ellipsis from '@/components/Ellipsis';
 
 interface RoleItemPropTypes {
     role?: RoleType;
@@ -65,7 +66,7 @@ const RoleItem: React.FC<RoleItemPropTypes> = (props) => {
                 </div>
             }
         >
-            <div>{role.description}</div>
+            <Ellipsis line={2}>{role.description}</Ellipsis>
             <Row className={styles.footer}>
                 <Col span={8}>
                     <Switch size={'small'} checked={role.status == 1} onChange={changeStatus} />
