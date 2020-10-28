@@ -6,12 +6,15 @@ const baseURL: string = '/api';
 
 
 export interface ResponseError {
-    originResponse?: AxiosResponse,
-    code?: number | string,
-    message?: string,
-    data?: any,
-    type: 'ResponseError',
+    originResponse: AxiosResponse
+    code?: number | string
+    message?: string
+    data?: any
+    type: 'ResponseError'
+    preventDefault: ()=>any
 }
+
+type ResultError = Omit<ResponseError, 'preventDefault'>
 
 function getStore() {
     const app = getDvaApp();
@@ -39,9 +42,9 @@ function createDefaultRequest() {
                     },
                 });
             }
-            const resultError: ResponseError = {
+            const resultError:ResultError = {
                 code: data.code,
-                message: data.msg,
+                message: typeof data==='object'?data.msg:data,
                 originResponse: response,
                 type: 'ResponseError',
             };
@@ -54,7 +57,7 @@ function createDefaultRequest() {
         }
         const { response } = err;
         const { status } = response;
-        const resultError: ResponseError = {
+        const resultError: ResultError = {
             originResponse: response,
             message: `[${status}]${response.statusText}`,
             code: status,

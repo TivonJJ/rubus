@@ -168,6 +168,22 @@ export default {
             res.send(mockUserList)
         }
     },
+    'POST /api/basis/user/update':(req:Request,res:Response)=>{
+        const user = mockUserList.data.find(item=>item.user_id==req.body.user_id);
+        if(user)Object.assign(user,req.body)
+        res.send({
+            code: 0,
+            data: []
+        });
+    },
+    'POST /api/basis/user/create':(req:Request,res:Response)=>{
+        const user = {...req.body,user_id: Date.now()};
+        mockUserList.data.unshift(user)
+        res.send({
+            code: 0,
+            data: []
+        });
+    },
     'POST /api/role/list':(req:Request,res:Response)=>{
         if(req.body.status){
             const list = mockRoleList.data.filter(item=>item.status==req.body.status);
@@ -179,9 +195,47 @@ export default {
             res.send(mockRoleList)
         }
     },
+    'POST /api/basis/role/updateStatus':(req:Request,res:Response)=>{
+        const role = mockRoleList.data.find(item=>item.role_id==req.body.role_id);
+        if(role)role.status = req.body.status;
+        res.send({
+            code: 0,
+            data: [],
+        })
+    },
+    'POST /api/basis/role/update':(req:Request,res:Response)=>{
+        const role = mockRoleList.data.find(item=>item.role_id==req.body.role_id);
+        if(role)Object.assign(role,req.body)
+        res.send({
+            code: 0,
+            data: [],
+        })
+    },
+    'POST /api/basis/role/add':(req:Request,res:Response)=>{
+        const role = {
+            status: 1,
+            ...req.body,
+            role_id: Date.now(),
+        }
+        mockRoleList.data.unshift(role);
+        res.send({
+            code: 0,
+            data: [],
+        })
+    },
+    'POST /api/basis/role/delete':(req:Request,res:Response)=>{
+        const index = mockRoleList.data.findIndex(item=>item.role_id==req.body.role_id);
+        if(index!==-1)mockRoleList.data.splice(index,1)
+        res.send({
+            code: 0,
+            data: [],
+        })
+    },
+    'POST /api/basis/role/detail':mockResByRole,
+    'POST /api/basis/role/roleUserList':{"code":"0","data":[{"able_alloc_userlist":[{"user_id":168,"description":null,"real_name":"叶翠浩","username":"15680461057","status":1}],"already_alloc_userlist":[{"user_id":136,"description":null,"real_name":"李切","username":"15002875942","status":1},{"user_id":137,"description":null,"real_name":"杨俊","username":"13618008806","status":1},{"user_id":140,"description":null,"real_name":"萨达","username":"baoxiaoja@qq.com","status":1},{"user_id":142,"description":null,"real_name":"灰灰","username":"18180845520","status":1},{"user_id":145,"description":null,"real_name":"温婷婷","username":"13709022973","status":1},{"user_id":146,"description":null,"real_name":"黎煜平","username":"17308022624","status":1},{"user_id":153,"description":null,"real_name":"罗振宇","username":"13980995624","status":1},{"user_id":161,"description":null,"real_name":"胡柯","username":"18682752475","status":1},{"user_id":162,"description":null,"real_name":"魏东梅","username":"18180736630","status":1},{"user_id":164,"description":null,"real_name":"李希西","username":"18227983407","status":1},{"user_id":166,"description":null,"real_name":"王煜翔","username":"18382988505","status":1},{"user_id":170,"description":null,"real_name":"唐闻","username":"13072825383","status":1},{"user_id":172,"description":null,"real_name":"薛辉","username":"15282376798","status":1},{"user_id":178,"description":null,"real_name":"陶凯","username":"13730600285","status":1},{"user_id":180,"description":null,"real_name":"邬中萍","username":"13678495612","status":1},{"user_id":181,"description":null,"real_name":"程仕磊","username":"15378194572","status":1},{"user_id":184,"description":null,"real_name":"杨志钊","username":"18482105374","status":1},{"user_id":187,"description":null,"real_name":"yang","username":"18482105377","status":1},{"user_id":188,"description":null,"real_name":"刘志刚","username":"15801206388","status":1},{"user_id":189,"description":null,"real_name":"huke812@163.com","username":"15002876578","status":1}]}],"msg":"success","psn":"10281407009919090350","total":1},
+    'POST /api/basis/role/allocRole': {code: 0,data:[]},
     'POST /api/resource/list':mockResource,
     'POST /api/basis/resource/list':mockResource,
-    'POST /api/basis/role/detail':mockResByRole,
     'POST /api/basis/resource/addOrUpdate':(req:Request,res:Response)=>{
         const list = req.body.res_list;
         fs.writeFile(require('path').join(__dirname,'menu.json'),

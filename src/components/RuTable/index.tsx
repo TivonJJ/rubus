@@ -20,12 +20,11 @@ export interface RuTableActionType {
 declare type ParamsType = {
     [key: string]: any;
 };
-export type RuColumns = ProColumns;
-export type RuColumnType = ProColumnType;
-export type ColumnsState = ProColumnsState;
+export declare type RuColumns<T = any> = ProColumns<T>;
+export type RuColumnType<T = unknown> = ProColumnType<T>;
+export type RuColumnsState = ProColumnsState;
 export interface RuTableProp<T extends {}, U extends ParamsType> extends ProTableProps<T, U> {
     id?: string
-    pagePropsMap?: { current: string, pageSize: string }
     onRequest?: (params: U & {
         pageSize?: number;
         current?: number;
@@ -39,12 +38,12 @@ export interface RuTableProp<T extends {}, U extends ParamsType> extends ProTabl
     removeRequestParamsEmptyAttribute?: boolean
 }
 
-export type TableInstance = {
+export type RuTableInstance = {
     actionRef?: RuTableActionType;
     formRef?: FormInstance;
 } | undefined | null
 
-const tableInstanceSet: {[name:string]:TableInstance} = {};
+const tableInstanceSet: {[name:string]:RuTableInstance} = {};
 
 const RuTable = <T extends {}, U extends ParamsType>(
     props: RuTableProp<T, U>,
@@ -53,6 +52,9 @@ const RuTable = <T extends {}, U extends ParamsType>(
     const insideActionRef = useRef();
     const insideFormRef = useRef();
     useEffect(() => {
+        if(props.id && tableInstanceSet[props.id]){
+            throw new Error(`${props.id} is already exist`);
+        }
         if (actionRef) {
             if (typeof actionRef === 'function') {
                 actionRef(insideActionRef.current as any);
@@ -131,11 +133,11 @@ RuTable.defaultProps = {
     removeRequestParamsEmptyAttribute: true
 };
 
-RuTable.getTable=(name:string):TableInstance=>{
+RuTable.getTable=(name:string):RuTableInstance=>{
     return tableInstanceSet[name];
 }
 
-RuTable.getTables = (name?: string[]):TableInstance[] => {
+RuTable.getTables = (name?: string[]):RuTableInstance[] => {
     if (!name) return Object.values(tableInstanceSet);
     return name.map(item => item ? tableInstanceSet[item] : null).filter(ref => ref != null);
 };

@@ -51,26 +51,26 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
 
     return (
         <Card bordered={false} className={styles.container}>
-            <img className={styles.logo} src={logo} alt='logo'/>
-            <Form form={form} onFinish={login} className={styles.loginForm} size="large">
+            <img className={styles.logo} src={logo} alt={"logo"}/>
+            <Form form={form} onFinish={login} className={styles.loginForm} size={"large"}>
                 {error ?
-                    <Alert message={error} type="error" className={styles.error} showIcon />
+                    <Alert message={error} type={"error"} className={styles.error} showIcon />
                     :
                     null
                 }
                 <Form.Item
-                    name="username"
+                    name={"username"}
                     rules={[{required: true, message: '请输入账号'}]}
                 >
-                    <Input placeholder="登录名" prefix={<UserOutlined />} />
+                    <Input placeholder={"登录名"} prefix={<UserOutlined />} />
                 </Form.Item>
                 <Form.Item
-                    name="password"
+                    name={"password"}
                     rules={[{required: true, message: '请输入密码'}]}
                 >
-                    <Input type="password" placeholder="密码" prefix={<LockOutlined />} />
+                    <Input type={"password"} placeholder={"密码"} prefix={<LockOutlined />} />
                 </Form.Item>
-                <div className="margin-sm_bottom">
+                <div className={"margin-sm_bottom"}>
                     <Checkbox
                         checked={isCatchUserAcc}
                         onChange={e=>{setIsCatchUserAcc(e.target.checked)}}
@@ -79,7 +79,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                     </Checkbox>
                 </div>
                 <Form.Item>
-                    <Button type="primary" loading={props.logging} block htmlType="submit">登录</Button>
+                    <Button type={"primary"} loading={props.logging} block htmlType={"submit"}>登录</Button>
                 </Form.Item>
             </Form>
         </Card>

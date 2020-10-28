@@ -65,7 +65,7 @@ const Menus:React.FC<PropsType> = (props)=>{
     }
     return (
         <Card bordered={false}>
-            <Prompt message="数据未保存，离开页面后当前修改的信息会丢失，是否确定离开" when={menuChanged} />
+            <Prompt message={"数据未保存，离开页面后当前修改的信息会丢失，是否确定离开"} when={menuChanged} />
             <Spin spinning={fetching || saving}>
                 <Toolbar onSave={onSave} />
                 <Row gutter={12}>

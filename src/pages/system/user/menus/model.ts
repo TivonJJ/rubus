@@ -1,4 +1,4 @@
-import { getMenus, setMenus } from "@/services/system"
+import { getMenus, setMenus } from "@/services/systemAccounts"
 import { Effect, Reducer } from 'umi';
 import { MenuList, MenuItem, loop, recombineTreesDNA, treeToPlan } from '@/utils/menu';
 import { parseJSONSafe } from '@/utils/utils';

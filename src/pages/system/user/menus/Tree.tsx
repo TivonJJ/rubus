@@ -5,13 +5,8 @@ import { ConnectProps, ConnectState } from '@/models/connect';
 import { loop, MenuItem, MenuList, recombineTreesDNA } from '@/utils/menu';
 import { DataNode } from 'antd/lib/tree';
 import debounce from 'lodash/debounce'
-import {
-    FolderOpenOutlined,
-    LinkOutlined,
-    PlayCircleOutlined,
-    NotificationOutlined,
-    PlusCircleOutlined,
-} from '@ant-design/icons';
+import { PlusCircleOutlined } from '@ant-design/icons';
+import { TypeIconMap } from '@/constants/menu';
 import {SysUserMenusModelState} from './model';
 import TreeItem from './TreeItem';
 
@@ -22,13 +17,6 @@ type IConnectState = ConnectState & {
 export interface ITreeProps extends ConnectProps{
     sysUserMenusModel: SysUserMenusModelState;
     onSelect:(menu:MenuItem,key:string)=>void
-}
-
-const TypesIconMap = {
-    'Folder': <FolderOpenOutlined />,
-    'Menu': <LinkOutlined />,
-    'Action': <PlayCircleOutlined />,
-    'StatusBar': <NotificationOutlined />,
 }
 
 const loopMenu = (data:MenuList, key:string, callback:(item:MenuItem,index:number,arr:MenuList)=>void) => {
@@ -83,7 +71,7 @@ const Tree:React.FC<ITreeProps>=(props)=>{
                         onInsert={onInsert}
                         onDel={onDel}
                     />,
-                icon: TypesIconMap[item.type],
+                icon: React.createElement(TypeIconMap[item.type]),
                 children: adaptMenuData(item.children||[])
             }
         })

@@ -110,10 +110,28 @@ each(@margin-both-direction, {
     display: none;
 }
 
-// card
 .card-group {
     .ant-card:not(:last-child) {
         margin-bottom: @margin-md;
+    }
+}
+
+.btn-group {
+    > button, .button {
+        &:not(:last-child) {
+            margin-right: @margin-sm;
+        }
+    }
+}
+
+.link-group {
+    > a, > .link{
+        &:not(:last-child)::after {
+            margin-right: 6px;
+            margin-left: 4px;
+            border-right: 1px solid @grey-light;
+            content: ' ';
+        }
     }
 }
 
@@ -123,7 +141,7 @@ each(@margin-both-direction, {
         border: 0;
         border-radius: 4px;
 
-        .ant-radio-inner{
+        .ant-radio-inner {
             display: none;
         }
 

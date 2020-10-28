@@ -84,10 +84,10 @@ const Form:React.FC<IFormProps>=(props)=>{
             {selectedMenu&&
                 <>
                     <AntForm.Item
-                        label="类型"
-                        name="type"
+                        label={"类型"}
+                        name={"type"}
                         rules={[{required:true}]}
-                        initialValue="Folder"
+                        initialValue={"Folder"}
                     >
                         <Radio.Group>
                             {Object.keys(Types).map(type=>(
@@ -98,26 +98,26 @@ const Form:React.FC<IFormProps>=(props)=>{
                         </Radio.Group>
                     </AntForm.Item>
                     <AntForm.Item
-                        label="名称"
-                        name="name"
+                        label={"名称"}
+                        name={"name"}
                         rules={[{required:true}]}
                     >
-                        <GlobalLangInput placeholder="资源名称、菜单标题"/>
+                        <GlobalLangInput placeholder={"资源名称、菜单标题"}/>
                     </AntForm.Item>
                     <AntForm.Item
-                        label="资源地址"
-                        name="path"
+                        label={"资源地址"}
+                        name={"path"}
                         rules={[{required:true}]}
                     >
-                        <Input placeholder="当前资源的相对地址"/>
+                        <Input placeholder={"当前资源的相对地址"}/>
                     </AntForm.Item>
                     <AntForm.Item
-                        label="图标"
-                        name="icon"
+                        label={"图标"}
+                        name={"icon"}
                         rules={[{ required: requireIcon }]}
                     >
                         <Select
-                            placeholder="选择资源的图标，菜单图标会展示在名字上"
+                            placeholder={"选择资源的图标，菜单图标会展示在名字上"}
                             allowClear
                             showSearch
                             filterOption={(input, option) =>
@@ -135,15 +135,15 @@ const Form:React.FC<IFormProps>=(props)=>{
                         </Select>
                     </AntForm.Item>
                     <AntForm.Item
-                        label="备注"
-                        name="description"
+                        label={"备注"}
+                        name={"description"}
                     >
-                        <Input.TextArea placeholder="自定义备注信息" allowClear/>
+                        <Input.TextArea placeholder={"自定义备注信息"} allowClear/>
                     </AntForm.Item>
                     <AntForm.Item
-                        label="启用"
-                        name="status"
-                        valuePropName="checked"
+                        label={"启用"}
+                        name={"status"}
+                        valuePropName={"checked"}
                     >
                         <FormItemInterceptor
                             pipes={FormItemInterceptor.Pipes.Bool2Number(1,2)}

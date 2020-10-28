@@ -29,7 +29,7 @@ const TreeItem:React.FC<ITreeItemProps> = (props)=>{
         const afterStr = name.substr(index + highlight.length);
         if(index > -1){
             renderName = (
-                <div className="inline-block">
+                <div className={"inline-block"}>
                     {beforeStr}
                     <span style={{ color: '#f50' }}>{highlight}</span>
                     {afterStr}
@@ -46,7 +46,7 @@ const TreeItem:React.FC<ITreeItemProps> = (props)=>{
                     <MinusCircleOutlined onClick={()=>selectedMenu&&onDel(selectedMenu)} />
                     <Dropdown
                         trigger={["click"]}
-                        placement="bottomCenter"
+                        placement={"bottomCenter"}
                         overlay={
                             <Menu>
                                 <Menu.Item>

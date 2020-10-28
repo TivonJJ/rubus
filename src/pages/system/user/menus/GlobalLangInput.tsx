@@ -38,7 +38,7 @@ const GlobalLangInput:React.FC<IGlobalLangInputProps> = (props)=>{
                 onClick={showModal}
             />
             <Modal
-                title="全球化名称"
+                title={"全球化名称"}
                 visible={modalVisible}
                 onCancel={hideModal}
                 onOk={handleOk}

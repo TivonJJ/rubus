@@ -1,24 +1,30 @@
 import React, { useRef } from 'react';
 import { Radio, Button } from 'antd';
-import RuTable, { RuColumns } from '@/components/RuTable';
+import RuTable, { RuColumns, RuTableActionType } from '@/components/RuTable';
 import { Status } from '@/constants/account';
-import { getAccounts } from '@/services/system';
+import { getAccounts } from '@/services/systemAccounts';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormInstance } from 'antd/lib/form';
+import Upsert from './Upsert';
+import { ResetPassword, ChangeStatus, Remove } from './Operate';
 
 const Accounts:React.FC = ()=>{
+    const formActionRef = useRef<FormInstance>()
+    const actionRef = useRef<RuTableActionType>()
+    const refresh = ()=>{
+        actionRef.current?.reload();
+    }
     const columns:RuColumns[] = [
         {
             title: '状态',
             dataIndex: 'status',
+            width: 100,
             valueEnum: Status,
             initialValue: '',
-
-            filters: true,
             renderFormItem:(_, { type, defaultRender, ...rest })=>{
                 return (
-                    <Radio.Group {...rest} className="button-radios">
-                        <Radio value="">全部</Radio>
+                    <Radio.Group {...rest} className={"button-radios"}>
+                        <Radio value={""}>全部</Radio>
                         {Object.keys(Status).map(key=>(
                             <Radio key={key} value={key}>{Status[key].text}</Radio>
                         ))}
@@ -31,7 +37,11 @@ const Accounts:React.FC = ()=>{
             dataIndex: 'username',
             search: false,
             render:(dom,col)=>{
-                return <a onClick={()=>console.log(col)}>{dom}</a>
+                return (
+                    <Upsert data={col} refresh={refresh}>
+                        <a>{dom}</a>
+                    </Upsert>
+                )
             }
         },
         {
@@ -53,26 +63,32 @@ const Accounts:React.FC = ()=>{
             title: '操作',
             key: 'option',
             valueType: 'option',
-            render:()=>{
+            render:(value,col)=>{
                 return (
-                    <a>111</a>
+                    <div className={"link-group"}>
+                        <ResetPassword data={col} refresh={refresh} />
+                        <ChangeStatus data={col} refresh={refresh} />
+                        <Remove data={col} refresh={refresh} />
+                    </div>
                 )
             }
         },
     ]
-    const formActionRef = useRef<FormInstance>()
     return (
-        <div className="card-group">
+        <div className={"card-group"}>
             <RuTable
-                headerTitle="账号列表"
+                headerTitle={"账号列表"}
                 formRef={formActionRef}
+                actionRef={actionRef}
                 columns={columns}
                 request={getAccounts}
-                rowKey="user_id"
+                rowKey={"user_id"}
                 toolBarRender={() => [
-                    <Button key="3" icon={<PlusOutlined />} type="primary">
-                        新建
-                    </Button>,
+                    <Upsert key={"new"} refresh={refresh}>
+                        <Button key={"3"} icon={<PlusOutlined />} type={"primary"}>
+                            新建
+                        </Button>
+                    </Upsert>
                 ]}
                 options={{
                     search: { allowClear:true },
