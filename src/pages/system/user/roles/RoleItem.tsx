@@ -3,11 +3,11 @@ import React from 'react';
 import { UserSwitchOutlined, PlusOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import { delRole, setRoleStatus } from '@/services/systemAccounts';
+import Ellipsis from '@/components/Ellipsis';
 import { RoleType } from './model';
 import styles from './style.less';
 import Upsert from './Upsert';
 import AssignAccounts from './AssignAccounts';
-import Ellipsis from '@/components/Ellipsis';
 
 interface RoleItemPropTypes {
     role?: RoleType;

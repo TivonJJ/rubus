@@ -1,5 +1,6 @@
 import classNames from 'classnames';
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, MouseEventHandler } from 'react';
+import { Popover } from 'antd';
 import styles from './index.less';
 
 export interface EllipsisProps {
@@ -13,20 +14,24 @@ export interface EllipsisProps {
     tooltip?: boolean;
     style?: CSSProperties;
     className?: string;
+    onClick?: MouseEventHandler;
 }
 
 const Ellipsis: React.FC<EllipsisProps> = (props) => {
-    return (
+    const { style, className, children, onClick, line, tooltip } = props;
+    const content = (
         <div
-            className={classNames(styles.ellipsis, props.className)}
+            className={classNames(styles.ellipsis, className)}
+            onClick={onClick}
             style={{
-                ...props.style,
-                WebkitLineClamp: props.line,
+                ...style,
+                WebkitLineClamp: line,
             }}
         >
-            {props.children}
+            {children}
         </div>
     );
+    return tooltip ? <Popover content={children}>{content}</Popover> : content;
 };
 
 export default Ellipsis;

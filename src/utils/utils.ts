@@ -47,6 +47,7 @@ export function removeEmptyProperty(
     });
     return obj;
 }
+
 /**
  * 移除对象中指定的属性
  * @param obj 操作对象
@@ -60,6 +61,7 @@ export const removeProperties = (obj: AnyObject, shouldRemoveProps: string[] = [
     });
     return obj;
 };
+
 // 数组去重
 export function unique(arr: any[]): any[] {
     arr.sort(); // 先排序
@@ -71,6 +73,7 @@ export function unique(arr: any[]): any[] {
     }
     return res;
 }
+
 // 判断是否Promise对象
 export function isPromise(obj: any): boolean {
     return (
@@ -87,6 +90,7 @@ export function isPromise(obj: any): boolean {
 export function getResourcePath(path: string): string {
     return joinPath(AppStartArgs.basePath, path);
 }
+
 // 获取两个时间的间隔，自动格化式显示
 export function durationDate(pre: MomentInput, next: MomentInput): string | null {
     if (!pre || !next) return null; // 缺少开始或结束时间都返回空
@@ -105,6 +109,7 @@ export function zeroize(text: string, count: number): string | null {
     if (text == null) return null;
     return (Array(count).join('0') + text).slice(-count);
 }
+
 // 常见类型转换为布尔值
 export function toBoolean(val: any): boolean {
     if (typeof val === 'boolean') return val;
@@ -127,6 +132,7 @@ export function toBoolean(val: any): boolean {
 export interface DefaultPaginationProps extends PaginationProps {
     data?: any[];
 }
+
 // 创建一个默认的分页对象
 export function createPagination(props: DefaultPaginationProps = {}) {
     const {
@@ -167,6 +173,7 @@ export interface ObjectProsMappingConfig {
     deep?: boolean;
     reverse?: boolean;
 }
+
 /**
  * 对象字段名映射转换
  * @param source
@@ -239,4 +246,26 @@ export const ellipsisText = (text: string, maxlength: number = Infinity): string
         return `${text.substring(0, maxlength)}...`;
     }
     return text;
+};
+/**
+ * 隐藏铭感信息
+ * @param content
+ * @param options
+ */
+export const maskText = (
+    content: string,
+    options: { start?: number; end?: number; mask: string; maskCount?: number },
+) => {
+    if (!content) return '';
+    const { start = 0, end = 0, mask = '*', maskCount } = options;
+    const startText = content.substr(0, start);
+    const endText = content.substr(content.length - end);
+    let count = maskCount;
+    if (!count) count = content.length - start - end;
+    let str = startText;
+    for (let i = 0; i < count; i++) {
+        str += mask;
+    }
+    str += endText;
+    return str;
 };
