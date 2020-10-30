@@ -4,17 +4,14 @@ import joinPath from 'join-path';
 
 const baseURL: string = '/api';
 
-
 export interface ResponseError {
-    originResponse: AxiosResponse
-    code?: number | string
-    message?: string
-    data?: any
-    type: 'ResponseError'
-    preventDefault: ()=>any
+    originResponse: AxiosResponse;
+    code?: number | string;
+    message?: string;
+    data?: any;
+    type: 'ResponseError';
+    preventDefault: () => any;
 }
-
-type ResultError = Omit<ResponseError, 'preventDefault'>
 
 function getStore() {
     const app = getDvaApp();
@@ -31,40 +28,44 @@ function createDefaultRequest() {
         config.headers['Accept-Language'] = getLocale();
         return config;
     });
-    instance.interceptors.response.use((response: AxiosResponse) => {
-        const { data } = response;
-        if (data && data.code != 0) {
-            if (data.code === 'SYS010') {// 未登录或登录超时
-                getStore().dispatch({
-                    type: 'user/logout',
-                    payload: {
-                        takeRouteInfo: true,
-                    },
-                });
+    instance.interceptors.response.use(
+        (response: AxiosResponse) => {
+            const { data } = response;
+            if (data && data.code != 0) {
+                if (data.code === 'SYS010') {
+                    // 未登录或登录超时
+                    getStore().dispatch({
+                        type: 'user/logout',
+                        payload: {
+                            takeRouteInfo: true,
+                        },
+                    });
+                }
+                const resultError: Partial<ResponseError> = {
+                    code: data.code,
+                    message: typeof data === 'object' ? data.msg : data,
+                    originResponse: response,
+                    type: 'ResponseError',
+                };
+                return Promise.reject(resultError);
             }
-            const resultError:ResultError = {
-                code: data.code,
-                message: typeof data==='object'?data.msg:data,
+            return data;
+        },
+        (err) => {
+            if (err instanceof Error) {
+                return Promise.reject(err);
+            }
+            const { response } = err;
+            const { status } = response;
+            const resultError: Partial<ResponseError> = {
                 originResponse: response,
+                message: `[${status}]${response.statusText}`,
+                code: status,
                 type: 'ResponseError',
             };
             return Promise.reject(resultError);
-        }
-        return data;
-    }, (err) => {
-        if (err instanceof Error) {
-            return Promise.reject(err);
-        }
-        const { response } = err;
-        const { status } = response;
-        const resultError: ResultError = {
-            originResponse: response,
-            message: `[${status}]${response.statusText}`,
-            code: status,
-            type: 'ResponseError',
-        };
-        return Promise.reject(resultError);
-    });
+        },
+    );
     return instance;
 }
 

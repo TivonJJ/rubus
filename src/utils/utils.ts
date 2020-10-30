@@ -261,6 +261,7 @@ export const maskText = (
     const startText = content.substr(0, start);
     const endText = content.substr(content.length - end);
     let count = maskCount;
+    // 如果不穿maskCount取截取字符的长度
     if (!count) count = content.length - start - end;
     let str = startText;
     for (let i = 0; i < count; i++) {
