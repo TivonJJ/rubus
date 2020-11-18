@@ -1,8 +1,8 @@
 import React from 'react';
 import ProForm, { DrawerForm, ProFormText, ProFormSelect } from '@ant-design/pro-form';
-import { createAccount, getRoles, updateAccount } from '@/services/systemAccounts';
 import { message } from 'antd';
 import { RoleType } from '@/pages/system/user/roles/model';
+import { createAccount, getRoles, updateAccount } from './service';
 
 export interface UpsertProps {
     data?: AnyObject;

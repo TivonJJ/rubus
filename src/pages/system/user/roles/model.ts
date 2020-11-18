@@ -1,12 +1,12 @@
 import { Effect, Reducer } from 'umi';
-import { createRole, getRoles, updateRole } from '@/services/systemAccounts';
+import { createRole, getRoles, updateRole } from './service';
 
 export interface RoleType {
-    role_user_count: number
-    role_id?: number | string
-    status?: number | string
-    description: string
-    role_name: string
+    role_user_count: number;
+    role_id?: number | string;
+    status?: number | string;
+    description: string;
+    role_name: string;
 }
 export interface SysAccountRolesModelState {
     roles: RoleType[];
@@ -23,31 +23,31 @@ export interface SysAccountRolesModelType {
     };
 }
 
-const SysAccountRolesModel:SysAccountRolesModelType = {
+const SysAccountRolesModel: SysAccountRolesModelType = {
     namespace: 'sysAccountRolesModel',
-    state:{
+    state: {
         roles: [],
     },
-    effects:{
-        *fetch({payload},{call,put}){
-            const res = yield call(getRoles,payload);
+    effects: {
+        *fetch({ payload }, { call, put }) {
+            const res = yield call(getRoles, payload);
             yield put({
                 type: 'updateState',
                 payload: {
-                    roles: res.data
-                }
-            })
+                    roles: res.data,
+                },
+            });
         },
-        *upsert({payload},{call}){
+        *upsert({ payload }, { call }) {
             const action = payload.role_id ? updateRole : createRole;
-            yield call(action,payload);
+            yield call(action, payload);
         },
     },
-    reducers:{
-        updateState(state,{payload}){
-            return {...state,...payload}
-        }
-    }
-}
+    reducers: {
+        updateState(state, { payload }) {
+            return { ...state, ...payload };
+        },
+    },
+};
 
 export default SysAccountRolesModel;

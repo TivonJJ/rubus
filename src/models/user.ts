@@ -1,23 +1,23 @@
-import {Effect,Reducer,history} from 'umi';
-import {login} from "@/services/user";
+import { Effect, Reducer, history } from 'umi';
+import { login } from '@/services/user';
 import { md5 } from '@/utils/utils';
 import { MenuList, convertResourceMenu } from '@/utils/menu';
 import CookieStore from '@/utils/CookieStore';
 
 export interface UserModel {
-    id: string | number
-    username: string
-    name: string
-    menu?: MenuList
-    defaultRouteMenuId?: number | string,
-    roleId?: number | string,
-    status?: number | string,
-    avatar?: string
+    id: string | number;
+    username: string;
+    name: string;
+    menu?: MenuList;
+    defaultRouteMenuId?: number | string;
+    roleId?: number | string;
+    status?: number | string;
+    avatar?: string;
 }
 export interface UserModelState {
-    currentUser?: UserModel | null;
+    currentUser?: UserModel;
 }
-export interface UserModelType {
+export interface UserStoreModelType {
     namespace: 'user';
     state: UserModelState;
     effects: {
@@ -29,56 +29,56 @@ export interface UserModelType {
     };
 }
 
-export const signPassword = (username:string, password:string):string=>{
+export const signPassword = (username: string, password: string): string => {
     return md5(username + password).toUpperCase();
 };
 
 const userCookieStore = new CookieStore('sys');
 
-const UserModel: UserModelType = {
+const UserStoreModel: UserStoreModelType = {
     namespace: 'user',
 
     state: {
-        currentUser: (()=>{
+        currentUser: (() => {
             const user = userCookieStore.get();
-            if(!user)return null;
+            if (!user) return null;
             convertResourceMenu(user.menu || []);
             return user;
         })(),
     },
 
     effects: {
-        * login({payload}, {call,put}) {
-            const user:UserModel = yield call(login, {
+        *login({ payload }, { call, put }) {
+            const user: UserModel = yield call(login, {
                 ...payload,
-                password: signPassword(payload.username,payload.password)
+                password: signPassword(payload.username, payload.password),
             });
             userCookieStore.set(user);
             convertResourceMenu(user.menu || []);
             yield put({
                 type: 'updateCurrentUser',
-                payload:user
-            })
+                payload: user,
+            });
             return user;
         },
-        * logout(_, {put}){
+        *logout(_, { put }) {
             yield put({
                 type: 'updateCurrentUser',
-                payload: null
+                payload: null,
             });
             userCookieStore.clear();
             history.push('/user/login');
-        }
+        },
     },
 
     reducers: {
-        updateCurrentUser(state, {payload}) {
+        updateCurrentUser(state, { payload }) {
             return {
                 ...state,
-                currentUser: payload
-            }
-        }
+                currentUser: payload,
+            };
+        },
     },
 };
 
-export default UserModel;
+export default UserStoreModel;

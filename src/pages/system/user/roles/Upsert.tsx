@@ -4,7 +4,7 @@ import { Form, message, Spin } from 'antd';
 import { connect, useRequest } from 'umi';
 import { ConnectProps, ConnectState } from '@/models/connect';
 import { ResponseError } from '@/utils/request';
-import { getRoleMenus } from '@/services/systemAccounts';
+import { getRoleMenus } from './service';
 import RoleTreeSelect from './RoleTreeSelect';
 import { SysAccountRolesModelState } from './model';
 
