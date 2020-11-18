@@ -14,36 +14,40 @@ const routes = [
         component: '../layouts/SecurityLayout',
         routes: [
             {
-                path:'/',
+                path: '/',
                 component: '../layouts/BasicLayout',
-                routes:[
+                routes: [
                     {
                         path: 'sys',
-                        routes:[
+                        routes: [
                             {
                                 path: 'user/accounts',
                                 component: './system/user/accounts',
                             },
                             {
                                 path: 'user/menus',
-                                component: './system/user/menus'
+                                component: './system/user/menus',
                             },
                             {
                                 path: 'user/roles',
-                                component: './system/user/roles'
-                            }
-                        ]
+                                component: './system/user/roles',
+                            },
+                        ],
+                    },
+                    {
+                        path: 'demo/components',
+                        component: './demo/Components',
                     },
                     {
                         component: './404',
                     },
-                ]
+                ],
             },
         ],
     },
     {
         component: './404',
     },
-]
+];
 
 export default routes;
