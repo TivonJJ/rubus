@@ -43,7 +43,7 @@ export interface BasicLayoutProps extends ProLayoutProps {
     };
     settings: Settings & DefaultSettings;
     dispatch: Dispatch;
-    currentUser: UserModel;
+    currentUser?: UserModel;
 }
 
 export type BasicLayoutContext = { [K in 'location']: BasicLayoutProps[K] } & {
@@ -52,13 +52,7 @@ export type BasicLayoutContext = { [K in 'location']: BasicLayoutProps[K] } & {
     };
 };
 const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
-    const {
-        dispatch,
-        children,
-        settings,
-        collapsed,
-        currentUser,
-    } = props;
+    const { dispatch, children, settings, collapsed, currentUser } = props;
     const { formatMessage } = useIntl();
 
     const handleMenuCollapse = (payload: boolean): void => {
@@ -79,12 +73,9 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
                 headerTitleRender={(logoDom, titleDom) => {
                     return (
                         <div
-                            className={
-                                classNames(
-                                    styles.mixTitle,
-                                    { [styles.mixTitleCollapsed]: collapsed },
-                                )
-                            }
+                            className={classNames(styles.mixTitle, {
+                                [styles.mixTitleCollapsed]: collapsed,
+                            })}
                             style={{ width: collapsed ? '' : settings.siderWidth }}
                         >
                             {logoDom}
@@ -115,7 +106,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
                     );
                 }}
                 footerRender={() => <GlobalFooter />}
-                menuDataRender={() => convertMenuToMenuRenderData(currentUser.menu || [])}
+                menuDataRender={() => convertMenuToMenuRenderData(currentUser?.menu || [])}
                 rightContentRender={() => <RightContent />}
                 {...props}
                 {...settings}
@@ -128,6 +119,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
 
 export default connect(({ global, settings, user }: ConnectState) => ({
     collapsed: global.collapsed,
-    settings,
+    settings: settings as Settings & DefaultSettings,
     currentUser: user.currentUser,
-}))(BasicLayout as React.FC);
+}))(BasicLayout);

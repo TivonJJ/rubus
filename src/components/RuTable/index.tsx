@@ -9,7 +9,7 @@ import { FormInstance } from 'antd/lib/form';
 import { SortOrder } from 'antd/lib/table/interface';
 import { RequestData } from '@ant-design/pro-table/lib/useFetchData';
 import { message } from 'antd';
-import { removeEmptyProperty } from '@/utils/utils';
+import { removeEmptyProperties } from '@/utils/utils';
 
 export interface RuTableActionType {
     reload: (resetPageIndex?: boolean) => void;
@@ -103,7 +103,7 @@ const RuTable = <T extends {}, U extends ParamsType>(props: RuTableProp<T, U>) =
     const wrapRequest = request
         ? (params: any, sort: any, filter: any) => {
               if (removeRequestParamsEmptyAttribute) {
-                  params = removeEmptyProperty(params);
+                  params = removeEmptyProperties(params);
               }
               if (onRequest) {
                   params = onRequest(params, sort, filter);

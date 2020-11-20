@@ -2,37 +2,41 @@ import React, { useEffect, useRef } from 'react';
 import { Card, Col, Row, Spin } from 'antd';
 import { connect } from 'umi';
 import { ConnectProps, ConnectState } from '@/models/connect';
-import { removeEmptyProperty } from '@/utils/utils';
-import Search,{SearchRef}  from './Search';
+import { removeEmptyProperties } from '@/utils/utils';
+import Search, { SearchRef } from './Search';
 import { SysAccountRolesModelState } from './model';
 import RoleItem from './RoleItem';
-import styles from './style.less'
+import styles from './style.less';
 
 type IConnectState = ConnectState & {
-    sysAccountRolesModel: SysAccountRolesModelState
+    sysAccountRolesModel: SysAccountRolesModelState;
 };
 
 type PropsType = ConnectProps & {
-    sysAccountRolesModel: SysAccountRolesModelState
-    fetching?: boolean
-    saving?: boolean
-}
+    sysAccountRolesModel: SysAccountRolesModelState;
+    fetching?: boolean;
+    saving?: boolean;
+};
 
-const Roles:React.FC<PropsType> = (props)=>{
-    const {dispatch,sysAccountRolesModel:{roles},fetching} = props;
+const Roles: React.FC<PropsType> = (props) => {
+    const {
+        dispatch,
+        sysAccountRolesModel: { roles },
+        fetching,
+    } = props;
     const searchRef = useRef<SearchRef>();
-    const fetch = (params?:AnyObject)=>{
+    const fetch = (params?: AnyObject) => {
         dispatch({
             type: 'sysAccountRolesModel/fetch',
-            payload: removeEmptyProperty(params||{})
-        })
-    }
-    useEffect(()=>{
+            payload: removeEmptyProperties(params || {}),
+        });
+    };
+    useEffect(() => {
         fetch();
-    },[])
-    const refresh = ()=>{
-        fetch(searchRef.current?.getValues())
-    }
+    }, []);
+    const refresh = () => {
+        fetch(searchRef.current?.getValues());
+    };
     return (
         <Card bordered={false}>
             <Spin spinning={fetching}>
@@ -42,7 +46,7 @@ const Roles:React.FC<PropsType> = (props)=>{
                     <Col span={8}>
                         <RoleItem refresh={refresh} />
                     </Col>
-                    {roles.map(role=>(
+                    {roles.map((role) => (
                         <Col span={8} key={role.role_id}>
                             <RoleItem role={role} refresh={refresh} />
                         </Col>
@@ -50,10 +54,10 @@ const Roles:React.FC<PropsType> = (props)=>{
                 </Row>
             </Spin>
         </Card>
-    )
-}
+    );
+};
 
-export default connect(({loading,sysAccountRolesModel}:IConnectState)=>({
+export default connect(({ loading, sysAccountRolesModel }: IConnectState) => ({
     fetching: loading.effects['sysAccountRolesModel/fetch'],
-    sysAccountRolesModel
+    sysAccountRolesModel,
 }))(Roles);

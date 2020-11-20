@@ -9,45 +9,53 @@ import { IconMap } from '@/constants/menu';
 export type MenuTypes = 'Folder' | 'Menu' | 'Action' | 'StatusBar';
 
 export interface MenuItem {
-    id: number
-    name: string | AnyObject
-    type: MenuTypes
-    dnaStr: string
-    dna: number[]
-    icon?: string
-    status?: number | boolean
-    path?: string
-    description?: string
-    children?: MenuItem[]
-    updateTime?: string
+    id: number;
+    name: string | AnyObject;
+    type: MenuTypes;
+    dnaStr: string;
+    dna: number[];
+    icon?: string;
+    status?: number | boolean;
+    path?: string;
+    description?: string;
+    children?: MenuItem[];
+    updateTime?: string;
 }
 
 export type MenuList = MenuItem[] & {
-    pathMap?: { [path: string]: MenuItem }
-    dnaMap?: { [dna: string]: MenuItem }
-}
+    pathMap?: { [path: string]: MenuItem };
+    dnaMap?: { [dna: string]: MenuItem };
+};
 /**
  *  菜单资源字段转换映射，使字段名一致
  */
 export const MenuResPropsMap = {
-    'res_id': 'id',
-    'icon_url':'icon',
-    'res_name': 'name',
-    'res_type': 'type',
-    'res_url': 'path',
-    'dna': 'dnaStr',
-}
+    res_id: 'id',
+    icon_url: 'icon',
+    res_name: 'name',
+    res_type: 'type',
+    res_url: 'path',
+    dna: 'dnaStr',
+};
 /**
  * 遍历菜单树或菜单数组
  * @param menu
  * @param callback
  */
-export function loop(menu: MenuList, callback: (item: MenuItem, index: number, parent: MenuItem | undefined,arr:MenuItem[]) => boolean|void):MenuList {
+export function loop(
+    menu: MenuList,
+    callback: (
+        item: MenuItem,
+        index: number,
+        parent: MenuItem | undefined,
+        arr: MenuItem[],
+    ) => boolean | void,
+): MenuList {
     function doEach(data: MenuList, parent?: MenuItem) {
-        for(let i=0;i<data.length;i++){
+        for (let i = 0; i < data.length; i++) {
             const item = data[i];
-            const rs = callback(item, i, parent,data);
-            if(rs===false){
+            const rs = callback(item, i, parent, data);
+            if (rs === false) {
                 break;
             }
             if (item.children) {
@@ -66,7 +74,7 @@ export function loop(menu: MenuList, callback: (item: MenuItem, index: number, p
  */
 export function planToTree(tileData: MenuList): MenuList {
     const tree: { children: MenuList } = { children: [] };
-    tileData.forEach(item => {
+    tileData.forEach((item) => {
         const dna = item.dnaStr || '0';
         const chain = dna.split('-');
         item.dna = [];
@@ -110,7 +118,7 @@ export function treeToPlan(menus: MenuList): MenuList {
 export function recombineTreesDNA(menus: MenuList) {
     loop(menus, (item, index, parent) => {
         const dna = parent ? parent.dna : [];
-        const newDna = [...dna,index]
+        const newDna = [...dna, index];
         item.dna = newDna;
         item.dnaStr = newDna.join('-');
     });
@@ -125,7 +133,7 @@ export function convertResourceMenu(menus: MenuList): MenuList {
     loop(menus, (menu, index, parent) => {
         const path = parent ? joinPath('/', parent.path, menu.path) : joinPath('/', menu.path);
         menu.path = path;
-        menu.name = parseJSONSafe(menu.name,{});
+        menu.name = parseJSONSafe(menu.name, {});
     });
     return extendResourceMenuMapping(menus);
 }
@@ -134,7 +142,7 @@ export function convertResourceMenu(menus: MenuList): MenuList {
  * 扩展menu的Map映射
  * @param menus
  */
-export function extendResourceMenuMapping(menus: MenuList): MenuList{
+export function extendResourceMenuMapping(menus: MenuList): MenuList {
     const routeMap: AnyObject = {};
     const dnaMap: AnyObject = {};
     loop(menus, (menu) => {
@@ -151,9 +159,11 @@ export function extendResourceMenuMapping(menus: MenuList): MenuList{
  */
 export function convertMenuToMenuRenderData(menus: MenuList): MenuDataItem[] {
     return menus.map((menu) => {
-        const IconComp:React.ComponentClass|string = menu.icon ? IconMap[menu.icon] || menu.icon : null;
+        const IconComp: React.ComponentClass | string = menu.icon
+            ? IconMap[menu.icon] || menu.icon
+            : null;
         let icon;
-        if(IconComp){
+        if (IconComp) {
             if (typeof IconComp === 'string') {
                 icon = IconComp;
             } else {
@@ -176,10 +186,10 @@ export function convertMenuToMenuRenderData(menus: MenuList): MenuDataItem[] {
  * @param menus
  * @param menuId
  */
-export function getFirstAccessibleMenu(menus: MenuList, menuId?: number|string): MenuItem | null {
+export function getFirstAccessibleMenu(menus: MenuList, menuId?: number | string): MenuItem | null {
     let foundMenu: MenuItem | null = null;
     loop(menus, (item) => {
-        if (item.status == true && item.type === 'Folder') {
+        if (item.status == true && (item.type === 'Folder' || item.type === 'Menu')) {
             if (menuId) {
                 if (menuId == item.id) {
                     foundMenu = item;
@@ -187,7 +197,7 @@ export function getFirstAccessibleMenu(menus: MenuList, menuId?: number|string):
             } else {
                 foundMenu = item;
             }
-            if(foundMenu){
+            if (foundMenu) {
                 return false;
             }
         }

@@ -35,11 +35,13 @@ const routes = [
                         ],
                     },
                     {
-                        path: 'demo/components',
-                        component: './demo/Components',
-                    },
-                    {
-                        component: './404',
+                        path: 'demo',
+                        routes: [
+                            {
+                                path: 'components',
+                                component: './demo/components/index',
+                            },
+                        ],
                     },
                 ],
             },

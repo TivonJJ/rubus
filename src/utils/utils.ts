@@ -1,11 +1,6 @@
-import { parse } from 'querystring';
 import crypto from 'crypto';
 import joinPath from 'join-path';
-import moment, { MomentInput } from 'moment';
-import { PaginationProps } from 'antd/lib/pagination';
 
-// 获取页面Query参数
-export const getPageQuery = () => parse(window.location.href.split('?')[1]);
 /**
  * MD5加密
  * @param text
@@ -23,14 +18,19 @@ export const md5 = (text: string, digestType: 'latin1' | 'hex' | 'base64' = 'hex
  * @param options
  * @returns {*}
  */
-export function removeEmptyProperty(
+export function removeEmptyProperties(
     obj: { [key: string]: any },
-    options: { ignores?: string[]; trim?: boolean } = {},
+    options: {
+        ignores?: string[];
+        trim?: boolean;
+        deep?: boolean;
+    } = {},
 ): object | null {
     if (!obj) return null;
     Object.keys(obj).forEach((key) => {
+        const { ignores, deep = true } = options;
         let val = obj[key];
-        if (options.ignores && options.ignores.indexOf(key) !== -1) {
+        if (ignores && ignores.indexOf(key) !== -1) {
             return;
         }
         if (options.trim && typeof val === 'string') {
@@ -41,8 +41,8 @@ export function removeEmptyProperty(
             obj[key] = undefined;
             delete obj[key];
         }
-        if (typeof val === 'object') {
-            removeEmptyProperty(val, options);
+        if (deep && typeof val === 'object') {
+            removeEmptyProperties(val, options);
         }
     });
     return obj;
@@ -62,7 +62,10 @@ export const removeProperties = (obj: AnyObject, shouldRemoveProps: string[] = [
     return obj;
 };
 
-// 数组去重
+/**
+ * 数组去重
+ * @param arr
+ */
 export function unique(arr: any[]): any[] {
     arr.sort(); // 先排序
     const res = [arr[0]];
@@ -74,7 +77,10 @@ export function unique(arr: any[]): any[] {
     return res;
 }
 
-// 判断是否Promise对象
+/**
+ * 判断是否Promise对象
+ * @param obj
+ */
 export function isPromise(obj: any): boolean {
     return (
         !!obj &&
@@ -91,15 +97,6 @@ export function getResourcePath(path: string): string {
     return joinPath(AppStartArgs.basePath, path);
 }
 
-// 获取两个时间的间隔，自动格化式显示
-export function durationDate(pre: MomentInput, next: MomentInput): string | null {
-    if (!pre || !next) return null; // 缺少开始或结束时间都返回空
-    pre = moment(pre);
-    next = moment(next);
-    if (pre.isSame(next)) return null; // 前后时间相等返回空
-    return pre.to(next, true);
-}
-
 /**
  * 补零
  * @param text 需要补零的参数
@@ -110,7 +107,10 @@ export function zeroize(text: string, count: number): string | null {
     return (Array(count).join('0') + text).slice(-count);
 }
 
-// 常见类型转换为布尔值
+/**
+ * 常见类型转换为布尔值
+ * @param val
+ */
 export function toBoolean(val: any): boolean {
     if (typeof val === 'boolean') return val;
     switch (val) {
@@ -129,35 +129,10 @@ export function toBoolean(val: any): boolean {
     }
 }
 
-export interface DefaultPaginationProps extends PaginationProps {
-    data?: any[];
-}
-
-// 创建一个默认的分页对象
-export function createPagination(props: DefaultPaginationProps = {}) {
-    const {
-        showSizeChanger = true,
-        showQuickJumper = true,
-        size = 'small',
-        pageSizeOptions = ['10', '20', '30', '40'],
-        pageSize = 20,
-        current = 1,
-        total = 0,
-        data = [],
-    } = props;
-    return {
-        ...props,
-        showSizeChanger,
-        showQuickJumper,
-        size,
-        pageSizeOptions,
-        pageSize,
-        current,
-        total,
-        data,
-    };
-}
-
+/**
+ * 翻转对象Key和Value
+ * @param obj
+ */
 export const reverseObjectKeyValue = (obj: AnyObject): AnyObject => {
     const keys = Object.keys(obj);
     const reverseObj = {};
@@ -168,12 +143,6 @@ export const reverseObjectKeyValue = (obj: AnyObject): AnyObject => {
     return reverseObj;
 };
 
-export interface ObjectProsMappingConfig {
-    keepOriginalProp?: boolean;
-    deep?: boolean;
-    reverse?: boolean;
-}
-
 /**
  * 对象字段名映射转换
  * @param source
@@ -183,7 +152,11 @@ export interface ObjectProsMappingConfig {
 export function objectPropsMapping(
     source: AnyObject | AnyObject[],
     mapping: AnyObject,
-    config: ObjectProsMappingConfig = {},
+    config: {
+        keepOriginalProp?: boolean;
+        deep?: boolean;
+        reverse?: boolean;
+    } = {},
 ): AnyObject {
     const { keepOriginalProp = false, deep = false, reverse = false } = config;
     if (reverse) {

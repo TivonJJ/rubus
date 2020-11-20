@@ -9,7 +9,15 @@
   },
   {
     "status": 1,
-    "$mark": 0.7813951909989991,
+    "$mark": 0.8913660615949752,
+    "dna": "0",
+    "res_type": "Folder",
+    "res_url": "demo",
+    "res_name": { "en-US": "Demo", "zh-CN": "演示" }
+  },
+  {
+    "status": 1,
+    "$mark": 0.36407163192067205,
     "dna": "0-0",
     "res_type": "Menu",
     "res_url": "components",

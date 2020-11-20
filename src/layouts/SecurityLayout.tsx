@@ -2,14 +2,13 @@ import React from 'react';
 import { Redirect, connect, ConnectProps } from 'umi';
 import { stringify } from 'querystring';
 import { ConnectState } from '@/models/connect';
-import { UserModel }  from '@/models/user';
+import { UserModel } from '@/models/user';
 
 interface SecurityLayoutProps extends ConnectProps {
     currentUser?: UserModel;
 }
 
 class SecurityLayout extends React.Component<SecurityLayoutProps> {
-
     render() {
         const { children, currentUser } = this.props;
         const isLogin = !!currentUser;
@@ -25,4 +24,4 @@ class SecurityLayout extends React.Component<SecurityLayoutProps> {
 
 export default connect(({ user }: ConnectState) => ({
     currentUser: user.currentUser,
-}))(SecurityLayout as React.ComponentClass<any>);
+}))(SecurityLayout);
