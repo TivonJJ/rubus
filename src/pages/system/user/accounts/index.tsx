@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Radio, Button } from 'antd';
-import RuTable, { RuColumns, RuTableActionType } from '@/components/RuTable';
+import RuTable, { RuColumns, RuActionType } from '@/components/RuTable';
 import { Status } from '@/constants/account';
 import { PlusOutlined } from '@ant-design/icons';
 import { FormInstance } from 'antd/lib/form';
@@ -9,8 +9,8 @@ import Upsert from './Upsert';
 import { ResetPassword, ChangeStatus, Remove } from './Operate';
 
 const Accounts: React.FC = () => {
-    const formActionRef = useRef<FormInstance>();
-    const actionRef = useRef<RuTableActionType>();
+    const formRef = useRef<FormInstance>();
+    const actionRef = useRef<RuActionType>();
     const refresh = () => {
         actionRef.current?.reload();
     };
@@ -80,7 +80,7 @@ const Accounts: React.FC = () => {
         <div className={'card-group'}>
             <RuTable
                 headerTitle={'账号列表'}
-                formRef={formActionRef}
+                formRef={formRef}
                 actionRef={actionRef}
                 columns={columns}
                 request={getAccounts}
@@ -97,13 +97,8 @@ const Accounts: React.FC = () => {
                 }}
                 form={{
                     onValuesChange: () => {
-                        formActionRef.current?.submit();
+                        formRef.current?.submit();
                     },
-                }}
-                search={{
-                    collapsed: false,
-                    collapseRender: () => false,
-                    optionRender: false,
                 }}
             />
         </div>

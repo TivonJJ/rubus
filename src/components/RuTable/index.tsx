@@ -4,26 +4,24 @@ import ProTable, {
     ProColumns,
     ProColumnType,
     ColumnsState as ProColumnsState,
+    RequestData,
+    ActionType,
 } from '@ant-design/pro-table';
 import { FormInstance } from 'antd/lib/form';
 import { SortOrder } from 'antd/lib/table/interface';
-import { RequestData } from '@ant-design/pro-table/lib/useFetchData';
 import { message } from 'antd';
 import { removeEmptyProperties } from '@/utils/utils';
 
-export interface RuTableActionType {
-    reload: (resetPageIndex?: boolean) => void;
-    reloadAndRest?: () => void;
-    reset?: () => void;
-    clearSelected?: () => void;
-}
-declare type ParamsType = {
-    [key: string]: any;
-};
+export type RuActionType = ActionType;
 export declare type RuColumns<T = any> = ProColumns<T>;
 export type RuColumnType<T = unknown> = ProColumnType<T>;
 export type RuColumnsState = ProColumnsState;
-export interface RuTableProp<T extends {}, U extends ParamsType> extends ProTableProps<T, U> {
+export interface RuTableProp<
+    T,
+    U extends {
+        [key: string]: any;
+    } = {}
+> extends ProTableProps<T, U> {
     id?: string;
     onRequest?: (
         params: U & {
@@ -44,7 +42,7 @@ export interface RuTableProp<T extends {}, U extends ParamsType> extends ProTabl
 
 export type RuTableInstance =
     | {
-          actionRef?: RuTableActionType;
+          actionRef?: RuActionType;
           formRef?: FormInstance;
       }
     | undefined
@@ -57,7 +55,14 @@ const tableInstanceSet: { [name: string]: RuTableInstance } = {};
  * @param props
  * @constructor
  */
-const RuTable = <T extends {}, U extends ParamsType>(props: RuTableProp<T, U>) => {
+const RuTable = <
+    T,
+    U extends {
+        [key: string]: any;
+    } = {}
+>(
+    props: RuTableProp<T, U>,
+) => {
     const {
         actionRef,
         formRef,
