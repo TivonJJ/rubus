@@ -1,7 +1,8 @@
 import React from 'react';
-import { Card } from 'antd';
+import { Button, Card } from 'antd';
 import AssociativeSelect from '@/components/AssociativeSelect';
 import { getAccounts } from '@/pages/system/user/accounts/service';
+import RichTextEditor  from '@/components/RichText/RichTextEditor';
 
 export default () => {
     return (
@@ -12,6 +13,8 @@ export default () => {
                 labelKey={'real_name'}
                 valueKey={'user_id'}
             />
+            <RichTextEditor placeholder={'请输入'}  />
+            <Button>C</Button>
         </Card>
     );
 };

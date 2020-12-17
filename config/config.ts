@@ -42,8 +42,7 @@ export default defineConfig({
     theme: {
         ...customTheme,
     },
-    // @ts-ignore
-    title: false,
+    title: defaultSettings.title,
     ignoreMomentLocale: true,
     proxy: proxy,
     define:{

@@ -1,6 +1,6 @@
 import React, { UIEvent, useEffect, useState } from 'react';
 import { Select } from 'antd';
-import { SelectProps, SelectValue } from 'antd/es/select';
+import { SelectProps, SelectValue } from 'antd/lib/select';
 import { useRequest } from 'umi';
 
 export interface AssociativeSelectData<DT> {
