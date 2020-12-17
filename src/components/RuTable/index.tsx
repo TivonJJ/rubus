@@ -111,7 +111,10 @@ const RuTable = <
                   params = removeEmptyProperties(params);
               }
               if (onRequest) {
-                  params = onRequest(params, sort, filter);
+                  const ret = onRequest(params, sort, filter);
+                  params = ret.params;
+                  sort = ret.sort;
+                  filter = ret.filter;
               }
               return request(params, sort, filter).then((res) => {
                   return onResponse ? onResponse(res) : res;
