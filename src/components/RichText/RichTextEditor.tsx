@@ -4,6 +4,7 @@ import Editor from 'wangeditor';
 export type EditorInstance = Editor;
 export interface RichTextEditorProps{
     value?: string
+    defaultValue?: string
     style?: React.CSSProperties
     className?: string
     autofocus? :boolean
@@ -32,29 +33,34 @@ const defaultEmotions = [
 ];
 
 const RichTextEditor:React.FC<RichTextEditorProps> = React.forwardRef((props,ref) => {
-    const {value,style,className,onFocus,onBlur,onChange,autofocus=false} = props;
+    const {value,defaultValue,style,className,onFocus,onBlur,onChange,autofocus=false,zIndex=1} = props;
     const container = useRef<HTMLDivElement>(null);
     const editorRef = useRef<EditorInstance>();
     const outRef = ref ? ref as typeof editorRef : null;
     useEffect(()=>{
         const editor = new Editor(container.current);
         editor.config.emotions = defaultEmotions;
+        editor.config.zIndex = zIndex;
         if(props.placeholder!==undefined)editor.config.placeholder = props.placeholder
-        if(props.zIndex!==undefined)editor.config.zIndex = props.zIndex;
         if(props.height!==undefined)editor.config.height = props.height;
         if(props.customAlert!==undefined)editor.config.customAlert = props.customAlert;
         editor.config.focus = autofocus;
         editor.config.onchange = (html:string)=>{
-            if(onChange)onChange(html);
+            onChange?.(html);
         }
         editor.config.onblur = ()=>{
-            const content = editor.txt.html() as string
-            if(onBlur)onBlur(content);
+            onBlur?.(editor.txt.html() as string);
+            if(value!==undefined && editor.txt.html() !== value){
+                editor.txt.html(value)
+            }
         }
         editor.config.onfocus = ()=>{
-            if(onFocus)onFocus()
+            onFocus?.()
         };
         editor.create();
+        if(defaultValue){
+            editor.txt.html(defaultValue);
+        }
         editorRef.current = editor;
         if(outRef){
             outRef.current = editor

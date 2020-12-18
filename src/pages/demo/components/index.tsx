@@ -1,20 +1,33 @@
-import React from 'react';
-import { Button, Card } from 'antd';
-import AssociativeSelect from '@/components/AssociativeSelect';
-import { getAccounts } from '@/pages/system/user/accounts/service';
-import RichTextEditor  from '@/components/RichText/RichTextEditor';
+import React  from 'react';
+import { Button, Card, Form } from 'antd';
+import RichTextEditor from '@/components/RichText/RichTextEditor';
+import JSONEditor  from '@/components/JSONEditor';
 
-export default () => {
+const Index = () => {
+    const [form] = Form.useForm();
+    const test = ()=>{
+        const values = form.getFieldsValue();
+        console.log(values);
+    }
     return (
         <Card bordered={false}>
-            <AssociativeSelect
-                request={getAccounts}
-                style={{ width: 200 }}
-                labelKey={'real_name'}
-                valueKey={'user_id'}
-            />
-            <RichTextEditor placeholder={'请输入'}  />
-            <Button>C</Button>
+            <Form form={form}>
+                <Form.Item label={'富文本输入'} name={'richText'}>
+                    <RichTextEditor />
+                </Form.Item>
+                <Form.Item label={'JSON'} name={'json'} initialValue={{json:'ccc'}}>
+                    <JSONEditor />
+                </Form.Item>
+            </Form>
+            <Button onClick={test}>Test</Button>
+            <Button onClick={()=>{
+                form.setFieldsValue({json:{date:Date.now()}})
+            }}>Set</Button>
+            <Button onClick={()=>{
+                form.setFieldsValue({json:{date2:Date.now()}})
+            }}>Set2</Button>
         </Card>
     );
 };
+
+export default Index

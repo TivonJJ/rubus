@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useImperativeHandle, useRef } from 'react';
 import ProTable, {
     ProTableProps,
     ProColumns,
@@ -16,37 +16,45 @@ export type RuActionType = ActionType;
 export declare type RuColumns<T = any> = ProColumns<T>;
 export type RuColumnType<T = unknown> = ProColumnType<T>;
 export type RuColumnsState = ProColumnsState;
-export interface RuTableProp<
-    T,
-    U extends {
-        [key: string]: any;
-    } = {}
-> extends ProTableProps<T, U> {
+export type OnRequest<U> = (
+    params: U & {
+        pageSize?: number;
+        current?: number;
+        keyword?: string;
+    },
+    sort: {
+        [key: string]: SortOrder;
+    },
+    filter: {
+        [key: string]: React.ReactText[];
+    },
+) => ({
+    params: U & {
+        pageSize?: number;
+        current?: number;
+        keyword?: string;
+    },
+    sort: {
+        [key: string]: SortOrder;
+    },
+    filter: {
+        [key: string]: React.ReactText[];
+    }
+})
+export interface RuTableProp<T extends {}, U extends {
+    [key: string]: any;
+} = {}> extends ProTableProps<T, U> {
     id?: string;
-    onRequest?: (
-        params: U & {
-            pageSize?: number;
-            current?: number;
-            keyword?: string;
-        },
-        sort: {
-            [key: string]: SortOrder;
-        },
-        filter: {
-            [key: string]: React.ReactText[];
-        },
-    ) => any;
+    onRequest?: OnRequest<U>;
     onResponse?: (data: any) => RequestData<T>;
     removeRequestParamsEmptyAttribute?: boolean;
 }
 
-export type RuTableInstance =
-    | {
-          actionRef?: RuActionType;
-          formRef?: FormInstance;
-      }
-    | undefined
-    | null;
+export type RuTableInstance = {
+    key?: string
+    actionRef?: React.MutableRefObject<RuActionType|undefined>;
+    formRef?: React.MutableRefObject<FormInstance|undefined>;
+}
 
 const tableInstanceSet: { [name: string]: RuTableInstance } = {};
 
@@ -55,52 +63,46 @@ const tableInstanceSet: { [name: string]: RuTableInstance } = {};
  * @param props
  * @constructor
  */
-const RuTable = <
-    T,
-    U extends {
-        [key: string]: any;
-    } = {}
->(
-    props: RuTableProp<T, U>,
-) => {
+const RuTable = <T extends {}, U extends {
+    [key: string]: any;
+} = {}>(props: RuTableProp<T, U>) => {
     const {
-        actionRef,
-        formRef,
+        actionRef:propsActionRef,
+        formRef:propsFormRef,
         request,
         onRequest,
         onResponse,
         removeRequestParamsEmptyAttribute,
         ...rest
     } = props;
-    const insideActionRef = useRef();
-    const insideFormRef = useRef();
+    const actionRef = useRef<RuActionType>();
+    const formRef = useRef<FormInstance>();
+    // 绑定 action ref
+    useImperativeHandle(propsActionRef, () => actionRef.current, [actionRef.current]);
+    useEffect(() => {
+        if (typeof propsActionRef === 'function' && actionRef.current) {
+            propsActionRef(actionRef.current);
+        }
+    }, [actionRef.current]);
+    // 绑定 form ref
+    useImperativeHandle(propsFormRef, () => formRef.current, [formRef.current]);
+    useEffect(() => {
+        if (typeof propsFormRef === 'function' && formRef.current) {
+            propsFormRef(formRef.current);
+        }
+    }, [formRef.current]);
     useEffect(() => {
         if (props.id && tableInstanceSet[props.id]) {
-            throw new Error(`${props.id} is already exist`);
-        }
-        if (actionRef) {
-            if (typeof actionRef === 'function') {
-                actionRef(insideActionRef.current as any);
-            } else {
-                actionRef.current = insideActionRef.current;
-            }
-        }
-        if (formRef) {
-            if (typeof formRef === 'function') {
-                formRef(insideFormRef.current as any);
-            } else {
-                formRef.current = insideFormRef.current;
-            }
+            throw new Error(`The table "${props.id}" already exist`);
         }
         if (props.id) {
             tableInstanceSet[props.id] = {
-                actionRef: insideActionRef.current,
-                formRef: insideFormRef.current,
+                actionRef,
+                formRef,
             };
         }
         return () => {
             if (props.id) {
-                tableInstanceSet[props.id] = undefined;
                 delete tableInstanceSet[props.id];
             }
         };
@@ -123,8 +125,8 @@ const RuTable = <
         : undefined;
     return (
         <ProTable<T, U>
-            actionRef={insideActionRef}
-            formRef={insideFormRef}
+            actionRef={actionRef}
+            formRef={formRef}
             request={wrapRequest}
             {...rest}
         />
@@ -132,7 +134,7 @@ const RuTable = <
 };
 
 RuTable.defaultProps = {
-    onRequest: (params: any) => {
+    onRequest: (params: any,sort:any,filter:any) => {
         // 自定义转换请求数据，把分页字段改成和接口一致
         const newParams = {
             ...params,
@@ -141,7 +143,7 @@ RuTable.defaultProps = {
         };
         delete newParams.current;
         delete newParams.pageSize;
-        return newParams;
+        return {params:newParams,sort,filter};
     },
     onResponse: (res: any = {}): RequestData<any> => {
         // 可以在这里自定义转换返回数据
@@ -163,15 +165,30 @@ RuTable.defaultProps = {
  * @param id Table的id
  */
 RuTable.getTable = (id: string): RuTableInstance => {
-    return tableInstanceSet[id];
+    return {...tableInstanceSet[id],key:id};
 };
 /**
  * 获取一组Table实列
  * @param id Table的id数组
  */
 RuTable.getTables = (id?: string[]): RuTableInstance[] => {
-    if (!id) return Object.values(tableInstanceSet);
-    return id.map((item) => (item ? tableInstanceSet[item] : null)).filter((ref) => ref != null);
+    const tables:RuTableInstance[] = [];
+    Object.keys(tableInstanceSet).forEach(key=>{
+        if(id && id.length){
+            if(id.indexOf(key)!==-1){
+                tables.push({
+                    key,
+                    ...tableInstanceSet[key]
+                })
+            }
+        }else {
+            tables.push({
+                key,
+                ...tableInstanceSet[key]
+            })
+        }
+    })
+    return tables;
 };
 
 export default RuTable;

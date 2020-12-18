@@ -94,7 +94,7 @@ export function isPromise(obj: any): boolean {
  * @param path 相对路径
  */
 export function getResourcePath(path: string): string {
-    return joinPath(AppStartArgs.basePath, path);
+    return joinPath(AppStartArgs.basePath || '/', path);
 }
 
 /**
