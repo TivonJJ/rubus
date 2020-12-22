@@ -69,8 +69,8 @@ function createDefaultRequest() {
     return instance;
 }
 
-export function getAbsUrl(url: string): string {
-    return joinPath(baseURL, url);
+export function getRequestUrl(...url: string[]): string {
+    return joinPath(baseURL, ...url);
 }
 
 export default createDefaultRequest();

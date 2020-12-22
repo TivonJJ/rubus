@@ -1,10 +1,10 @@
-import React  from 'react';
+import React, { useRef } from 'react';
 import { Button, Card, Form } from 'antd';
-import RichTextEditor from '@/components/RichText/RichTextEditor';
-import JSONEditor  from '@/components/JSONEditor';
+import Uploader from '@/components/Uploader';
 
 const Index = () => {
     const [form] = Form.useForm();
+    const ref = useRef()
     const test = ()=>{
         const values = form.getFieldsValue();
         console.log(values);
@@ -12,20 +12,17 @@ const Index = () => {
     return (
         <Card bordered={false}>
             <Form form={form}>
-                <Form.Item label={'富文本输入'} name={'richText'}>
-                    <RichTextEditor />
+                <Form.Item label={'上传'} name={'file'}>
+                    <Uploader.ImageUploader ref={ref} multiple maxQuantity={3} />
                 </Form.Item>
-                <Form.Item label={'JSON'} name={'json'} initialValue={{json:'ccc'}}>
-                    <JSONEditor />
-                </Form.Item>
+                <Uploader >
+                    <Button>非受控上传</Button>
+                </Uploader>
             </Form>
-            <Button onClick={test}>Test</Button>
+            <Button onClick={test}>GET</Button>
             <Button onClick={()=>{
-                form.setFieldsValue({json:{date:Date.now()}})
-            }}>Set</Button>
-            <Button onClick={()=>{
-                form.setFieldsValue({json:{date2:Date.now()}})
-            }}>Set2</Button>
+                form.setFieldsValue({file:['a','b']})
+            }}>SET</Button>
         </Card>
     );
 };

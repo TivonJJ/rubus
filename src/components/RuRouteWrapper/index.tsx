@@ -8,7 +8,7 @@ export interface RuRouteWrapperConfig {
     childProps?: AnyObject;
 }
 
-export interface RuRouteRenderProps extends RuRouteWrapperConfig, RouteComponentProps {
+interface RuRouteRenderProps extends RuRouteWrapperConfig, RouteComponentProps {
     child: any;
 }
 

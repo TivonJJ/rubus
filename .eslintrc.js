@@ -7,6 +7,10 @@ module.exports = {
         'jsx-a11y/label-has-associated-control': 0,
         'no-restricted-globals': ['error', 'event', 'fdescribe'],
         'react/jsx-curly-brace-presence': ['error', { props: 'always', children: 'never' }],
+        'no-multi-assign': 'warn',
+        'jsx-a11y/alt-text': 'warn',
+        'import/no-named-as-default': 'warn',
+        'no-unused-expressions': 'warn'
     },
     globals: {
         ANT_DESIGN_PRO_ONLY_DO_NOT_USE_IN_YOUR_PRODUCTION: true,

@@ -11,7 +11,6 @@ export type JSONEditorInstance = Editor;
 export interface JSONEditorProps extends Omit<JSONEditorOptions, 'onChange'> {
     value?: any
     disabled?: boolean
-    ref?: React.Ref<JSONEditorInstance | undefined>
     onChange?: (value?:object|null)=>void
 }
 
@@ -28,7 +27,6 @@ class JSONEditor extends React.Component<JSONEditorProps>{
     componentDidMount() {
         const local = getLocale();
         if(this.containerRef && this.containerRef.current){
-            // eslint-disable-next-line no-multi-assign
             const editor = this.editor = new Editor(this.containerRef.current, {
                 modes: ['code', 'form', 'text', 'tree', 'view'],
                 language: local === 'zh-CN' ? 'zh-CN' : 'en',

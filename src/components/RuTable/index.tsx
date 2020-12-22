@@ -45,15 +45,15 @@ export interface RuTableProp<T extends {}, U extends {
     [key: string]: any;
 } = {}> extends ProTableProps<T, U> {
     id?: string;
-    onRequest?: OnRequest<U>;
-    onResponse?: (data: any) => RequestData<T>;
-    removeRequestParamsEmptyAttribute?: boolean;
+    onRequest?: OnRequest<U>
+    onResponse?: (data: any) => RequestData<T>
+    removeRequestParamsEmptyAttribute?: boolean
 }
 
 export type RuTableInstance = {
     key?: string
-    actionRef?: React.MutableRefObject<RuActionType|undefined>;
-    formRef?: React.MutableRefObject<FormInstance|undefined>;
+    actionRef?: React.MutableRefObject<RuActionType|undefined>
+    formRef?: React.MutableRefObject<FormInstance|undefined>
 }
 
 const tableInstanceSet: { [name: string]: RuTableInstance } = {};
