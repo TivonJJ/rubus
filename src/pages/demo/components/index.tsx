@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { Button, Card, Form } from 'antd';
 import Uploader from '@/components/Uploader';
-import MoneyFormatter from '@/components/Formatter/MoneyFormatter';
 
 const Index = () => {
     const [form] = Form.useForm();
@@ -21,7 +20,6 @@ const Index = () => {
                 </Uploader>
             </Form>
             <Button onClick={test}>GET</Button>
-            <MoneyFormatter value={1234121.32718891} />
             <Button
                 onClick={() => {
                     form.setFieldsValue({ file: ['a', 'b'] });

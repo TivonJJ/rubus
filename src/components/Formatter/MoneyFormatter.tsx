@@ -1,33 +1,39 @@
 import React from 'react';
-import { getLocale, useIntl } from 'umi';
+import { getLocale } from 'umi';
+import NumberFormatter, { NumberFormatterOptions, NumberFormatterProps } from './NumberFormatter';
 
-export interface MoneyFormatterProps {
-    currency?: string;
-    value?: string | number | null;
-    emptyContent?: React.ReactNode;
-}
+export declare type MoneyFormatterOptions = Omit<NumberFormatterOptions, 'valueStyle'>;
+
+export declare type MoneyFormatterProps = Omit<NumberFormatterProps, 'valueStyle'>;
 
 const MoneyFormatter = (props: MoneyFormatterProps) => {
-    const { emptyContent = '-' } = props;
-    let { value, currency } = props;
-    const locale = getLocale();
-    if (!currency) {
-        currency = {
-            'zh-CN': 'CNY',
-            'en-US': 'USD',
-        }[locale];
-    }
-    const intl = useIntl();
-    let content = emptyContent;
-    if (value) {
-        if (typeof value === 'string') value = Number(value);
-        content = intl.formatNumber(value, {
-            style: 'currency',
-            currency,
-        });
-    }
+    const { className, style, value, ...rest } = props;
+    return (
+        <span className={className} style={style}>
+            {MoneyFormatter.format(value, rest)}
+        </span>
+    );
+};
 
-    return <span>{content}</span>;
+// MoneyFormatter.defaultProps = {
+//     currencyDisplay: 'narrowSymbol'
+// }
+
+MoneyFormatter.LocaleCurrencyMap = {
+    'zh-CN': 'CNY',
+    'en-US': 'USD',
+};
+
+MoneyFormatter.format = (value?: string | number | null, option?: MoneyFormatterOptions) => {
+    const locale = getLocale();
+    if (!option) option = {};
+    if (!option.currency) {
+        option.currency = MoneyFormatter.LocaleCurrencyMap?.[locale];
+    }
+    return NumberFormatter.format(value, {
+        ...option,
+        valueStyle: 'currency',
+    });
 };
 
 export default MoneyFormatter;
