@@ -1,3 +1,3 @@
 declare module "join-path" {
-    export = (...path: string[])=> string
+    export = (...path: (string|undefined|null)[])=> string
 }

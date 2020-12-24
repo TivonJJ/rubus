@@ -6,6 +6,7 @@ import { getRequestUrl } from '@/utils/request';
 import { PlusOutlined } from '@ant-design/icons';
 import Viewer from 'react-viewer';
 import { ImageDecorator } from 'react-viewer/lib/ViewerProps';
+import { useIntl } from '@@/plugin-locale/localeExports';
 
 export interface UploaderProps extends Omit<UploadProps, 'onChange'|'fileList'|'defaultFileList'>{
     children?: React.ReactNode
@@ -27,6 +28,7 @@ const ImageUploader = React.forwardRef((props:ImageUploaderProps,ref)=>{
     const [loading,setLoading] = useState<boolean>(false)
     const [preview,setPreview] = useState<{ index?:number,images:ImageDecorator[] }>()
     const uploadRef = useRef<any>(null);
+    const {formatMessage} = useIntl();
     useImperativeHandle(ref,()=>uploadRef.current,[uploadRef.current])
     const renderUploadButton=()=>{
         if(loading)return null
@@ -41,7 +43,9 @@ const ImageUploader = React.forwardRef((props:ImageUploaderProps,ref)=>{
             (
                 <div>
                     <PlusOutlined />
-                    <div style={{ marginTop: 8 }}>上传</div>
+                    <div style={{ marginTop: 8 }}>
+                        {formatMessage({id:'component.uploader.upload'})}
+                    </div>
                 </div>
             );
     }
@@ -93,8 +97,11 @@ export interface UploaderType extends React.ForwardRefExoticComponent<any>{
 }
 
 const Uploader = React.forwardRef((props:UploaderProps,ref)=>{
+    const {formatMessage} = useIntl();
     const renderDefaultChildren=()=>(
-        <Button>上传</Button>
+        <Button>
+            {formatMessage({id:'component.uploader.upload'})}
+        </Button>
     )
     const {
         children=renderDefaultChildren(),

@@ -7,7 +7,7 @@ type DefaultSettings = ProSettings & {
     siderWidth?: number;
 };
 
-const proSettings: DefaultSettings = {
+const proSettings: Partial<DefaultSettings> = {
     primaryColor: Theme.primaryColor,
     navTheme: 'light',
     // headerTheme: 'light',
@@ -21,7 +21,6 @@ const proSettings: DefaultSettings = {
     menu: {
         locale: true,
     },
-    title: 'Rubus Starter Kit',
     pwa: false,
     iconfontUrl: '',
 };

@@ -36,7 +36,9 @@ export default defineConfig({
         ie: 11,
     },
     // umi routes: https://umijs.org/docs/routing
-    routes: routes,
+    routes: [
+        ...routes,
+    ],
     base: startArgs.basePath,
     // Theme for antd: https://ant.design/docs/react/customize-theme-cn
     theme: {

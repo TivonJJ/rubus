@@ -1,12 +1,11 @@
-import component from './zh-CN/component';
-import globalHeader from './zh-CN/globalHeader';
+import app from './zh-CN/app';
 import menu from './zh-CN/menu';
 import pwa from './zh-CN/pwa';
+import uploader from './zh-CN/component.uploader';
 
 export default {
-    'navBar.lang': '语言',
-    ...globalHeader,
+    ...app,
     ...menu,
     ...pwa,
-    ...component,
+    ...uploader,
 };

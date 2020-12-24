@@ -184,22 +184,38 @@ export function convertMenuToMenuRenderData(menus: MenuList): MenuDataItem[] {
 /**
  * 获取第一个可访问的或指定可访问的菜单资源地址
  * @param menus
+ * @param path
+ */
+export function getFirstAccessibleMenu(menus: MenuList, path?: string): MenuItem | null {
+    let foundMenu: MenuItem | null = null;
+    const {pathMap={}} = menus;
+    const menu = (path && path !== '/' && path !== '') ? pathMap[path] : Object.values(pathMap)[0];
+    if(!menu)return null;
+    const checkIsAccessible=(m:MenuItem)=>{
+        return m.status == true && (m.type === 'Action' || m.type === 'Menu');
+    }
+    if(checkIsAccessible(menu))return menu;
+    loop(menu.children as MenuList, (item) => {
+        if (checkIsAccessible(item)) {
+            foundMenu = item;
+            return false;
+        }
+        return true;
+    });
+    return foundMenu;
+}
+
+/**
+ * 获取第一个可访问的或指定可访问的菜单资源地址
+ * @param menus
  * @param menuId
  */
-export function getFirstAccessibleMenu(menus: MenuList, menuId?: number | string): MenuItem | null {
+export function getMenuById(menus: MenuList, menuId?: number | string): MenuItem | null {
     let foundMenu: MenuItem | null = null;
     loop(menus, (item) => {
-        if (item.status == true && (item.type === 'Folder' || item.type === 'Menu')) {
-            if (menuId) {
-                if (menuId == item.id) {
-                    foundMenu = item;
-                }
-            } else {
-                foundMenu = item;
-            }
-            if (foundMenu) {
-                return false;
-            }
+        if (item.status == true && menuId == item.id) {
+            foundMenu = item;
+            return false;
         }
         return true;
     });

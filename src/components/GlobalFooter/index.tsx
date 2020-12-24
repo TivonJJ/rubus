@@ -1,22 +1,15 @@
-import {DefaultFooter, FooterProps} from '@ant-design/pro-layout';
+import { DefaultFooter, FooterProps } from '@ant-design/pro-layout';
 import React from 'react';
 
 export interface GlobalFooterProps extends FooterProps{}
 
-const GlobalFooter: React.FC<GlobalFooterProps> = props => {
-    return (
-        <DefaultFooter
-            copyright={props.copyright}
-            links={props.links}
-            style={props.style}
-            className={props.className}
-        />
-    );
+const GlobalFooter: React.FC<GlobalFooterProps> = (props) => {
+    return <DefaultFooter {...props} />;
 };
 
 GlobalFooter.defaultProps = {
-    copyright: 'Copyright  2020 Rubus Starter kit',
-    links: false
+    copyright: `2020 Rubus Starter kit ${AppStartArgs.bv ? `Ver:${AppStartArgs.bv}` : ''}`,
+    links: false,
 };
 
-export default GlobalFooter
+export default GlobalFooter;

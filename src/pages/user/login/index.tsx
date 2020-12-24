@@ -5,7 +5,7 @@ import { ConnectProps, ConnectState } from '@/models/connect';
 import { UserModel } from '@/models/user';
 import { connect, history } from 'umi';
 import logo from '@/assets/login-logo.png';
-import { getFirstAccessibleMenu } from '@/utils/menu';
+import {  getMenuById } from '@/utils/menu';
 import styles from './style.less';
 
 export interface LoginFormProps extends ConnectProps {
@@ -46,8 +46,11 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                     } else {
                         localStorage.removeItem('last-login-user');
                     }
-                    const target = getFirstAccessibleMenu(user.menu || [], user.defaultRouteMenuId);
-                    const to = target ? target.path : '/';
+                    const target = user.defaultRouteMenuId?
+                        getMenuById(user.menu || [], user.defaultRouteMenuId)
+                        :
+                        null
+                    const to = target?.path || '/';
                     history.replace(to);
                 },
                 (err: ErrorEvent) => {

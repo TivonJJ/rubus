@@ -43,9 +43,19 @@ const routes = [
                             },
                         ],
                     },
+                    {
+                        component: './404',
+                    },
                 ],
             },
+            {
+                component: './404',
+            },
         ],
+    },
+    {
+        path: '/404',
+        component: './404',
     },
     {
         component: './404',
