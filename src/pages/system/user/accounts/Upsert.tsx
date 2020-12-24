@@ -1,13 +1,13 @@
 import React from 'react';
 import ProForm, { DrawerForm, ProFormText, ProFormSelect } from '@ant-design/pro-form';
 import { message } from 'antd';
-import { RoleType } from '@/pages/system/user/roles/model';
+import type { RoleType } from '@/pages/system/user/roles/model';
 import { createAccount, getRoles, updateAccount } from './service';
 
-export interface UpsertProps {
+export type UpsertProps = {
     data?: AnyObject;
     refresh: () => void;
-}
+};
 
 const Upsert: React.FC<UpsertProps> = (props) => {
     const { children, data, refresh } = props;

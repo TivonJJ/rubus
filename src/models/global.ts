@@ -1,17 +1,17 @@
-import { Reducer } from 'umi';
+import type { Reducer } from 'umi';
 
-export interface GlobalModelState {
+export type GlobalModelState = {
     collapsed: boolean;
-}
+};
 
-export interface GlobalModelType {
+export type GlobalModelType = {
     namespace: 'global';
     state: GlobalModelState;
     effects: {};
     reducers: {
         changeLayoutCollapsed: Reducer<GlobalModelState>;
     };
-}
+};
 
 const GlobalModel: GlobalModelType = {
     namespace: 'global',

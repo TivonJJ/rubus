@@ -1,34 +1,34 @@
-import { MenuDataItem, Settings as ProSettings } from '@ant-design/pro-layout';
+import type { MenuDataItem, Settings as ProSettings } from '@ant-design/pro-layout';
 import { GlobalModelState } from './global';
 import { UserModelState } from './user';
 
 export { GlobalModelState, UserModelState };
 
-export interface Loading {
+export type Loading = {
     global: boolean;
-    effects: { [key: string]: boolean | undefined };
+    effects: Record<string, boolean | undefined>;
     models: {
         global?: boolean;
         setting?: boolean;
         user?: boolean;
-        [modelName:string]: boolean;
+        [modelName: string]: boolean;
     };
-}
+};
 
-export interface ConnectState {
+export type ConnectState = {
     loading: Loading;
     global: GlobalModelState;
     settings: ProSettings;
     user: UserModelState;
-}
+};
 
-export interface Route extends MenuDataItem {
+export type Route = {
     routes?: Route[];
-}
+} & MenuDataItem;
 
 /**
  * @type T: Params matched in dynamic routing
  */
-export interface ConnectProps<T = {}> extends Partial<RouterTypes<Route, T>> {
+export type ConnectProps<T = {}> = {
     dispatch?: Dispatch<AnyAction>;
-}
+} & Partial<RouterTypes<Route, T>>;

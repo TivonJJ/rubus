@@ -1,5 +1,6 @@
 import React from 'react';
-import Editor, { JSONEditorOptions } from 'jsoneditor';
+import type { JSONEditorOptions } from 'jsoneditor';
+import Editor from 'jsoneditor';
 import 'jsoneditor/dist/jsoneditor.min.css';
 import ace from 'brace';
 import 'brace/mode/json';
@@ -8,21 +9,21 @@ import df from 'deep-diff';
 
 export type JSONEditorInstance = Editor;
 
-export interface JSONEditorProps extends Omit<JSONEditorOptions, 'onChange'> {
+export type JSONEditorProps = {
     value?: any
     disabled?: boolean
-    onChange?: (value?:object|null)=>void
-}
+    onChange?: (value?: object|null) => void
+} & Omit<JSONEditorOptions, 'onChange'>;
 
 class JSONEditor extends React.Component<JSONEditorProps>{
     static defaultProps = {
         mode: 'code',
         value: '',
-    }
+    };
 
-    containerRef = React.createRef<HTMLDivElement>()
+    containerRef = React.createRef<HTMLDivElement>();
 
-    editor:Editor|null = null
+    editor: Editor|null = null;
 
     componentDidMount() {
         const local = getLocale();
@@ -62,9 +63,9 @@ class JSONEditor extends React.Component<JSONEditorProps>{
         if(this.editor){
             if(this.props.value !== nextProps.value){
                 try{
-                    const json = this.editor.get()
+                    const json = this.editor.get();
                     if(df.diff(json,nextProps.value)){
-                        this.editor.update(nextProps.value)
+                        this.editor.update(nextProps.value);
                     }
                 }catch (e){
                     // do nothing

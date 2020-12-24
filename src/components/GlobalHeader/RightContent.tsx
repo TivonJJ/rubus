@@ -1,13 +1,14 @@
-import { Settings as ProSettings } from '@ant-design/pro-layout';
+import type { Settings as ProSettings } from '@ant-design/pro-layout';
 import React from 'react';
-import { connect, ConnectProps, SelectLang } from 'umi';
-import { ConnectState } from '@/models/connect';
+import type { ConnectProps} from 'umi';
+import { connect, SelectLang } from 'umi';
+import type { ConnectState } from '@/models/connect';
 import Avatar from './Avatar';
 import styles from './index.less';
 
-export interface GlobalHeaderRightProps extends Partial<ConnectProps>, Partial<ProSettings> {
+export type GlobalHeaderRightProps = {
     theme?: ProSettings['navTheme'] | 'realDark';
-}
+} & Partial<ConnectProps> & Partial<ProSettings>;
 
 const GlobalHeaderRight: React.FC<GlobalHeaderRightProps> = (props) => {
     const { theme, layout } = props;

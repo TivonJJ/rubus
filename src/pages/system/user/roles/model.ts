@@ -1,17 +1,17 @@
-import { Effect, Reducer } from 'umi';
+import type { Effect, Reducer } from 'umi';
 import { createRole, getRoles, updateRole } from './service';
 
-export interface RoleType {
+export type RoleType = {
     role_user_count: number;
     role_id?: number | string;
     status?: number | string;
     description: string;
     role_name: string;
-}
-export interface SysAccountRolesModelState {
+};
+export type SysAccountRolesModelState = {
     roles: RoleType[];
-}
-export interface SysAccountRolesModelType {
+};
+export type SysAccountRolesModelType = {
     namespace: 'sysAccountRolesModel';
     state: SysAccountRolesModelState;
     effects: {
@@ -21,7 +21,7 @@ export interface SysAccountRolesModelType {
     reducers: {
         updateState: Reducer<SysAccountRolesModelState>;
     };
-}
+};
 
 const SysAccountRolesModel: SysAccountRolesModelType = {
     namespace: 'sysAccountRolesModel',

@@ -25,7 +25,7 @@ class CookieStore {
         Cookies.set(this.cookieKey, storeKey, { path: '/' });
     }
 
-    get():any {
+    get(): any {
         const storeKey = Cookies.get(this.cookieKey);
         if (!storeKey) return null;
         const user = this.Storage.getItem(storeKey);

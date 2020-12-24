@@ -2,24 +2,24 @@ import React, { useImperativeHandle } from 'react';
 import { Form, Radio } from 'antd';
 import { RoleStatus } from '@/constants/account';
 
-export interface FormValues {
+export type FormValues = {
     status?: number | string
-}
+};
 
-interface SearchProps {
-    onSearch:(values:FormValues)=>void,
+type SearchProps = {
+    onSearch: (values: FormValues) => void,
     ref?: any
-}
+};
 
-export interface SearchRef {
-    getValues:()=>FormValues
-}
+export type SearchRef = {
+    getValues: () => FormValues
+};
 
-const Search:React.FC<SearchProps> = React.forwardRef((props,ref)=>{
+const Search: React.FC<SearchProps> = React.forwardRef((props,ref)=>{
     const [form] = Form.useForm();
-    const onValuesChange = (changed:FormValues,values:FormValues)=>{
-        props.onSearch(values)
-    }
+    const onValuesChange = (changed: FormValues,values: FormValues)=>{
+        props.onSearch(values);
+    };
     useImperativeHandle(ref,()=>({
         getValues(){
             return form.getFieldsValue();
@@ -36,7 +36,7 @@ const Search:React.FC<SearchProps> = React.forwardRef((props,ref)=>{
                 </Radio.Group>
             </Form.Item>
         </Form>
-    )
-})
+    );
+});
 
 export default Search;

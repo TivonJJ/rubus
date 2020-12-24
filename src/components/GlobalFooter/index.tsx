@@ -1,7 +1,8 @@
-import { DefaultFooter, FooterProps } from '@ant-design/pro-layout';
+import type { FooterProps } from '@ant-design/pro-layout';
+import { DefaultFooter } from '@ant-design/pro-layout';
 import React from 'react';
 
-export interface GlobalFooterProps extends FooterProps{}
+export type GlobalFooterProps = FooterProps;
 
 const GlobalFooter: React.FC<GlobalFooterProps> = (props) => {
     return <DefaultFooter {...props} />;

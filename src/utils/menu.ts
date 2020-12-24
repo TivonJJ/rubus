@@ -2,13 +2,13 @@ import React from 'react';
 import joinPath from 'join-path';
 import cloneDeep from 'lodash/cloneDeep';
 import { getLocale } from 'umi';
-import { MenuDataItem } from '@ant-design/pro-layout';
+import type { MenuDataItem } from '@ant-design/pro-layout';
 import { parseJSONSafe } from '@/utils/utils';
 import { IconMap } from '@/constants/menu';
 
 export type MenuTypes = 'Folder' | 'Menu' | 'Action' | 'StatusBar';
 
-export interface MenuItem {
+export type MenuItem = {
     id: number;
     name: string | AnyObject;
     type: MenuTypes;
@@ -16,15 +16,15 @@ export interface MenuItem {
     dna: number[];
     icon?: string;
     status?: number | boolean;
-    path?: string;
+    path: string;
     description?: string;
     children?: MenuItem[];
     updateTime?: string;
-}
+};
 
 export type MenuList = MenuItem[] & {
-    pathMap?: { [path: string]: MenuItem };
-    dnaMap?: { [dna: string]: MenuItem };
+    pathMap?: Record<string, MenuItem>;
+    dnaMap?: Record<string, MenuItem>;
 };
 /**
  *  菜单资源字段转换映射，使字段名一致
@@ -51,11 +51,14 @@ export function loop(
         arr: MenuItem[],
     ) => boolean | void,
 ): MenuList {
+    let shouldStop: boolean = false;
     function doEach(data: MenuList, parent?: MenuItem) {
         for (let i = 0; i < data.length; i++) {
+            if(shouldStop)break;
             const item = data[i];
             const rs = callback(item, i, parent, data);
             if (rs === false) {
+                shouldStop = true;
                 break;
             }
             if (item.children) {
@@ -191,11 +194,11 @@ export function getFirstAccessibleMenu(menus: MenuList, path?: string): MenuItem
     const {pathMap={}} = menus;
     const menu = (path && path !== '/' && path !== '') ? pathMap[path] : Object.values(pathMap)[0];
     if(!menu)return null;
-    const checkIsAccessible=(m:MenuItem)=>{
-        return m.status == true && (m.type === 'Action' || m.type === 'Menu');
-    }
+    const checkIsAccessible=(m: MenuItem)=>{
+        return m.status == true && (m.type === 'Action' || m.type === 'Menu') && !/:/.test(m.path);
+    };
     if(checkIsAccessible(menu))return menu;
-    loop(menu.children as MenuList, (item) => {
+    loop(menu.children||[], (item) => {
         if (checkIsAccessible(item)) {
             foundMenu = item;
             return false;

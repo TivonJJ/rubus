@@ -3,10 +3,10 @@ import { message, Popconfirm, Spin } from 'antd';
 import { useRequest } from 'umi';
 import { resetAccountPassword, updateAccount, delAccount } from './service';
 
-interface OperateProps {
+type OperateProps = {
     data: AnyObject;
     refresh: () => void;
-}
+};
 
 export const ResetPassword: React.FC<OperateProps> = (props) => {
     const { data, refresh } = props;

@@ -2,22 +2,22 @@ import React, { useEffect, useRef } from 'react';
 import Editor from 'wangeditor';
 
 export type EditorInstance = Editor;
-export interface RichTextEditorProps{
+export type RichTextEditorProps = {
     value?: string
     defaultValue?: string
     style?: React.CSSProperties
     className?: string
-    autofocus? :boolean
-    onFocus?: ()=>void
-    onBlur?: (html:string)=>void
-    onChange?: (html:string)=>void
-    customAlert?: (message:string,type:'success'|'info'|'warning'|'error')=>void
+    autofocus? : boolean
+    onFocus?: () => void
+    onBlur?: (html: string) => void
+    onChange?: (html: string) => void
+    customAlert?: (message: string,type: 'success'|'info'|'warning'|'error') => void
     height?: number
     zIndex?: number
     placeholder?: string
     disabled?: boolean
     ref?: React.Ref<EditorInstance>
-}
+};
 
 const defaultEmotions = [
     {
@@ -32,7 +32,7 @@ const defaultEmotions = [
     }
 ];
 
-const RichTextEditor:React.FC<RichTextEditorProps> = React.forwardRef((props,ref) => {
+const RichTextEditor: React.FC<RichTextEditorProps> = React.forwardRef((props,ref) => {
     const {value,defaultValue,style,className,onFocus,onBlur,onChange,autofocus=false,zIndex=1} = props;
     const container = useRef<HTMLDivElement>(null);
     const editorRef = useRef<EditorInstance>();
@@ -41,21 +41,21 @@ const RichTextEditor:React.FC<RichTextEditorProps> = React.forwardRef((props,ref
         const editor = new Editor(container.current);
         editor.config.emotions = defaultEmotions;
         editor.config.zIndex = zIndex;
-        if(props.placeholder!==undefined)editor.config.placeholder = props.placeholder
+        if(props.placeholder!==undefined)editor.config.placeholder = props.placeholder;
         if(props.height!==undefined)editor.config.height = props.height;
         if(props.customAlert!==undefined)editor.config.customAlert = props.customAlert;
         editor.config.focus = autofocus;
-        editor.config.onchange = (html:string)=>{
+        editor.config.onchange = (html: string)=>{
             onChange?.(html);
-        }
+        };
         editor.config.onblur = ()=>{
             onBlur?.(editor.txt.html() as string);
             if(value!==undefined && editor.txt.html() !== value){
-                editor.txt.html(value)
+                editor.txt.html(value);
             }
-        }
+        };
         editor.config.onfocus = ()=>{
-            onFocus?.()
+            onFocus?.();
         };
         editor.create();
         if(defaultValue){
@@ -63,26 +63,26 @@ const RichTextEditor:React.FC<RichTextEditorProps> = React.forwardRef((props,ref
         }
         editorRef.current = editor;
         if(outRef){
-            outRef.current = editor
+            outRef.current = editor;
         }
         return ()=>{
-            editor.destroy()
-        }
-    },[])
+            editor.destroy();
+        };
+    },[]);
     useEffect(()=>{
         if(!editorRef.current)return;
         if(editorRef.current.txt.html()!==value){
             editorRef.current.txt.html(value);
         }
-    },[value])
+    },[value]);
     useEffect(()=>{
         if(!editorRef.current)return;
         if(props.disabled){
-            editorRef.current.disable()
+            editorRef.current.disable();
         }else {
             editorRef.current.enable();
         }
-    },[props.disabled])
+    },[props.disabled]);
     return (
         <div
             style={style}

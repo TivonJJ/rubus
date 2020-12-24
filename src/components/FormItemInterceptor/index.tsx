@@ -1,4 +1,5 @@
-import React, { ChangeEvent } from 'react';
+import type { ChangeEvent } from 'react';
+import React from 'react';
 import moment from 'moment';
 import { reverseObjectKeyValue } from '@/utils/utils';
 
@@ -9,12 +10,12 @@ type Pipe = {
 type PipeWrapper = (...args: any[]) => Pipe;
 export type PipeType = PipeWrapper & Pipe;
 
-export interface FormItemInterceptorProps {
+export type FormItemInterceptorProps = {
     pipes: PipeType | PipeType[] | Pipe | Pipe[];
     onChange?: (values: ChangeEvent, ...args: any[]) => void;
     valuePropName?: string;
-}
-export interface IDefaultPipes {
+};
+export type IDefaultPipes = {
     DateString: PipeType;
     String: PipeType;
     Number: PipeType;
@@ -22,7 +23,7 @@ export interface IDefaultPipes {
     Bool2Number: PipeType;
     Number2Bool: PipeType;
     ArrayString: PipeType;
-}
+};
 
 /**
  * 预置处理管道

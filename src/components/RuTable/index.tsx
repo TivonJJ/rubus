@@ -1,5 +1,5 @@
 import React, { useEffect, useImperativeHandle, useRef } from 'react';
-import ProTable, {
+import type {
     ProTableProps,
     ProColumns,
     ProColumnType,
@@ -7,8 +7,9 @@ import ProTable, {
     RequestData,
     ActionType,
 } from '@ant-design/pro-table';
-import { FormInstance } from 'antd/lib/form';
-import { SortOrder } from 'antd/lib/table/interface';
+import ProTable from '@ant-design/pro-table';
+import type { FormInstance } from 'antd/lib/form';
+import type { SortOrder } from 'antd/lib/table/interface';
 import { message } from 'antd';
 import { removeEmptyProperties } from '@/utils/utils';
 
@@ -22,50 +23,38 @@ export type OnRequest<U> = (
         current?: number;
         keyword?: string;
     },
-    sort: {
-        [key: string]: SortOrder;
-    },
-    filter: {
-        [key: string]: React.ReactText[];
-    },
+    sort: Record<string, SortOrder>,
+    filter: Record<string, React.ReactText[]>,
 ) => ({
     params: U & {
         pageSize?: number;
         current?: number;
         keyword?: string;
     },
-    sort: {
-        [key: string]: SortOrder;
-    },
-    filter: {
-        [key: string]: React.ReactText[];
-    }
-})
-export interface RuTableProp<T extends {}, U extends {
-    [key: string]: any;
-} = {}> extends ProTableProps<T, U> {
+    sort: Record<string, SortOrder>,
+    filter: Record<string, React.ReactText[]>
+});
+export type RuTableProp<T extends {}, U extends Record<string, any> = {}> = {
     id?: string;
     onRequest?: OnRequest<U>
     onResponse?: (data: any) => RequestData<T>
     removeRequestParamsEmptyAttribute?: boolean
-}
+} & ProTableProps<T, U>;
 
 export type RuTableInstance = {
     key?: string
     actionRef?: React.MutableRefObject<RuActionType|undefined>
     formRef?: React.MutableRefObject<FormInstance|undefined>
-}
+};
 
-const tableInstanceSet: { [name: string]: RuTableInstance } = {};
+const tableInstanceSet: Record<string, RuTableInstance> = {};
 
 /**
  * 高级 Table表格
  * @param props
  * @constructor
  */
-const RuTable = <T extends {}, U extends {
-    [key: string]: any;
-} = {}>(props: RuTableProp<T, U>) => {
+const RuTable = <T extends {}, U extends Record<string, any> = {}>(props: RuTableProp<T, U>) => {
     const {
         actionRef:propsActionRef,
         formRef:propsFormRef,
@@ -134,7 +123,7 @@ const RuTable = <T extends {}, U extends {
 };
 
 RuTable.defaultProps = {
-    onRequest: (params: any,sort:any,filter:any) => {
+    onRequest: (params: any,sort: any,filter: any) => {
         // 自定义转换请求数据，把分页字段改成和接口一致
         const newParams = {
             ...params,
@@ -172,22 +161,22 @@ RuTable.getTable = (id: string): RuTableInstance => {
  * @param id Table的id数组
  */
 RuTable.getTables = (id?: string[]): RuTableInstance[] => {
-    const tables:RuTableInstance[] = [];
+    const tables: RuTableInstance[] = [];
     Object.keys(tableInstanceSet).forEach(key=>{
         if(id && id.length){
             if(id.indexOf(key)!==-1){
                 tables.push({
                     key,
                     ...tableInstanceSet[key]
-                })
+                });
             }
         }else {
             tables.push({
                 key,
                 ...tableInstanceSet[key]
-            })
+            });
         }
-    })
+    });
     return tables;
 };
 

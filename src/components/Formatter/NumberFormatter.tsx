@@ -1,18 +1,18 @@
 import React from 'react';
 import { useIntl } from 'umi';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { FormatNumberOptions } from 'react-intl';
+import type { FormatNumberOptions } from 'react-intl';
 
-export interface NumberFormatterOptions extends Omit<FormatNumberOptions, 'style'> {
+export type NumberFormatterOptions = {
     valueStyle?: FormatNumberOptions['style'];
-}
+} & Omit<FormatNumberOptions, 'style'>;
 
-export interface NumberFormatterProps extends NumberFormatterOptions {
+export type NumberFormatterProps = {
     className?: string;
     style?: React.CSSProperties;
     value?: string | number | null;
     emptyContent?: React.ReactNode;
-}
+} & NumberFormatterOptions;
 
 const NumberFormatter = (props: NumberFormatterProps) => {
     const { className, style, value, emptyContent = '-', ...rest } = props;

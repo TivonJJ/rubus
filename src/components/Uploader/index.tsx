@@ -1,108 +1,32 @@
 import React, { useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { UploadProps } from 'antd/lib/upload';
-import { RcFile, UploadChangeParam, UploadFile } from 'antd/lib/upload/interface';
+import type { UploadProps } from 'antd/lib/upload';
+import type { RcFile, UploadChangeParam, UploadFile } from 'antd/lib/upload/interface';
 import { Button, Upload } from 'antd';
 import { getRequestUrl } from '@/utils/request';
 import { PlusOutlined } from '@ant-design/icons';
 import Viewer from 'react-viewer';
-import { ImageDecorator } from 'react-viewer/lib/ViewerProps';
+import type { ImageDecorator } from 'react-viewer/lib/ViewerProps';
 import { useIntl } from '@@/plugin-locale/localeExports';
 
-export interface UploaderProps extends Omit<UploadProps, 'onChange'|'fileList'|'defaultFileList'>{
+export type UploaderProps = {
     children?: React.ReactNode
     value?: string | string[]
     defaultValue?: string | string[]
     maxQuantity?: number
-    onChange?:(value:string|string[]|undefined) => void
-    onUploadChange?:(info: UploadChangeParam) => void
-    onUploadFinish?:(files:Array<UploadFile>)=>void
-    onGetFileKey?: (response:UploadFile) => string
+    onChange?: (value: string|string[]|undefined) => void
+    onUploadChange?: (info: UploadChangeParam) => void
+    onUploadFinish?: (files: UploadFile[]) => void
+    onGetFileKey?: (response: UploadFile) => string
     downloadPrefix?: string
-}
+} & Omit<UploadProps, 'onChange'|'fileList'|'defaultFileList'>;
 
-export interface ImageUploaderProps extends Omit<UploaderProps, 'listType'|'showUploadList'>{
-    viewerClassName?: string
-}
-const ImageUploader = React.forwardRef((props:ImageUploaderProps,ref)=>{
-    const {value,accept,viewerClassName,children,...rest} = props;
-    const [loading,setLoading] = useState<boolean>(false)
-    const [preview,setPreview] = useState<{ index?:number,images:ImageDecorator[] }>()
-    const uploadRef = useRef<any>(null);
-    const {formatMessage} = useIntl();
-    useImperativeHandle(ref,()=>uploadRef.current,[uploadRef.current])
-    const renderUploadButton=()=>{
-        if(loading)return null
-        if(props.multiple){
-            if(props.maxQuantity && value?.length && value?.length >= props.maxQuantity){
-                return null
-            }
-        }else if (value){
-            return null
-        }
-        return children ||
-            (
-                <div>
-                    <PlusOutlined />
-                    <div style={{ marginTop: 8 }}>
-                        {formatMessage({id:'component.uploader.upload'})}
-                    </div>
-                </div>
-            );
-    }
-    const beforeUpload=(file: RcFile, FileList: RcFile[])=>{
-        setLoading(true);
-        return props.beforeUpload?.(file,FileList) || true;
-    }
-    const onUploadFinish=(files:Array<UploadFile>)=>{
-        setLoading(false);
-        props.onUploadFinish?.(files)
-    }
-    const onPreview = (file:UploadFile)=>{
-        const images:ImageDecorator[] = uploadRef.current?.fileList?.map((f:UploadFile)=>({
-            src: f.url,
-            alt: f.uid,
-        })) || [];
-        const index = images.findIndex((img)=>img.alt===file.uid);
-        setPreview({index:Math.max(0,index),images})
-    }
-    return (
-        <>
-            <Uploader
-                accept={accept}
-                value={value}
-                {...rest}
-                listType={'picture-card'}
-                beforeUpload={beforeUpload}
-                onUploadFinish={onUploadFinish}
-                onPreview={onPreview}
-                ref={uploadRef}
-            >
-                {renderUploadButton()}
-            </Uploader>
-            {preview&&
-            <Viewer
-                visible
-                onClose={() => { setPreview(undefined) } }
-                images={preview.images}
-                activeIndex={preview.index}
-                className={viewerClassName}
-            />
-            }
-        </>
-    )
-})
-
-export interface UploaderType extends React.ForwardRefExoticComponent<any>{
-    ImageUploader: typeof ImageUploader
-}
-
-const Uploader = React.forwardRef((props:UploaderProps,ref)=>{
+const Uploader = React.forwardRef((props: UploaderProps,ref)=>{
     const {formatMessage} = useIntl();
     const renderDefaultChildren=()=>(
         <Button>
             {formatMessage({id:'component.uploader.upload'})}
         </Button>
-    )
+    );
     const {
         children=renderDefaultChildren(),
         value,
@@ -120,10 +44,10 @@ const Uploader = React.forwardRef((props:UploaderProps,ref)=>{
     } = props;
     let {action} = props;
     if(typeof action==='string')action = getRequestUrl(action);
-    const [fileList,setFileList] = React.useState<Array<UploadFile>>([]);
-    const syncValue2FileList=(val?:string | string[])=>{
+    const [fileList,setFileList] = React.useState<UploadFile[]>([]);
+    const syncValue2FileList=(val?: string | string[])=>{
         if(multiple && val && !Array.isArray(val)){
-            throw new TypeError('The value must be an array when multiple is true')
+            throw new TypeError('The value must be an array when multiple is true');
         }
         let fileKeys: string[];
         if (!val) {
@@ -142,45 +66,45 @@ const Uploader = React.forwardRef((props:UploaderProps,ref)=>{
             name: v,
             status: 'success',
         })));
-    }
+    };
     useEffect(()=>{
-        syncValue2FileList(value)
-    },[value])
+        syncValue2FileList(value);
+    },[value]);
     useEffect(()=>{
         if(defaultValue !== undefined){
-            syncValue2FileList(defaultValue)
+            syncValue2FileList(defaultValue);
         }
-    },[])
-    const onChangeEvent=(info:UploadChangeParam)=>{
-        const extFileProps=(file:UploadFile)=>{
+    },[]);
+    const onChangeEvent=(info: UploadChangeParam)=>{
+        const extFileProps=(file: UploadFile)=>{
             file.uid = file.name = onGetFileKey(file);
             file.thumbUrl = file.url = getRequestUrl(downloadPrefix||'',file.uid);
-        }
+        };
         onUploadChange?.(info);
         info.fileList.forEach(file=>{
-            if(file.response && file.status==='done')extFileProps(file)
-        })
+            if(file.response && file.status==='done')extFileProps(file);
+        });
         setFileList(info.fileList);
         if(info.file.status==='done'){
-            extFileProps(info.file)
+            extFileProps(info.file);
             if(multiple){
                 if(!info.fileList.find(item=>item.status!=='done'&&item.status!=='success')){
                     onChange?.(info.fileList.map(f=>f.uid));
-                    onUploadFinish?.(info.fileList)
+                    onUploadFinish?.(info.fileList);
                 }
             }else {
-                onChange?.(info.file.uid)
-                onUploadFinish?.(info.fileList)
+                onChange?.(info.file.uid);
+                onUploadFinish?.(info.fileList);
             }
         }
-    }
-    const onRemoveEvent = (file:UploadFile)=>{
+    };
+    const onRemoveEvent = (file: UploadFile)=>{
         if(fileList){
-            const newList = fileList.filter(item=>item.uid!==file.uid)
+            const newList = fileList.filter(item=>item.uid!==file.uid);
             setFileList(newList);
-            onChange?.(newList.map(a=>a.uid))
+            onChange?.(newList.map(a=>a.uid));
         }
-    }
+    };
     return (
         <Upload
             onChange={onChangeEvent}
@@ -194,16 +118,93 @@ const Uploader = React.forwardRef((props:UploaderProps,ref)=>{
             {children}
         </Upload>
     );
-}) as UploaderType
+}) as UploaderType;
+
+export type ImageUploaderProps = {
+    viewerClassName?: string
+} & Omit<UploaderProps, 'listType'|'showUploadList'>;
+
+const ImageUploader = React.forwardRef((props: ImageUploaderProps,ref)=>{
+    const {value,accept,viewerClassName,children,...rest} = props;
+    const [loading,setLoading] = useState<boolean>(false);
+    const [preview,setPreview] = useState<{ index?: number,images: ImageDecorator[] }>();
+    const uploadRef = useRef<any>(null);
+    const {formatMessage} = useIntl();
+    useImperativeHandle(ref,()=>uploadRef.current,[uploadRef.current]);
+    const renderUploadButton=()=>{
+        if(loading)return null;
+        if(props.multiple){
+            if(props.maxQuantity && value?.length && value?.length >= props.maxQuantity){
+                return null;
+            }
+        }else if (value){
+            return null;
+        }
+        return children ||
+            (
+                <div>
+                    <PlusOutlined />
+                    <div style={{ marginTop: 8 }}>
+                        {formatMessage({id:'component.uploader.upload'})}
+                    </div>
+                </div>
+            );
+    };
+    const beforeUpload=(file: RcFile, FileList: RcFile[])=>{
+        setLoading(true);
+        return props.beforeUpload?.(file,FileList) || true;
+    };
+    const onUploadFinish=(files: UploadFile[])=>{
+        setLoading(false);
+        props.onUploadFinish?.(files);
+    };
+    const onPreview = (file: UploadFile)=>{
+        const images: ImageDecorator[] = uploadRef.current?.fileList?.map((f: UploadFile)=>({
+            src: f.url,
+            alt: f.uid,
+        })) || [];
+        const index = images.findIndex((img)=>img.alt===file.uid);
+        setPreview({index:Math.max(0,index),images});
+    };
+    return (
+        <>
+            <Uploader
+                accept={accept}
+                value={value}
+                {...rest}
+                listType={'picture-card'}
+                beforeUpload={beforeUpload}
+                onUploadFinish={onUploadFinish}
+                onPreview={onPreview}
+                ref={uploadRef}
+            >
+                {renderUploadButton()}
+            </Uploader>
+            {preview&&
+            <Viewer
+                visible
+                onClose={() => { setPreview(undefined); } }
+                images={preview.images}
+                activeIndex={preview.index}
+                className={viewerClassName}
+            />
+            }
+        </>
+    );
+});
+
+export type UploaderType = {
+    ImageUploader: typeof ImageUploader
+} & React.ForwardRefExoticComponent<any>;
 
 Uploader.defaultProps = {
     action: 'basis/file/upload/',
     downloadPrefix: 'basis/file/download/'
-}
+};
 
 ImageUploader.defaultProps={
     accept: 'image/*'
-}
+};
 
 Uploader.ImageUploader = ImageUploader;
 

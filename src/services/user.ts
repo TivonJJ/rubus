@@ -1,12 +1,13 @@
 import request from '@/utils/request';
-import { UserModel } from '@/models/user';
+import type { UserModel } from '@/models/user';
 import { objectPropsMapping } from '@/utils/utils';
-import { planToTree, MenuList, MenuResPropsMap } from '@/utils/menu';
+import type { MenuList} from '@/utils/menu';
+import { planToTree, MenuResPropsMap } from '@/utils/menu';
 
-export async function login(params:any): Promise<UserModel> {
+export async function login(params: any): Promise<UserModel> {
     return request.post('basis/user/login', params).then((res)=>{
         const data = res.data[0];
-        const user:UserModel = {
+        const user: UserModel = {
             id: data.user_id,
             username: data.username,
             name: data.real_name,

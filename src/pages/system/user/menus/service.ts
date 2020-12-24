@@ -1,6 +1,7 @@
 import request from '@/utils/request';
 import { objectPropsMapping } from '@/utils/utils';
-import { MenuList, planToTree, MenuResPropsMap } from '@/utils/menu';
+import type { MenuList} from '@/utils/menu';
+import { planToTree, MenuResPropsMap } from '@/utils/menu';
 
 // 获取系统所有菜单资源树
 export async function getMenus(params?: any): Promise<MenuList> {

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, message, Modal, Spin, Transfer } from 'antd';
 import { useRequest } from 'umi';
-import { TransferItem } from 'antd/lib/transfer';
+import type { TransferItem } from 'antd/lib/transfer';
 import { getRoleAccounts, setRoleAccounts } from './service';
-import { RoleType } from './model';
+import type { RoleType } from './model';
 
-interface AssignAccountsProps {
+type AssignAccountsProps = {
     role: RoleType;
     onSuccess?: () => void;
-}
+};
 
 const AssignAccounts: React.FC<AssignAccountsProps> = (props) => {
     const { children, role, onSuccess } = props;

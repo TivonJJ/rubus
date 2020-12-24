@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
 import { getLocale, useRequest } from 'umi';
 import { Alert, Spin, Tree as AntTree } from 'antd';
-import { loop, MenuList } from '@/utils/menu';
-import { DataNode } from 'antd/lib/tree';
+import type { MenuList } from '@/utils/menu';
+import { loop } from '@/utils/menu';
+import type { DataNode } from 'antd/lib/tree';
 import { TypeIconMap } from '@/constants/menu';
 import { parseJSONSafe } from '@/utils/utils';
 import { getMenus } from './service';
 
 type Key = string | number;
 
-export interface IRoleTreeSelectProps {
+export type IRoleTreeSelectProps = {
     fetching?: boolean;
     value?: Key[];
     onChange?: (
@@ -20,7 +21,7 @@ export interface IRoleTreeSelectProps {
               }
             | Key[],
     ) => void;
-}
+};
 
 const Tree: React.FC<IRoleTreeSelectProps> = (props) => {
     const { value, onChange } = props;

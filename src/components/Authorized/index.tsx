@@ -1,13 +1,14 @@
-import React, { PropsWithChildren } from 'react';
+import type { PropsWithChildren } from 'react';
+import React from 'react';
 import { Result } from 'antd';
 import check  from './CheckPermissions';
 
-interface AuthorizedProps {
+type AuthorizedProps = {
     route: string;
     noMatch?: React.ReactNode;
-}
+};
 
-const Authorized = (props:PropsWithChildren<AuthorizedProps>) => {
+const Authorized = (props: PropsWithChildren<AuthorizedProps>) => {
     const {
         children,
         route,
@@ -18,7 +19,7 @@ const Authorized = (props:PropsWithChildren<AuthorizedProps>) => {
                 subTitle={"Sorry, you are not authorized to access this page."}
             />
         ),
-    } = props
+    } = props;
     const childrenRender: React.ReactNode = typeof children === 'undefined' ? null : children;
     const hasAuth = check(route);
     return (

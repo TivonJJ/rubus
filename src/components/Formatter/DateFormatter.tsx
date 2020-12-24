@@ -1,13 +1,13 @@
 import moment from 'moment';
 import React from 'react';
 
-export interface DateFormatterProps {
+export type DateFormatterProps = {
     className?: string;
     style?: React.CSSProperties;
     value?: moment.MomentInput;
     format?: string;
     emptyContent?: React.ReactNode;
-}
+};
 
 const DateFormatter = (props: DateFormatterProps) => {
     const { className, style, value, format, emptyContent = '-' } = props;

@@ -107,21 +107,16 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
         return getRoutesList(routes as any);
     },[routes]);
     const content = useMemo(()=>{
-        const isFound = routeRegexp.find(reg=>reg.test(pathname));
-        if(!isFound){
+        // 不存在的路由地址
+        const currentRoute = routeRegexp.find(reg=>reg.test(pathname));
+        if(!currentRoute){
             return notFound;
         }
+        // 自动跳转到第一个可访问的路由节点
         const first = getFirstAccessibleMenu(currentUser?.menu||[],pathname);
-        console.log(first);
         if(first?.path && first.path !== pathname){
-            console.log('aaa');
             return <Redirect to={first.path} />;
         }
-        // const matchUserMenu = userMenus.find(path=>ptr(pathname).test(path));
-        // if(matchUserMenu && pathMap[matchUserMenu].type==='Folder' && pathMap[matchUserMenu].children?.[0]){
-        //     const r = pathMap[matchUserMenu].children[0]
-        //     return <Redirect to={r.path} />
-        // }
         return (
             <Authorized route={location?.pathname as string} noMatch={noMatch}>
                 {children}
@@ -135,6 +130,14 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
                 formatMessage={formatMessage}
                 onCollapse={handleMenuCollapse}
                 onMenuHeaderClick={() => history.push('/')}
+                // 修复document title不同步问题
+                pageTitleRender={(titleProps,titleStr,names)=>{
+                    const title = names?.title || titleStr || titleProps.title || '';
+                    setTimeout(()=>{
+                        document.title = title;
+                    });
+                    return title;
+                }}
                 headerTitleRender={(logoDom, titleDom) => {
                     return (
                         <div
@@ -154,13 +157,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
                     }
                     return <Link to={menuItemProps.path}>{defaultDom}</Link>;
                 }}
-                breadcrumbRender={(routers = []) => [
-                    {
-                        path: '/',
-                        breadcrumbName: formatMessage({ id: 'menu.home' }),
-                    },
-                    ...routers,
-                ]}
+                breadcrumbRender={() => []}
                 // 面包屑Item渲染
                 itemRender={() => []}
                 footerRender={() => <GlobalFooter />}
@@ -168,7 +165,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
                 rightContentRender={() => <RightContent />}
                 {...props}
                 {...settings}
-                title={settings.title || formatMessage({ id:'app.title' })}
+                title={formatMessage({id:settings.title})}
             >
                 {content}
             </ProLayout>

@@ -1,9 +1,10 @@
 import classNames from 'classnames';
-import React, { CSSProperties, MouseEventHandler } from 'react';
+import type { CSSProperties, MouseEventHandler } from 'react';
+import React from 'react';
 import { Popover } from 'antd';
 import styles from './index.less';
 
-export interface EllipsisProps {
+export type EllipsisProps = {
     /**
      * 显示的最大行数
      */
@@ -15,7 +16,7 @@ export interface EllipsisProps {
     style?: CSSProperties;
     className?: string;
     onClick?: MouseEventHandler;
-}
+};
 
 const Ellipsis: React.FC<EllipsisProps> = (props) => {
     const { style, className, children, onClick, line, tooltip } = props;

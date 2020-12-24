@@ -1,16 +1,16 @@
 import React, { useMemo, useState } from 'react';
 import { withRouter } from 'umi';
-import { RouteComponentProps } from 'react-router';
+import type { RouteComponentProps } from 'react-router';
 
-export interface RuRouteWrapperConfig {
+export type RuRouteWrapperConfig = {
     onResume?: (match: any) => void;
     forceRender?: boolean;
     childProps?: AnyObject;
-}
+};
 
-interface RuRouteRenderProps extends RuRouteWrapperConfig, RouteComponentProps {
+type RuRouteRenderProps = {
     child: any;
-}
+} & RuRouteWrapperConfig & RouteComponentProps;
 
 const RouteRender: React.FC<RuRouteRenderProps> = (props) => {
     const { children: root, childProps, onResume, forceRender = false } = props;

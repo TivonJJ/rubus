@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { Card, Col, Row, Spin } from 'antd';
 import { connect } from 'umi';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import type { ConnectProps, ConnectState } from '@/models/connect';
 import { removeEmptyProperties } from '@/utils/utils';
-import Search, { SearchRef } from './Search';
-import { SysAccountRolesModelState } from './model';
+import type { SearchRef } from './Search';
+import Search from './Search';
+import type { SysAccountRolesModelState } from './model';
 import RoleItem from './RoleItem';
 import styles from './style.less';
 

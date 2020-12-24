@@ -1,25 +1,26 @@
 import React, { useEffect, useRef } from 'react';
 import { Card, Col, message, Row, Spin } from 'antd';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import type { ConnectProps, ConnectState } from '@/models/connect';
 import { connect, Prompt } from 'umi';
-import { MenuItem } from '@/utils/menu';
-import { SysUserMenusModelState } from './model';
+import type { MenuItem } from '@/utils/menu';
+import type { SysUserMenusModelState } from './model';
 import MenuTree from './Tree';
-import MenuForm, { IImperativeHandle } from './Form';
+import type { IImperativeHandle } from './Form';
+import MenuForm from './Form';
 import Toolbar from './Toolbar';
 
 type PropsType = ConnectProps & {
     fetching?: boolean
     saving?: boolean
     menuChanged?: boolean
-}
+};
 
 type IConnectState = ConnectState & {
     sysUserMenusModel: SysUserMenusModelState
 };
 
 
-const Menus:React.FC<PropsType> = (props)=>{
+const Menus: React.FC<PropsType> = (props)=>{
     const {
         fetching = false,
         saving = false,
@@ -31,26 +32,26 @@ const Menus:React.FC<PropsType> = (props)=>{
         dispatch({
             type: 'sysUserMenusModel/fetchMenus'
         });
-    }
+    };
     useEffect(()=>{
         fetchMenus();
         return ()=>{
             dispatch({
                 type: 'sysUserMenusModel/reset'
-            })
-        }
+            });
+        };
     },[]);
-    const onTreeSelect=(menu:MenuItem)=>{
+    const onTreeSelect=(menu: MenuItem)=>{
         formRef.current?.validate().then(()=>{
             formRef.current?.syncForm2Store();
             props.dispatch({
                 type: 'sysUserMenusModel/selectMenu',
                 payload: menu
-            })
+            });
         },()=>{
-            message.error('表单数据有误')
-        })
-    }
+            message.error('表单数据有误');
+        });
+    };
     const onSave=()=>{
         formRef.current?.validate().then(()=>{
             formRef.current?.syncForm2Store();
@@ -58,11 +59,11 @@ const Menus:React.FC<PropsType> = (props)=>{
                 type: 'sysUserMenusModel/save',
             }).then(()=>{
                 fetchMenus();
-            })
+            });
         },()=>{
-            message.error('表单数据有误')
-        })
-    }
+            message.error('表单数据有误');
+        });
+    };
     return (
         <Card bordered={false}>
             <Prompt message={"数据未保存，离开页面后当前修改的信息会丢失，是否确定离开"} when={menuChanged} />
@@ -78,10 +79,10 @@ const Menus:React.FC<PropsType> = (props)=>{
                 </Row>
             </Spin>
         </Card>
-    )
-}
+    );
+};
 
-export default connect(({loading,sysUserMenusModel}:IConnectState)=>({
+export default connect(({loading,sysUserMenusModel}: IConnectState)=>({
     fetching: loading.effects['sysUserMenusModel/fetchMenus'],
     saving: loading.effects['sysUserMenusModel/save'],
     menuChanged: sysUserMenusModel.menuChanged,

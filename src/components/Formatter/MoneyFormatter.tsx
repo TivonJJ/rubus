@@ -1,6 +1,7 @@
 import React from 'react';
 import { getLocale } from 'umi';
-import NumberFormatter, { NumberFormatterOptions, NumberFormatterProps } from './NumberFormatter';
+import type { NumberFormatterOptions, NumberFormatterProps } from './NumberFormatter';
+import NumberFormatter from './NumberFormatter';
 
 export declare type MoneyFormatterOptions = Omit<NumberFormatterOptions, 'valueStyle'>;
 

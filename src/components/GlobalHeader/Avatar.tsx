@@ -1,15 +1,16 @@
 import { LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Menu } from 'antd';
 import React from 'react';
-import { ConnectProps, connect } from 'umi';
-import { ConnectState } from '@/models/connect';
-import { UserModel } from '@/models/user';
+import type { ConnectProps} from 'umi';
+import { connect } from 'umi';
+import type { ConnectState } from '@/models/connect';
+import type { UserModel } from '@/models/user';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 
-export interface GlobalHeaderRightProps extends Partial<ConnectProps> {
+export type GlobalHeaderRightProps = {
     currentUser?: UserModel;
-}
+} & Partial<ConnectProps>;
 
 class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
     onMenuClick = (event: {
@@ -51,7 +52,7 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
                     <span className={`${styles.name} anticon`}>{currentUser.name}</span>
                 </div>
             </HeaderDropdown>
-        )
+        );
     }
 }
 

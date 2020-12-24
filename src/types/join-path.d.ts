@@ -1,3 +1,4 @@
 declare module "join-path" {
-    export = (...path: (string|undefined|null)[])=> string
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    export = (...args: (string|undefined|null)[])=> string;
 }

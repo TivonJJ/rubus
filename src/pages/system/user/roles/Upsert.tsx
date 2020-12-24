@@ -2,21 +2,21 @@ import React from 'react';
 import ProForm, { DrawerForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
 import { Form, message, Spin } from 'antd';
 import { connect, useRequest } from 'umi';
-import { ConnectProps, ConnectState } from '@/models/connect';
-import { ResponseError } from '@/utils/request';
+import type { ConnectProps, ConnectState } from '@/models/connect';
+import type { ResponseError } from '@/utils/request';
 import { getRoleMenus } from './service';
 import RoleTreeSelect from './RoleTreeSelect';
-import { SysAccountRolesModelState } from './model';
+import type { SysAccountRolesModelState } from './model';
 
 type IConnectState = ConnectState & {
     sysAccountRolesModel: SysAccountRolesModelState;
 };
 
-interface IUpsertProps extends ConnectProps {
+type IUpsertProps = {
     data?: AnyObject;
     refresh: () => void;
     sysAccountRolesModel?: SysAccountRolesModelState;
-}
+} & ConnectProps;
 
 const Upsert: React.FC<IUpsertProps> = (props) => {
     const { children, data, refresh } = props;

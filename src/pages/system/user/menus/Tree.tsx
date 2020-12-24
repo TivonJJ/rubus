@@ -1,25 +1,26 @@
 import React, { useMemo, useState } from 'react';
 import { connect,getLocale } from 'umi';
 import { Modal, Tree as AntTree } from 'antd';
-import { ConnectProps, ConnectState } from '@/models/connect';
-import { loop, MenuItem, MenuList, recombineTreesDNA } from '@/utils/menu';
-import { DataNode } from 'antd/lib/tree';
-import debounce from 'lodash/debounce'
+import type { ConnectProps, ConnectState } from '@/models/connect';
+import type { MenuItem, MenuList} from '@/utils/menu';
+import { loop, recombineTreesDNA } from '@/utils/menu';
+import type { DataNode } from 'antd/lib/tree';
+import debounce from 'lodash/debounce';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { TypeIconMap } from '@/constants/menu';
-import {SysUserMenusModelState} from './model';
+import type {SysUserMenusModelState} from './model';
 import TreeItem from './TreeItem';
 
 type IConnectState = ConnectState & {
     sysUserMenusModel: SysUserMenusModelState
 };
 
-export interface ITreeProps extends ConnectProps{
+export type ITreeProps = {
     sysUserMenusModel: SysUserMenusModelState;
-    onSelect:(menu:MenuItem,key:string)=>void
-}
+    onSelect: (menu: MenuItem,key: string) => void
+} & ConnectProps;
 
-const loopMenu = (data:MenuList, key:string, callback:(item:MenuItem,index:number,arr:MenuList)=>void) => {
+const loopMenu = (data: MenuList, key: string, callback: (item: MenuItem,index: number,arr: MenuList) => void) => {
     for (let i = 0; i < data.length; i++) {
         if (data[i].dnaStr === key) {
             callback(data[i], i, data);
@@ -32,35 +33,35 @@ const loopMenu = (data:MenuList, key:string, callback:(item:MenuItem,index:numbe
     }
 };
 
-const Tree:React.FC<ITreeProps>=(props)=>{
+const Tree: React.FC<ITreeProps>=(props)=>{
     const {sysUserMenusModel:{menus,selectedMenu,searchValue}} = props;
     const [expandedKeys,setExpandedKeys] = useState<string[]>();
     const [autoExpandParent,setAutoExpandParent] = useState<boolean>(false);
     const local = getLocale();
-    const onInsert = (level:number,to?:MenuItem)=>{
+    const onInsert = (level: number,to?: MenuItem)=>{
         props.dispatch({
             type: 'sysUserMenusModel/insertMenu',
             payload: {
                 level,
                 to
             }
-        })
+        });
         if(to?.dnaStr){
-            setExpandedKeys([...expandedKeys||[],to.dnaStr])
+            setExpandedKeys([...expandedKeys||[],to.dnaStr]);
         }
-    }
-    const onDel=(menu:MenuItem)=>{
+    };
+    const onDel=(menu: MenuItem)=>{
         Modal.confirm({
             title: '确定移除？',
             onOk:()=>{
                 props.dispatch({
                     type: 'sysUserMenusModel/delMenu',
                     payload: menu
-                })
+                });
             }
-        })
-    }
-    const adaptMenuData=(data:MenuList):DataNode[]=>{
+        });
+    };
+    const adaptMenuData=(data: MenuList): DataNode[]=>{
         return data.map((item)=>{
             return {
                 key: item.dnaStr,
@@ -73,11 +74,11 @@ const Tree:React.FC<ITreeProps>=(props)=>{
                     />,
                 icon: React.createElement(TypeIconMap[item.type]),
                 children: adaptMenuData(item.children||[])
-            }
-        })
-    }
+            };
+        });
+    };
     const treeData = adaptMenuData(menus);
-    const onDrop=(info:any)=>{
+    const onDrop=(info: any)=>{
         const dropKey = info.node.props.eventKey;
         const dragKey = info.dragNode.props.eventKey;
         const dropPos = info.node.props.pos.split('-');
@@ -114,30 +115,30 @@ const Tree:React.FC<ITreeProps>=(props)=>{
         props.dispatch({
             type: 'sysUserMenusModel/updateMenus',
             payload: recombineTreesDNA(data),
-        })
-    }
+        });
+    };
     const searchTree = debounce(()=>{
-        const keys:string[] = [];
+        const keys: string[] = [];
         if(searchValue){
             loop(menus,(item)=>{
                 const name = item.name && item.name[local];
                 if(name && name.indexOf(searchValue) !== -1 && item.dna.length>1){
                     keys.push(item.dnaStr);
                 }
-            })
+            });
         }
         setExpandedKeys(keys);
         setAutoExpandParent(true);
-    },800)
+    },800);
     useMemo(()=>{
-        searchTree()
-    },[searchValue])
-    const onSelect=(keys:any[])=>{
+        searchTree();
+    },[searchValue]);
+    const onSelect=(keys: any[])=>{
         const curKey = keys[0];
         loopMenu(menus,curKey,(menu)=>{
             props.onSelect(menu,curKey);
-        })
-    }
+        });
+    };
     return (
         <div>
             {treeData.length>0?
@@ -160,8 +161,8 @@ const Tree:React.FC<ITreeProps>=(props)=>{
                 <PlusCircleOutlined onClick={()=>onInsert(0)} />
             }
         </div>
-    )
-}
+    );
+};
 
 export default connect(({sysUserMenusModel}: IConnectState) => ({
     sysUserMenusModel,

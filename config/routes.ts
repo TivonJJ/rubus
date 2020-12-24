@@ -38,7 +38,7 @@ const routes = [
                         path: 'demo',
                         routes: [
                             {
-                                path: 'components',
+                                path: 'component',
                                 component: './demo/components/index',
                             },
                         ],

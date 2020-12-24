@@ -19,7 +19,7 @@ export const md5 = (text: string, digestType: 'latin1' | 'hex' | 'base64' = 'hex
  * @returns {*}
  */
 export function removeEmptyProperties(
-    obj: { [key: string]: any },
+    obj: Record<string, any>,
     options: {
         ignores?: string[];
         trim?: boolean;

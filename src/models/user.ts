@@ -1,10 +1,12 @@
-import { Effect, Reducer, history } from 'umi';
+import type { Effect, Reducer} from 'umi';
+import { history } from 'umi';
 import { login } from '@/services/user';
 import { md5 } from '@/utils/utils';
-import { MenuList, convertResourceMenu } from '@/utils/menu';
+import type { MenuList} from '@/utils/menu';
+import { convertResourceMenu } from '@/utils/menu';
 import CookieStore from '@/utils/CookieStore';
 
-export interface UserModel {
+export type UserModel = {
     id: string | number;
     username: string;
     name: string;
@@ -13,11 +15,11 @@ export interface UserModel {
     roleId?: number | string;
     status?: number | string;
     avatar?: string;
-}
-export interface UserModelState {
+};
+export type UserModelState = {
     currentUser?: UserModel;
-}
-export interface UserStoreModelType {
+};
+export type UserStoreModelType = {
     namespace: 'user';
     state: UserModelState;
     effects: {
@@ -27,7 +29,7 @@ export interface UserStoreModelType {
     reducers: {
         updateCurrentUser: Reducer<UserModelState>;
     };
-}
+};
 
 export const signPassword = (username: string, password: string): string => {
     return md5(username + password).toUpperCase();

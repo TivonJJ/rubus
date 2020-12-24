@@ -4,15 +4,15 @@ import { UserSwitchOutlined, PlusOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import Ellipsis from '@/components/Ellipsis';
 import { delRole, setRoleStatus } from './service';
-import { RoleType } from './model';
+import type { RoleType } from './model';
 import styles from './style.less';
 import Upsert from './Upsert';
 import AssignAccounts from './AssignAccounts';
 
-interface RoleItemPropTypes {
+type RoleItemPropTypes = {
     role?: RoleType;
     refresh: () => void;
-}
+};
 
 const RoleItem: React.FC<RoleItemPropTypes> = (props) => {
     const { role, refresh } = props;

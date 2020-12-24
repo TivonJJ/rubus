@@ -7,7 +7,8 @@ type DefaultSettings = ProSettings & {
     siderWidth?: number;
 };
 
-const proSettings: Partial<DefaultSettings> = {
+const proSettings: DefaultSettings = {
+    title: 'app.title',
     primaryColor: Theme.primaryColor,
     navTheme: 'light',
     // headerTheme: 'light',
@@ -22,7 +23,7 @@ const proSettings: Partial<DefaultSettings> = {
         locale: true,
     },
     pwa: false,
-    iconfontUrl: '',
+    iconfontUrl: ''
 };
 
 export type { DefaultSettings };

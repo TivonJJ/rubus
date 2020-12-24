@@ -1,16 +1,17 @@
-import React, { UIEvent, useEffect, useState } from 'react';
+import type { UIEvent} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Select } from 'antd';
-import { SelectProps, SelectValue } from 'antd/lib/select';
+import type { SelectProps, SelectValue } from 'antd/lib/select';
 import { useRequest } from 'umi';
 
-export interface AssociativeSelectData<DT> {
+export type AssociativeSelectData<DT> = {
     total: number;
     data: DT[];
     page_index: number;
     page_size: number;
-}
+};
 
-export interface AssociativeSelectProps<VT, DT> extends SelectProps<VT> {
+export type AssociativeSelectProps<VT, DT> = {
     labelKey?: string;
     valueKey?: string;
     labelRender?: (item: DT, page: AssociativeSelectData<DT>) => React.ReactNode;
@@ -22,7 +23,7 @@ export interface AssociativeSelectProps<VT, DT> extends SelectProps<VT> {
     params?: AnyObject;
     pageSize?: number;
     onScrollBottom?: (evt: UIEvent<HTMLDivElement>, page: AssociativeSelectData<DT>) => void;
-}
+} & SelectProps<VT>;
 
 const AssociativeSelect = <VT extends SelectValue = SelectValue, DT extends {} = any>(
     props: AssociativeSelectProps<VT, DT>,

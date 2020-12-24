@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import classNames from 'classnames';
 import styles from './RichTextViewer.less';
 
-export interface RichTextViewerProps{
+export type RichTextViewerProps = {
     style?: React.CSSProperties
     className?: string
     /**
@@ -27,26 +27,26 @@ export interface RichTextViewerProps{
      */
     heightRefreshFrequency?: boolean | number
     title?: string
-}
+};
 
-const RichTextViewer:React.FC<RichTextViewerProps> = (props) => {
+const RichTextViewer: React.FC<RichTextViewerProps> = (props) => {
     const {className,style,value='',height:propHeight,heightRefreshFrequency,title='rich-text-viewer'} = props;
     let {scrolling='auto',autoHeight} = props;
     if(propHeight!=null)autoHeight = false;
     if(autoHeight)scrolling = 'no';
     const frameRef = useRef<HTMLIFrameElement>(null);
-    const [height,setHeight] = useState<number|string|undefined>(propHeight)
+    const [height,setHeight] = useState<number|string|undefined>(propHeight);
     useEffect(()=>{
         if(frameRef.current){
             frameRef.current.contentDocument?.write(value);
             if(autoHeight){
-                const h = frameRef.current.contentDocument?.body.scrollHeight
-                setHeight(h)
+                const h = frameRef.current.contentDocument?.body.scrollHeight;
+                setHeight(h);
             }
         }
-    },[value])
+    },[value]);
     useEffect(()=>{
-        let interval:NodeJS.Timeout;
+        let interval: NodeJS.Timeout;
         if(heightRefreshFrequency!==undefined && (heightRefreshFrequency === true || heightRefreshFrequency > 0)){
             const frequency = typeof heightRefreshFrequency === 'number' ? heightRefreshFrequency : 500;
             interval = setInterval(() => {
@@ -60,8 +60,8 @@ const RichTextViewer:React.FC<RichTextViewerProps> = (props) => {
         }
         return ()=>{
             interval && clearInterval(interval);
-        }
-    },[height])
+        };
+    },[height]);
     return (
         <iframe
             title={title}
@@ -74,4 +74,4 @@ const RichTextViewer:React.FC<RichTextViewerProps> = (props) => {
     );
 };
 
-export default RichTextViewer
+export default RichTextViewer;

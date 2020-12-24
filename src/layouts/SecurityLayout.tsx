@@ -1,12 +1,13 @@
 import React from 'react';
-import { Redirect, connect, ConnectProps } from 'umi';
+import type { ConnectProps } from 'umi';
+import { Redirect, connect } from 'umi';
 import { stringify } from 'querystring';
-import { ConnectState } from '@/models/connect';
-import { UserModel } from '@/models/user';
+import type { ConnectState } from '@/models/connect';
+import type { UserModel } from '@/models/user';
 
-interface SecurityLayoutProps extends ConnectProps {
+type SecurityLayoutProps = {
     currentUser?: UserModel;
-}
+} & ConnectProps;
 
 class SecurityLayout extends React.Component<SecurityLayoutProps> {
     render() {

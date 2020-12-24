@@ -10,11 +10,25 @@ import {defaults} from 'lodash';
 
 const startArgs = defaults(minimist(process.argv.slice(2)),{basePath:'/'});
 
-const customTheme = {...Theme};
-Object.keys(customTheme).forEach(key=>{
-    customTheme[_.kebabCase(key)] = customTheme[key];
-    delete customTheme[key];
-})
+function getTheme(){
+    const customTheme = {...Theme};
+    Object.keys(customTheme).forEach(key=>{
+        customTheme[_.kebabCase(key)] = customTheme[key];
+        delete customTheme[key];
+    })
+    return customTheme;
+}
+
+function getEnvConfig():AnyObject{
+    const env = process.env.REACT_APP_ENV || 'prod';
+    try{
+        const config = require(`./env/${env}.json`);
+        if(!config)return {};
+        return config.default || config
+    }catch (e){
+        return {}
+    }
+}
 
 export default defineConfig({
     hash: true,
@@ -42,14 +56,15 @@ export default defineConfig({
     base: startArgs.basePath,
     // Theme for antd: https://ant.design/docs/react/customize-theme-cn
     theme: {
-        ...customTheme,
+        ...getTheme(),
     },
     title: defaultSettings.title,
     ignoreMomentLocale: true,
     proxy: proxy,
     define:{
         REACT_APP_TITLE: defaultSettings.title,
-        AppStartArgs: startArgs
+        AppStartArgs: startArgs,
+        EnvConfig: getEnvConfig(),
     },
     manifest: {
         basePath: startArgs.basePath,

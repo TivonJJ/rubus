@@ -16,10 +16,10 @@ function check(route: string): boolean {
     if(!state.user || !state.user.currentUser)return false;
     // 默认有根目录权限
     if(route==='/')return true;
-    const routes:string[] = Object.keys(state.user.currentUser.menu?.pathMap || {});
+    const routes: string[] = Object.keys(state.user.currentUser.menu?.pathMap || {});
     const found = routes.find((item)=>{
-        return ptr(item).test(route)
-    })
+        return ptr(item).test(route);
+    });
     return found != null;
 }
 

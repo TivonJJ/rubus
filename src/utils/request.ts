@@ -1,17 +1,18 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios from 'axios';
 import { getDvaApp, getLocale } from 'umi';
 import joinPath from 'join-path';
 
 const baseURL: string = '/api';
 
-export interface ResponseError {
+export type ResponseError = {
     originResponse: AxiosResponse;
     code?: number | string;
     message?: string;
     data?: any;
     type: 'ResponseError';
     preventDefault: () => any;
-}
+};
 
 function getStore() {
     const app = getDvaApp();

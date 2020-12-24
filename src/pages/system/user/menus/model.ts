@@ -1,15 +1,16 @@
-import { Effect, Reducer } from 'umi';
-import { MenuList, MenuItem, loop, recombineTreesDNA, treeToPlan } from '@/utils/menu';
+import type { Effect, Reducer } from 'umi';
+import type { MenuList, MenuItem} from '@/utils/menu';
+import { loop, recombineTreesDNA, treeToPlan } from '@/utils/menu';
 import { parseJSONSafe } from '@/utils/utils';
 import { getMenus, setMenus } from './service';
 
-export interface SysUserMenusModelState {
+export type SysUserMenusModelState = {
     menus: MenuList;
     selectedMenu?: MenuItem;
     menuChanged: boolean;
     searchValue?: string;
-}
-export interface SysUserMenusModelType {
+};
+export type SysUserMenusModelType = {
     namespace: 'sysUserMenusModel';
     state: SysUserMenusModelState;
     effects: {
@@ -25,7 +26,7 @@ export interface SysUserMenusModelType {
         selectMenu: Reducer<SysUserMenusModelState>;
         reset: Reducer<SysUserMenusModelState>;
     };
-}
+};
 
 const initialState = (): SysUserMenusModelState => ({
     menus: [],

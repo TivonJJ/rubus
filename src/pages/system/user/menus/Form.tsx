@@ -1,27 +1,27 @@
 import React, { useImperativeHandle, useMemo, useState } from 'react';
 import { Form as AntForm, Input, Radio, Select, Switch } from 'antd';
 import { connect } from 'umi';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import type { ConnectProps, ConnectState } from '@/models/connect';
 import { IconMap, Types } from '@/constants/menu';
 import FormItemInterceptor from '@/components/FormItemInterceptor';
-import { SysUserMenusModelState } from './model';
+import type { SysUserMenusModelState } from './model';
 import GlobalLangInput from './GlobalLangInput';
 
 type IConnectState = ConnectState & {
     sysUserMenusModel: SysUserMenusModelState
 };
 
-export interface IFormProps extends ConnectProps{
+export type IFormProps = {
     sysUserMenusModel: SysUserMenusModelState,
     wrappedComponentRef?: any,
-}
+} & ConnectProps;
 
-export interface IImperativeHandle{
-    validate:()=>Promise<AnyObject>
-    syncForm2Store:()=>void
-}
+export type IImperativeHandle = {
+    validate: () => Promise<AnyObject>
+    syncForm2Store: () => void
+};
 
-const Form:React.FC<IFormProps>=(props)=>{
+const Form: React.FC<IFormProps>=(props)=>{
     const {sysUserMenusModel:{selectedMenu},wrappedComponentRef} = props;
     const [form] = AntForm.useForm();
     const [dirty,setDirty] = useState<boolean>(false);
@@ -40,7 +40,7 @@ const Form:React.FC<IFormProps>=(props)=>{
                     values: form.getFieldsValue()
                 }
             });
-            setDirty(false)
+            setDirty(false);
         }
     }));
 
@@ -50,9 +50,9 @@ const Form:React.FC<IFormProps>=(props)=>{
             form.setFieldsValue(selectedMenu);
         }else {
             form.resetFields();
-            setDirty(false)
+            setDirty(false);
         }
-    },[selectedMenu])
+    },[selectedMenu]);
     const onValuesChange=()=>{
         setDirty(true);
         props.dispatch({
@@ -60,8 +60,8 @@ const Form:React.FC<IFormProps>=(props)=>{
             payload:{
                 menuChanged: true
             }
-        })
-    }
+        });
+    };
     const formItemLayout = {
         labelCol: {
             xs: { span: 24 },
@@ -130,7 +130,7 @@ const Form:React.FC<IFormProps>=(props)=>{
                                     <Select.Option value={name} key={name}>
                                         <Icon/> {name}
                                     </Select.Option>
-                                )
+                                );
                             })}
                         </Select>
                     </AntForm.Item>
@@ -154,8 +154,8 @@ const Form:React.FC<IFormProps>=(props)=>{
                 </>
             }
         </AntForm>
-    )
-}
+    );
+};
 
 const ConnectedForm = connect(({sysUserMenusModel}: IConnectState) => ({
     sysUserMenusModel,

@@ -1,16 +1,16 @@
-import { MenuDataItem, getMenuData, getPageTitle } from '@ant-design/pro-layout';
+import type { MenuDataItem,ProSettings } from '@ant-design/pro-layout';
+import { getMenuData, getPageTitle } from '@ant-design/pro-layout';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { useIntl, ConnectProps, connect } from 'umi';
+import type { ConnectProps} from 'umi';
+import { useIntl, connect } from 'umi';
 import React from 'react';
-import { ConnectState } from '@/models/connect';
+import type { ConnectState } from '@/models/connect';
 import GlobalFooter from '@/components/GlobalFooter';
 import styles from './AccountLayout.less';
 
-export interface UserLayoutProps extends Partial<ConnectProps> {
-    breadcrumbNameMap: {
-        [path: string]: MenuDataItem;
-    };
-}
+export type UserLayoutProps = {
+    breadcrumbNameMap: Record<string, MenuDataItem>;
+} & Partial<ConnectProps> & ProSettings;
 
 const UserLayout: React.FC<UserLayoutProps> = (props) => {
     const {
@@ -32,6 +32,7 @@ const UserLayout: React.FC<UserLayoutProps> = (props) => {
         formatMessage,
         breadcrumb,
         ...props,
+        title: formatMessage({id:props.title})
     });
     return (
         <HelmetProvider>

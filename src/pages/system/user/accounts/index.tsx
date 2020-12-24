@@ -1,9 +1,10 @@
 import React, { useRef } from 'react';
 import { Radio, Button } from 'antd';
-import RuTable, { RuColumns, RuActionType } from '@/components/RuTable';
+import type { RuColumns, RuActionType } from '@/components/RuTable';
+import RuTable from '@/components/RuTable';
 import { Status } from '@/constants/account';
 import { PlusOutlined } from '@ant-design/icons';
-import { FormInstance } from 'antd/lib/form';
+import type { FormInstance } from 'antd/lib/form';
 import { getAccounts } from './service';
 import Upsert from './Upsert';
 import { ResetPassword, ChangeStatus, Remove } from './Operate';

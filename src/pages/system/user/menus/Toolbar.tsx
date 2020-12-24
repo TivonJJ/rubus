@@ -1,39 +1,41 @@
 import { Button, Col, Input, Row, Modal } from 'antd';
-import React, { ChangeEvent, MouseEvent, useRef } from 'react';
-import { ConnectProps, ConnectState } from '@/models/connect';
+import type { ChangeEvent, MouseEvent} from 'react';
+import React, { useRef } from 'react';
+import type { ConnectProps, ConnectState } from '@/models/connect';
 import { connect } from 'umi';
 import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
-import { MenuList, planToTree, treeToPlan } from '@/utils/menu';
-import { SysUserMenusModelState } from './model';
+import type { MenuList} from '@/utils/menu';
+import { planToTree, treeToPlan } from '@/utils/menu';
+import type { SysUserMenusModelState } from './model';
 import styles from './style.less';
 
 type IConnectState = ConnectState & {
     sysUserMenusModel: SysUserMenusModelState
 };
 
-export interface IToolbarProps extends ConnectProps{
+export type IToolbarProps = {
     sysUserMenusModel: SysUserMenusModelState,
-    onSave:()=>void
-}
+    onSave: () => void
+} & ConnectProps;
 
-const Toolbar:React.FC<IToolbarProps> = (props)=>{
+const Toolbar: React.FC<IToolbarProps> = (props)=>{
     const {sysUserMenusModel:{searchValue,menuChanged,menus},onSave} = props;
-    const fileSelectRef = useRef<any>()
-    const search = (evt:any)=>{
+    const fileSelectRef = useRef<any>();
+    const search = (evt: any)=>{
         props.dispatch({
             type: 'sysUserMenusModel/updateState',
             payload:{
                 searchValue: evt.target.value
             }
-        })
-    }
-    const exportJSON=(evt:MouseEvent&{currentTarget:HTMLAnchorElement})=>{
+        });
+    };
+    const exportJSON=(evt: MouseEvent&{currentTarget: HTMLAnchorElement})=>{
         const fileName = `menus-${Date.now()}.json`;
         evt.currentTarget.download = fileName;
         const list = treeToPlan(menus);
         evt.currentTarget.href = `data:text/plain,${JSON.stringify(list)}`;
-    }
-    const handleFile=(evt:ChangeEvent&{currentTarget:HTMLInputElement})=>{
+    };
+    const handleFile=(evt: ChangeEvent&{currentTarget: HTMLInputElement})=>{
         const {files} = evt.currentTarget;
         if(!files || !files.length)return;
         const file = files[0];
@@ -46,14 +48,14 @@ const Toolbar:React.FC<IToolbarProps> = (props)=>{
         if(window.FileReader){
             const reader = new FileReader();
             reader.onload = ()=>{
-                let json:MenuList|null = null;
+                let json: MenuList|null = null;
                 try{
                     json = JSON.parse(reader.result as string);
                 }catch (e){
                     Modal.error({
                         title: '资源导入失败',
                         content: e.message
-                    })
+                    });
                 }
                 if(json){
                     json.forEach(item=>{
@@ -75,10 +77,10 @@ const Toolbar:React.FC<IToolbarProps> = (props)=>{
         }else {
             Modal.error({
                 content: '您的浏览器不支持文件读取'
-            })
+            });
         }
         fileSelectRef.current.value = null;
-    }
+    };
     return (
         <div className={styles.toolbar}>
             <Row gutter={12}>
@@ -115,9 +117,9 @@ const Toolbar:React.FC<IToolbarProps> = (props)=>{
                 </Col>
             </Row>
         </div>
-    )
-}
+    );
+};
 
-export default connect(({ sysUserMenusModel }:IConnectState)=>({
+export default connect(({ sysUserMenusModel }: IConnectState)=>({
     sysUserMenusModel
-}))(Toolbar)
+}))(Toolbar);

@@ -4,11 +4,11 @@ import { getLocale } from 'umi';
 
 const SupportedLangs = ['en-US', 'zh-CN'];
 
-export interface IGlobalLangInputProps {
+export type IGlobalLangInputProps = {
     value?: any;
     placeholder?: string;
     onChange?: (values: any) => void;
-}
+};
 
 const GlobalLangInput: React.FC<IGlobalLangInputProps> = (props) => {
     const { value, onChange, placeholder } = props;

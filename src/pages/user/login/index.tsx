@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Card, Alert, Checkbox, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { ConnectProps, ConnectState } from '@/models/connect';
-import { UserModel } from '@/models/user';
+import type { ConnectProps, ConnectState } from '@/models/connect';
+import type { UserModel } from '@/models/user';
 import { connect, history } from 'umi';
 import logo from '@/assets/login-logo.png';
 import {  getMenuById } from '@/utils/menu';
 import styles from './style.less';
 
-export interface LoginFormProps extends ConnectProps {
+export type LoginFormProps = {
     currentUser?: UserModel;
     logging?: boolean;
-}
+} & ConnectProps;
 
 const LoginForm: React.FC<LoginFormProps> = (props) => {
     const [form] = Form.useForm();
@@ -49,7 +49,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                     const target = user.defaultRouteMenuId?
                         getMenuById(user.menu || [], user.defaultRouteMenuId)
                         :
-                        null
+                        null;
                     const to = target?.path || '/';
                     history.replace(to);
                 },
