@@ -3,7 +3,7 @@ import { Form, Input, Card, Alert, Checkbox, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import type { ConnectProps, ConnectState } from '@/models/connect';
 import type { UserModel } from '@/models/user';
-import { connect, history } from 'umi';
+import { connect, history, useIntl } from 'umi';
 import logo from '@/assets/login-logo.png';
 import {  getMenuById } from '@/utils/menu';
 import styles from './style.less';
@@ -17,6 +17,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
     const [form] = Form.useForm();
     const [error, setError] = useState<string>();
     const [isCatchUserAcc, setIsCatchUserAcc] = useState<boolean>();
+    const {formatMessage} = useIntl();
 
     useEffect(() => {
         let lastUser = localStorage.getItem('last-login-user');
@@ -67,11 +68,26 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                 {error ? (
                     <Alert message={error} type={'error'} className={styles.error} showIcon />
                 ) : null}
-                <Form.Item name={'username'} rules={[{ required: true, message: '请输入账号' }]}>
-                    <Input placeholder={'登录名'} prefix={<UserOutlined />} />
+                <Form.Item
+                    name={'username'}
+                    label={formatMessage({id:'page.user.login.username'})}
+                    rules={[{ required: true }]}
+                >
+                    <Input
+                        placeholder={formatMessage({id:'page.user.login.username'})}
+                        prefix={<UserOutlined />}
+                    />
                 </Form.Item>
-                <Form.Item name={'password'} rules={[{ required: true, message: '请输入密码' }]}>
-                    <Input type={'password'} placeholder={'密码'} prefix={<LockOutlined />} />
+                <Form.Item
+                    name={'password'}
+                    label={formatMessage({id:'page.user.login.password'})}
+                    rules={[{ required: true }]}
+                >
+                    <Input
+                        type={'password'}
+                        placeholder={formatMessage({id:'page.user.login.password'})}
+                        prefix={<LockOutlined />}
+                    />
                 </Form.Item>
                 <div className={'margin-sm_bottom'}>
                     <Checkbox
@@ -80,12 +96,12 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                             setIsCatchUserAcc(e.target.checked);
                         }}
                     >
-                        记住密码
+                        {formatMessage({id:'page.user.login.rememberPassword'})}
                     </Checkbox>
                 </div>
                 <Form.Item>
                     <Button type={'primary'} loading={props.logging} block htmlType={'submit'}>
-                        登录
+                        {formatMessage({id:'page.user.login.sign'})}
                     </Button>
                 </Form.Item>
             </Form>

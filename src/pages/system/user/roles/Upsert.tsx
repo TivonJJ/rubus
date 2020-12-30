@@ -7,6 +7,7 @@ import type { ResponseError } from '@/utils/request';
 import { getRoleMenus } from './service';
 import RoleTreeSelect from './RoleTreeSelect';
 import type { SysAccountRolesModelState } from './model';
+import { useIntl } from 'umi';
 
 type IConnectState = ConnectState & {
     sysAccountRolesModel: SysAccountRolesModelState;
@@ -25,6 +26,7 @@ const Upsert: React.FC<IUpsertProps> = (props) => {
         manual: true,
         throwOnError: true,
     });
+    const {formatMessage} = useIntl();
     const submit = (values: AnyObject) => {
         return props
             .dispatch({
@@ -63,7 +65,10 @@ const Upsert: React.FC<IUpsertProps> = (props) => {
         <DrawerForm
             trigger={children}
             onFinish={submit}
-            title={`${data ? '编辑' : '新增'}角色`}
+            title={formatMessage(
+                { id: 'page.system.user.role.form.title' },
+                { action: formatMessage({ id: `common.${data ? 'edit' : 'add'}` }) },
+            )}
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 18 }}
             form={form}
@@ -78,26 +83,33 @@ const Upsert: React.FC<IUpsertProps> = (props) => {
                 <ProFormText hidden name={'role_id'} />
                 <ProFormText
                     name={'role_type'}
-                    label={'角色编码'}
+                    label={formatMessage({id:'page.system.user.role.form.roleCode'})}
                     rules={[
                         { required: true },
                         {
                             pattern: /^[a-z]([a-z]|[0-9]|-)+$/i,
-                            message: '只能2位以上包含字母数字和-,且第一位不能是数字',
+                            message: formatMessage({id:'page.system.user.role.form.roleCode.matchMsg'}),
                         },
                     ]}
-                    placeholder={'角色编码不能重复，将根据编码识别角色'}
+                    placeholder={formatMessage({id:'page.system.user.role.form.roleCode.placeholder'})}
                 />
                 <ProFormText
                     name={'role_name'}
-                    label={'角色名'}
+                    label={formatMessage({id:'page.system.user.role.form.roleName'})}
                     rules={[{ required: true }]}
-                    placeholder={'请输入角色名称'}
                 />
-                <Form.Item label={'权限列表'} name={'res_list'} rules={[{ required: true }]}>
+                <Form.Item
+                    label={formatMessage({id:'page.system.user.role.form.permissions'})}
+                    name={'res_list'}
+                    rules={[{ required: true }]}
+                >
                     <RoleTreeSelect />
                 </Form.Item>
-                <ProFormTextArea name={'description'} label={'描述'} placeholder={'附加描述信息'} />
+                <ProFormTextArea
+                    name={'description'}
+                    label={formatMessage({id:'page.system.user.role.form.description'})}
+                    placeholder={formatMessage({id:'page.system.user.role.form.description.placeholder'})}
+                />
             </Spin>
         </DrawerForm>
     );

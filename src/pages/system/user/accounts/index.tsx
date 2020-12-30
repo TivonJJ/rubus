@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Radio, Button } from 'antd';
+import { useIntl } from 'umi';
 import type { RuColumns, RuActionType } from '@/components/RuTable';
 import RuTable from '@/components/RuTable';
 import { Status } from '@/constants/account';
@@ -10,6 +11,7 @@ import Upsert from './Upsert';
 import { ResetPassword, ChangeStatus, Remove } from './Operate';
 
 const Accounts: React.FC = () => {
+    const {formatMessage} = useIntl();
     const formRef = useRef<FormInstance>();
     const actionRef = useRef<RuActionType>();
     const refresh = () => {
@@ -17,7 +19,7 @@ const Accounts: React.FC = () => {
     };
     const columns: RuColumns[] = [
         {
-            title: '状态',
+            title: formatMessage({id:'page.system.accounts.table.column.status'}),
             dataIndex: 'status',
             width: 100,
             valueEnum: Status,
@@ -25,7 +27,7 @@ const Accounts: React.FC = () => {
             renderFormItem: (_, { type, defaultRender, ...rest }) => {
                 return (
                     <Radio.Group {...rest} className={'button-radios'}>
-                        <Radio value={''}>全部</Radio>
+                        <Radio value={''}>{formatMessage({id:'page.system.accounts.search.status.all'})}</Radio>
                         {Object.keys(Status).map((key) => (
                             <Radio key={key} value={key}>
                                 {Status[key].text}
@@ -36,7 +38,7 @@ const Accounts: React.FC = () => {
             },
         },
         {
-            title: '登录账号',
+            title: formatMessage({id:'page.system.accounts.table.column.account'}),
             dataIndex: 'username',
             search: false,
             render: (dom, col) => {
@@ -48,22 +50,22 @@ const Accounts: React.FC = () => {
             },
         },
         {
-            title: '姓名',
+            title: formatMessage({id:'page.system.accounts.table.column.name'}),
             dataIndex: 'real_name',
             search: false,
         },
         {
-            title: '平台角色',
+            title: formatMessage({id:'page.system.accounts.table.column.role'}),
             dataIndex: 'role_name',
             search: false,
         },
         {
-            title: '邮箱',
+            title: formatMessage({id:'page.system.accounts.table.column.email'}),
             dataIndex: 'email',
             search: false,
         },
         {
-            title: '操作',
+            title: formatMessage({id:'page.system.accounts.table.column.operate'}),
             key: 'option',
             valueType: 'option',
             render: (value, col) => {
@@ -80,7 +82,7 @@ const Accounts: React.FC = () => {
     return (
         <div className={'card-group'}>
             <RuTable
-                headerTitle={'账号列表'}
+                headerTitle={formatMessage({id:'page.system.accounts.table.title'})}
                 formRef={formRef}
                 actionRef={actionRef}
                 columns={columns}
@@ -89,12 +91,15 @@ const Accounts: React.FC = () => {
                 toolBarRender={() => [
                     <Upsert key={'new'} refresh={refresh}>
                         <Button key={'3'} icon={<PlusOutlined />} type={'primary'}>
-                            新建
+                            {formatMessage({ id: 'page.system.accounts.table.toolbar.new' })}
                         </Button>
                     </Upsert>,
                 ]}
                 options={{
-                    search: { allowClear: true, placeholder: '关键词查找' },
+                    search: {
+                        allowClear: true,
+                        placeholder: formatMessage({id:'page.system.accounts.table.search.placeholder'})
+                    },
                 }}
                 form={{
                     onValuesChange: () => {

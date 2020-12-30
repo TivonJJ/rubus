@@ -1,6 +1,6 @@
 import React from 'react';
 import { message, Popconfirm, Spin } from 'antd';
-import { useRequest } from 'umi';
+import { useRequest,useIntl } from 'umi';
 import { resetAccountPassword, updateAccount, delAccount } from './service';
 
 type OperateProps = {
@@ -9,13 +9,14 @@ type OperateProps = {
 };
 
 export const ResetPassword: React.FC<OperateProps> = (props) => {
+    const { formatMessage } = useIntl();
     const { data, refresh } = props;
     const { loading, run } = useRequest(resetAccountPassword, { manual: true, throwOnError: true });
     const reset = () => {
         if (loading) return;
         run(data.user_id).then(
             () => {
-                message.success('操作成功');
+                message.success(formatMessage({id:'common.operateSuccess'}));
                 refresh();
             },
             (err) => {
@@ -24,15 +25,30 @@ export const ResetPassword: React.FC<OperateProps> = (props) => {
         );
     };
     return (
-        <Popconfirm title={`确定重置“${data.real_name}”的密码？`} onConfirm={reset}>
-            <a>{loading ? <Spin size={'small'} /> : '重置密码'}</a>
+        <Popconfirm
+            title={
+                formatMessage(
+                    { id:'page.system.accounts.operate.resetPwd.confirm'},
+                    {name: data.real_name}
+                )
+            }
+            onConfirm={reset}
+        >
+            <a>
+                {loading ?
+                    <Spin size={'small'} />
+                    :
+                    formatMessage({ id: 'page.system.accounts.operate.resetPwd' })
+                }
+            </a>
         </Popconfirm>
     );
 };
 
 export const ChangeStatus: React.FC<OperateProps> = (props) => {
+    const { formatMessage } = useIntl();
     const { data, refresh } = props;
-    const toStatusText = data.status == 1 ? '停用' : '启用';
+    const toStatusText = formatMessage({id:`page.system.accounts.operate.${data.status == 1 ? 'disable' : 'enable'}`});
     const { loading, run } = useRequest(updateAccount, { manual: true, throwOnError: true });
     const change = () => {
         if (loading) return;
@@ -41,7 +57,7 @@ export const ChangeStatus: React.FC<OperateProps> = (props) => {
             status: data.status == 1 ? 2 : 1,
         }).then(
             () => {
-                message.success('操作成功');
+                message.success(formatMessage({id:'common.operateSuccess'}));
                 refresh();
             },
             (err) => {
@@ -50,20 +66,27 @@ export const ChangeStatus: React.FC<OperateProps> = (props) => {
         );
     };
     return (
-        <Popconfirm title={`确定${toStatusText}“${data.real_name}”？`} onConfirm={change}>
+        <Popconfirm
+            title={formatMessage(
+                { id: 'page.system.accounts.operate.toggleConfirm' },
+                { status: toStatusText,name: data.real_name },
+            )}
+            onConfirm={change}
+        >
             <a>{loading ? <Spin size={'small'} /> : toStatusText}</a>
         </Popconfirm>
     );
 };
 
 export const Remove: React.FC<OperateProps> = (props) => {
+    const {formatMessage} = useIntl();
     const { data, refresh } = props;
     const { loading, run } = useRequest(delAccount, { manual: true, throwOnError: true });
     const remove = () => {
         if (loading) return;
         run(data.user_id).then(
             () => {
-                message.success('操作成功');
+                message.success(formatMessage({id:'common.operateSuccess'}));
                 refresh();
             },
             (err) => {
@@ -72,8 +95,20 @@ export const Remove: React.FC<OperateProps> = (props) => {
         );
     };
     return (
-        <Popconfirm title={`删除用户“${data.real_name}”？`} onConfirm={remove}>
-            <a>{loading ? <Spin size={'small'} /> : '删除'}</a>
+        <Popconfirm
+            title={formatMessage(
+                { id: 'page.system.accounts.operate.delete.confirm' },
+                { name: data.real_name },
+            )}
+            onConfirm={remove}
+        >
+            <a>
+                {loading ?
+                    <Spin size={'small'} />
+                    :
+                    formatMessage({id:'page.system.accounts.operate.delete'})
+                }
+            </a>
         </Popconfirm>
     );
 };

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React  from 'react';
 import { getLocale, useRequest } from 'umi';
 import { Alert, Spin, Tree as AntTree } from 'antd';
 import type { MenuList } from '@/utils/menu';
@@ -26,8 +26,7 @@ export type IRoleTreeSelectProps = {
 const Tree: React.FC<IRoleTreeSelectProps> = (props) => {
     const { value, onChange } = props;
     const local = getLocale();
-    const { data: menus, run: fetchMenus, error, loading: fetchingMenus } = useRequest(getMenus, {
-        manual: true,
+    const { data: menus, error, loading: fetchingMenus } = useRequest(getMenus, {
         formatResult: (data = []) => {
             loop(data, (menu) => {
                 menu.name = parseJSONSafe(menu.name, {});
@@ -46,9 +45,6 @@ const Tree: React.FC<IRoleTreeSelectProps> = (props) => {
         });
     };
     const treeData = adaptMenuData(menus || []);
-    useEffect(() => {
-        fetchMenus();
-    }, []);
     if (error) {
         return <Alert message={error.message} type={'error'} showIcon />;
     }

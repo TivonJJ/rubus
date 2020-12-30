@@ -1,0 +1,17 @@
+export default {
+    'page.system.user.role.search.status': '状态',
+    'page.system.user.role.search.status.all': '全部',
+    'page.system.user.role.table.title': '共{total}条记录',
+    'page.system.user.role.action.delete': '删除',
+    'page.system.user.role.action.delete.confirm': '确定删除？',
+    'page.system.user.role.action.edit': '编辑',
+    'page.system.user.role.action.statusChangeConfirm': '确定{status}角色：{name}',
+    'page.system.user.role.form.title': '{action} 角色',
+    'page.system.user.role.form.roleCode': '角色编码',
+    'page.system.user.role.form.roleCode.matchMsg': '只能2位以上包含字母数字和-,且第一位不能是数字',
+    'page.system.user.role.form.roleCode.placeholder': '角色编码不能重复，将根据编码识别角色',
+    'page.system.user.role.form.roleName': '角色名',
+    'page.system.user.role.form.permissions': '权限列表',
+    'page.system.user.role.form.description': '描述',
+    'page.system.user.role.form.description.placeholder': '附加描述信息',
+};

@@ -1,12 +1,23 @@
+import { DrawerForm } from '@ant-design/pro-form';
 import { Button, message, notification } from 'antd';
 
 import React from 'react';
-import { useIntl } from 'umi';
+import { useIntl,getIntl } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 
 const { pwa } = defaultSettings;
 const isHttps = document.location.protocol === 'https:';
 
+setTimeout(()=>{
+    DrawerForm.defaultProps = {
+        submitter: {
+            searchConfig:{
+                submitText: getIntl().formatMessage({ id: 'common.ok' }),
+                resetText: getIntl().formatMessage({ id: 'common.cancel' }),
+            }
+        }
+    };
+});
 // if pwa is true
 if (pwa) {
     // Notify user if offline now

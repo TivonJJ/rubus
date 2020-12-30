@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { Card, Col, Row, Spin } from 'antd';
-import { connect } from 'umi';
+import { connect,useIntl } from 'umi';
 import type { ConnectProps, ConnectState } from '@/models/connect';
 import { removeEmptyProperties } from '@/utils/utils';
 import type { SearchRef } from './Search';
 import Search from './Search';
-import type { SysAccountRolesModelState } from './model';
+import type { RoleType, SysAccountRolesModelState } from './model';
 import RoleItem from './RoleItem';
 import styles from './style.less';
 
@@ -25,6 +25,7 @@ const Roles: React.FC<PropsType> = (props) => {
         sysAccountRolesModel: { roles },
         fetching,
     } = props;
+    const {formatMessage} = useIntl();
     const searchRef = useRef<SearchRef>();
     const fetch = (params?: AnyObject) => {
         dispatch({
@@ -42,12 +43,14 @@ const Roles: React.FC<PropsType> = (props) => {
         <Card bordered={false}>
             <Spin spinning={fetching}>
                 <Search onSearch={fetch} ref={searchRef} />
-                <div className={styles.total}>共 {roles.length} 条记录</div>
+                <div className={styles.total}>
+                    {formatMessage({id: 'page.system.user.role.table.title'},{total:roles.length})}
+                </div>
                 <Row gutter={16}>
                     <Col span={8}>
                         <RoleItem refresh={refresh} />
                     </Col>
-                    {roles.map((role) => (
+                    {roles.map((role: RoleType) => (
                         <Col span={8} key={role.role_id}>
                             <RoleItem role={role} refresh={refresh} />
                         </Col>

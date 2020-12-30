@@ -1,0 +1,17 @@
+export default {
+    'page.system.user.role.search.status': 'Status',
+    'page.system.user.role.search.status.all': 'All',
+    'page.system.user.role.table.title': 'Total {total} items',
+    'page.system.user.role.action.delete': 'Delete',
+    'page.system.user.role.action.delete.confirm': 'Are you sure you want to do that?',
+    'page.system.user.role.action.edit': 'Edit',
+    'page.system.user.role.action.statusChangeConfirm': 'Are you sure you want to set the role status to {status}',
+    'page.system.user.role.form.title': '{action} Role',
+    'page.system.user.role.form.roleCode': 'Role Code',
+    'page.system.user.role.form.roleCode.matchMsg': 'It can only have more than 2 digits, including alphanumeric and - and the first digit cannot be a number',
+    'page.system.user.role.form.roleCode.placeholder': 'Cannot be repeated. The role will be identified according to the code',
+    'page.system.user.role.form.roleName': 'Role Name',
+    'page.system.user.role.form.permissions': 'Permissions',
+    'page.system.user.role.form.description': 'Description',
+    'page.system.user.role.form.description.placeholder': 'Additional information description',
+};

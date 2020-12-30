@@ -443,6 +443,11 @@ export default {
     'POST /api/basis/resource/list': mockResource,
     'POST /api/basis/resource/addOrUpdate': (req: Request, res: Response) => {
         const list = req.body.res_list;
+        list.forEach((item:any)=> {
+            if (!item.res_id){
+                item.res_id = Math.random()
+            }
+        })
         fs.writeFile(
             require('path').join(__dirname, 'menu.json'),
             JSON.stringify(list),
