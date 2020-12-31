@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Input, Modal } from 'antd';
-import { getLocale } from 'umi';
+import { getLocale, useIntl } from 'umi';
 
 const SupportedLangs = ['en-US', 'zh-CN'];
 
@@ -12,6 +12,7 @@ export type IGlobalLangInputProps = {
 
 const GlobalLangInput: React.FC<IGlobalLangInputProps> = (props) => {
     const { value, onChange, placeholder } = props;
+    const { formatMessage } = useIntl();
     const [form] = Form.useForm();
     const [modalVisible, setModalVisible] = useState<boolean>();
     const localValue = value ? value[getLocale()] : '';
@@ -33,7 +34,7 @@ const GlobalLangInput: React.FC<IGlobalLangInputProps> = (props) => {
         <>
             <Input readOnly value={localValue} placeholder={placeholder} onClick={showModal} />
             <Modal
-                title={'全球化名称'}
+                title={formatMessage({ id: 'page.system.user.menu.form.name.prompt' })}
                 visible={modalVisible}
                 onCancel={hideModal}
                 onOk={handleOk}

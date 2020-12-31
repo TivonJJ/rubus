@@ -1,18 +1,18 @@
 import {
-    BellOutlined,
-    DashboardOutlined,
-    TeamOutlined,
-    FileTextOutlined,
-    SafetyCertificateOutlined,
-    SolutionOutlined,
-    FolderOpenOutlined, LinkOutlined, PlayCircleOutlined, NotificationOutlined,
+    FolderOpenOutlined,
+    LinkOutlined,
+    PlayCircleOutlined,
+    NotificationOutlined,
 } from '@ant-design/icons';
+import { getIntl } from 'umi';
+
+const { formatMessage } = getIntl();
 
 export const Types = {
-    Folder: '功能分区',
-    Menu: '菜单',
-    Action: '操作',
-    StatusBar: '状态栏',
+    Folder: formatMessage({ id: 'constants.menu.types.folder' }),
+    Menu: formatMessage({ id: 'constants.menu.types.menu' }),
+    Action: formatMessage({ id: 'constants.menu.types.action' }),
+    StatusBar: formatMessage({ id: 'constants.menu.types.statusbar' }),
 };
 
 export const TypeIconMap = {
@@ -20,13 +20,4 @@ export const TypeIconMap = {
     Menu: LinkOutlined,
     Action: PlayCircleOutlined,
     StatusBar: NotificationOutlined,
-};
-
-export const IconMap = {
-    Bell: BellOutlined,
-    Dashboard: DashboardOutlined,
-    Team: TeamOutlined,
-    FileText: FileTextOutlined,
-    SafetyCertificate: SafetyCertificateOutlined,
-    SolutionOut: SolutionOutlined,
 };

@@ -4,7 +4,23 @@ import cloneDeep from 'lodash/cloneDeep';
 import { getLocale } from 'umi';
 import type { MenuDataItem } from '@ant-design/pro-layout';
 import { parseJSONSafe } from '@/utils/utils';
-import { IconMap } from '@/constants/menu';
+import {
+    BellOutlined,
+    DashboardOutlined,
+    FileTextOutlined,
+    SafetyCertificateOutlined,
+    SolutionOutlined,
+    TeamOutlined,
+} from '@ant-design/icons';
+
+export const IconMap = {
+    Bell: BellOutlined,
+    Dashboard: DashboardOutlined,
+    Team: TeamOutlined,
+    FileText: FileTextOutlined,
+    SafetyCertificate: SafetyCertificateOutlined,
+    SolutionOut: SolutionOutlined,
+};
 
 export type MenuTypes = 'Folder' | 'Menu' | 'Action' | 'StatusBar';
 
@@ -54,7 +70,7 @@ export function loop(
     let shouldStop: boolean = false;
     function doEach(data: MenuList, parent?: MenuItem) {
         for (let i = 0; i < data.length; i++) {
-            if(shouldStop)break;
+            if (shouldStop) break;
             const item = data[i];
             const rs = callback(item, i, parent, data);
             if (rs === false) {
@@ -191,14 +207,14 @@ export function convertMenuToMenuRenderData(menus: MenuList): MenuDataItem[] {
  */
 export function getFirstAccessibleMenu(menus: MenuList, path?: string): MenuItem | null {
     let foundMenu: MenuItem | null = null;
-    const {pathMap={}} = menus;
-    const menu = (path && path !== '/' && path !== '') ? pathMap[path] : Object.values(pathMap)[0];
-    if(!menu)return null;
-    const checkIsAccessible=(m: MenuItem)=>{
+    const { pathMap = {} } = menus;
+    const menu = path && path !== '/' && path !== '' ? pathMap[path] : Object.values(pathMap)[0];
+    if (!menu) return null;
+    const checkIsAccessible = (m: MenuItem) => {
         return m.status == true && (m.type === 'Action' || m.type === 'Menu') && !/:/.test(m.path);
     };
-    if(checkIsAccessible(menu))return menu;
-    loop(menu.children||[], (item) => {
+    if (checkIsAccessible(menu)) return menu;
+    loop(menu.children || [], (item) => {
         if (checkIsAccessible(item)) {
             foundMenu = item;
             return false;
