@@ -5,7 +5,7 @@ import type { ConnectProps, ConnectState } from '@/models/connect';
 import type { UserModel } from '@/models/user';
 import { connect, history, useIntl } from 'umi';
 import logo from '@/assets/login-logo.png';
-import {  getMenuById } from '@/utils/menu';
+import { getMenuById } from '@/utils/menu';
 import styles from './style.less';
 
 export type LoginFormProps = {
@@ -16,15 +16,15 @@ export type LoginFormProps = {
 const LoginForm: React.FC<LoginFormProps> = (props) => {
     const [form] = Form.useForm();
     const [error, setError] = useState<string>();
-    const [isCatchUserAcc, setIsCatchUserAcc] = useState<boolean>();
-    const {formatMessage} = useIntl();
+    const [isCacheUserAcc, setIsCacheUserAcc] = useState<boolean>(false);
+    const { formatMessage } = useIntl();
 
     useEffect(() => {
         let lastUser = localStorage.getItem('last-login-user');
         if (lastUser) {
             lastUser = JSON.parse(lastUser);
             form.setFieldsValue(lastUser);
-            setIsCatchUserAcc(true);
+            setIsCacheUserAcc(true);
         }
     }, []);
 
@@ -36,7 +36,7 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
             })
             .then(
                 (user: UserModel) => {
-                    if (isCatchUserAcc) {
+                    if (isCacheUserAcc) {
                         localStorage.setItem(
                             'last-login-user',
                             JSON.stringify({
@@ -47,10 +47,9 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                     } else {
                         localStorage.removeItem('last-login-user');
                     }
-                    const target = user.defaultRouteMenuId?
-                        getMenuById(user.menu || [], user.defaultRouteMenuId)
-                        :
-                        null;
+                    const target = user.defaultRouteMenuId
+                        ? getMenuById(user.menu || [], user.defaultRouteMenuId)
+                        : null;
                     const to = target?.path || '/';
                     history.replace(to);
                 },
@@ -70,38 +69,38 @@ const LoginForm: React.FC<LoginFormProps> = (props) => {
                 ) : null}
                 <Form.Item
                     name={'username'}
-                    label={formatMessage({id:'page.user.login.username'})}
+                    label={formatMessage({ id: 'page.user.login.username' })}
                     rules={[{ required: true }]}
                 >
                     <Input
-                        placeholder={formatMessage({id:'page.user.login.username'})}
+                        placeholder={formatMessage({ id: 'page.user.login.username' })}
                         prefix={<UserOutlined />}
                     />
                 </Form.Item>
                 <Form.Item
                     name={'password'}
-                    label={formatMessage({id:'page.user.login.password'})}
+                    label={formatMessage({ id: 'page.user.login.password' })}
                     rules={[{ required: true }]}
                 >
                     <Input
                         type={'password'}
-                        placeholder={formatMessage({id:'page.user.login.password'})}
+                        placeholder={formatMessage({ id: 'page.user.login.password' })}
                         prefix={<LockOutlined />}
                     />
                 </Form.Item>
                 <div className={'margin-sm_bottom'}>
                     <Checkbox
-                        checked={isCatchUserAcc}
+                        checked={isCacheUserAcc}
                         onChange={(e) => {
-                            setIsCatchUserAcc(e.target.checked);
+                            setIsCacheUserAcc(e.target.checked);
                         }}
                     >
-                        {formatMessage({id:'page.user.login.rememberPassword'})}
+                        {formatMessage({ id: 'page.user.login.rememberPassword' })}
                     </Checkbox>
                 </div>
                 <Form.Item>
                     <Button type={'primary'} loading={props.logging} block htmlType={'submit'}>
-                        {formatMessage({id:'page.user.login.sign'})}
+                        {formatMessage({ id: 'page.user.login.sign' })}
                     </Button>
                 </Form.Item>
             </Form>

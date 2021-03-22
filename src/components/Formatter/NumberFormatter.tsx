@@ -1,6 +1,5 @@
 import React from 'react';
-import { useIntl } from 'umi';
-// eslint-disable-next-line import/no-extraneous-dependencies
+import { getIntl } from 'umi';
 import type { FormatNumberOptions } from 'react-intl';
 
 export type NumberFormatterOptions = {
@@ -28,8 +27,7 @@ NumberFormatter.format = (
     value?: string | number | null,
     option?: NumberFormatterOptions & FormatNumberOptions,
 ) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const intl = useIntl();
+    const intl = getIntl();
     let content;
     if (value) {
         if (typeof value === 'string') value = Number(value);

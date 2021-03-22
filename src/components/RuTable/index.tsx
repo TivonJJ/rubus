@@ -25,26 +25,26 @@ export type OnRequest<U> = (
     },
     sort: Record<string, SortOrder>,
     filter: Record<string, React.ReactText[]>,
-) => ({
+) => {
     params: U & {
         pageSize?: number;
         current?: number;
         keyword?: string;
-    },
-    sort: Record<string, SortOrder>,
-    filter: Record<string, React.ReactText[]>
-});
+    };
+    sort: Record<string, SortOrder>;
+    filter: Record<string, React.ReactText[]>;
+};
 export type RuTableProp<T extends {}, U extends Record<string, any> = {}> = {
     id?: string;
-    onRequest?: OnRequest<U>
-    onResponse?: (data: any) => RequestData<T>
-    removeRequestParamsEmptyAttribute?: boolean
+    onRequest?: OnRequest<U>;
+    onResponse?: (data: any) => RequestData<T>;
+    removeRequestParamsEmptyAttribute?: boolean;
 } & ProTableProps<T, U>;
 
 export type RuTableInstance = {
-    key?: string
-    actionRef?: React.MutableRefObject<RuActionType|undefined>
-    formRef?: React.MutableRefObject<FormInstance|undefined>
+    key?: string;
+    actionRef?: React.MutableRefObject<RuActionType | undefined>;
+    formRef?: React.MutableRefObject<FormInstance | undefined>;
 };
 
 const tableInstanceSet: Record<string, RuTableInstance> = {};
@@ -56,30 +56,28 @@ const tableInstanceSet: Record<string, RuTableInstance> = {};
  */
 const RuTable = <T extends {}, U extends Record<string, any> = {}>(props: RuTableProp<T, U>) => {
     const {
-        actionRef:propsActionRef,
-        formRef:propsFormRef,
+        actionRef: propsActionRef,
+        formRef: propsFormRef,
         request,
         onRequest,
         onResponse,
         removeRequestParamsEmptyAttribute,
+        id,
         ...rest
     } = props;
     const actionRef = useRef<RuActionType>();
     const formRef = useRef<FormInstance>();
-    // 绑定 action ref
+    // 绑定 action ref、form ref
     useImperativeHandle(propsActionRef, () => actionRef.current, [actionRef.current]);
+    useImperativeHandle(propsFormRef, () => formRef.current, [formRef.current]);
     useEffect(() => {
         if (typeof propsActionRef === 'function' && actionRef.current) {
             propsActionRef(actionRef.current);
         }
-    }, [actionRef.current]);
-    // 绑定 form ref
-    useImperativeHandle(propsFormRef, () => formRef.current, [formRef.current]);
-    useEffect(() => {
         if (typeof propsFormRef === 'function' && formRef.current) {
             propsFormRef(formRef.current);
         }
-    }, [formRef.current]);
+    }, [actionRef.current, formRef.current]);
     useEffect(() => {
         if (props.id && tableInstanceSet[props.id]) {
             throw new Error(`The table "${props.id}" already exist`);
@@ -117,13 +115,14 @@ const RuTable = <T extends {}, U extends Record<string, any> = {}>(props: RuTabl
             actionRef={actionRef}
             formRef={formRef}
             request={wrapRequest}
+            id={`rutable_${id}`}
             {...rest}
         />
     );
 };
 
 RuTable.defaultProps = {
-    onRequest: (params: any,sort: any,filter: any) => {
+    onRequest: (params: any, sort: any, filter: any) => {
         // 自定义转换请求数据，把分页字段改成和接口一致
         const newParams = {
             ...params,
@@ -132,7 +131,7 @@ RuTable.defaultProps = {
         };
         delete newParams.current;
         delete newParams.pageSize;
-        return {params:newParams,sort,filter};
+        return { params: newParams, sort, filter };
     },
     onResponse: (res: any = {}): RequestData<any> => {
         // 可以在这里自定义转换返回数据
@@ -154,7 +153,7 @@ RuTable.defaultProps = {
  * @param id Table的id
  */
 RuTable.getTable = (id: string): RuTableInstance => {
-    return {...tableInstanceSet[id],key:id};
+    return { ...tableInstanceSet[id], key: id };
 };
 /**
  * 获取一组Table实列
@@ -162,18 +161,18 @@ RuTable.getTable = (id: string): RuTableInstance => {
  */
 RuTable.getTables = (id?: string[]): RuTableInstance[] => {
     const tables: RuTableInstance[] = [];
-    Object.keys(tableInstanceSet).forEach(key=>{
-        if(id && id.length){
-            if(id.indexOf(key)!==-1){
+    Object.keys(tableInstanceSet).forEach((key) => {
+        if (id && id.length) {
+            if (id.indexOf(key) !== -1) {
                 tables.push({
                     key,
-                    ...tableInstanceSet[key]
+                    ...tableInstanceSet[key],
                 });
             }
-        }else {
+        } else {
             tables.push({
                 key,
-                ...tableInstanceSet[key]
+                ...tableInstanceSet[key],
             });
         }
     });
