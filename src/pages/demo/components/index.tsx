@@ -1,34 +1,42 @@
-import React, { useRef } from 'react';
-import { Button, Card, Form } from 'antd';
-import Uploader from '@/components/Uploader';
+import React from 'react';
+import { Button, Card } from 'antd';
+import { connect } from 'umi';
+import type { ConnectState } from '@/models/connect';
+import type { ConnectProps } from '@/models/connect';
+import type { Settings as ProSettings } from '@ant-design/pro-layout';
+import { SettingDrawer } from '@ant-design/pro-layout';
+import styles from './index.less';
 
-const Index = () => {
-    const [form] = Form.useForm();
-    const ref = useRef();
-    const test = () => {
-        const values = form.getFieldsValue();
-        console.log(values);
+type PropsType = ConnectProps & {
+    settings: ProSettings;
+};
+
+const Index: React.FC<PropsType> = ({ settings, dispatch }) => {
+    const onSettingChange = (ns: ProSettings) => {
+        console.log(ns);
+        dispatch({
+            type: 'settings/changeSetting',
+            payload: ns,
+        });
+    };
+    const setT = () => {
+        dispatch({
+            type: 'settings/changeSetting',
+            payload: {
+                primaryColor: 'dust',
+            },
+        });
     };
     return (
         <Card bordered={false}>
-            <Form form={form}>
-                <Form.Item label={'上传'} name={'file'}>
-                    <Uploader.ImageUploader ref={ref} multiple maxQuantity={3} />
-                </Form.Item>
-                <Uploader>
-                    <Button>非受控上传</Button>
-                </Uploader>
-            </Form>
-            <Button onClick={test}>GET</Button>
-            <Button
-                onClick={() => {
-                    form.setFieldsValue({ file: ['a', 'b'] });
-                }}
-            >
-                SET
+            <div className={'text-primary'}>Text Primary</div>
+            <div className={styles.pr}>Primary</div>
+            <Button type={'primary'} onClick={setT}>
+                更换配置
             </Button>
+            <SettingDrawer settings={settings} onSettingChange={onSettingChange} />
         </Card>
     );
 };
 
-export default Index;
+export default connect(({ settings }: ConnectState) => ({ settings }))(Index);

@@ -1,27 +1,13 @@
-@import "./theme";
-@import "./utils";
-
-* {
-    word-wrap: break-word
-}
-
-body {
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
+@import './theme';
+@import './utils';
 
 // utils
 // --- margin utils ---
-@margin-size: margin-xss, margin-xs, margin-sm, margin-md, margin-lg;
-@margin-direction: left, top, right, bottom;
-//noinspection Stylelint
-@margin-both-direction: {
-    v: top, bottom;
-    h: left, right;
-};
+@margin-sizes: margin-xss, margin-xs, margin-sm, margin-md, margin-lg;
+@margin-directions: left, top, right, bottom;
+
 .gen-margins() {
-    each(@margin-size, {
+    each(@margin-sizes, {
         .@{value} {
             .margin(@@value)
         }
@@ -29,7 +15,7 @@ body {
 }
 
 .gen-margins(@direction,@direction-name:@direction) {
-    each(@margin-size, {
+    each(@margin-sizes, {
         .@{value}_@{direction-name} {
             .margin(@@value, @direction)
         }
@@ -37,11 +23,8 @@ body {
 }
 
 .gen-margins();
-each(@margin-direction, {
+each(@margin-directions, {
     .gen-margins(@value)
-});
-each(@margin-both-direction, {
-    .gen-margins(@value, @key)
 });
 // text
 .text-sm {
@@ -117,7 +100,8 @@ each(@margin-both-direction, {
 }
 
 .btn-group {
-    > button, .button {
+    > button,
+    .button {
         &:not(:last-child) {
             margin-right: @margin-sm;
         }
@@ -125,7 +109,8 @@ each(@margin-both-direction, {
 }
 
 .link-group {
-    > a, > .link{
+    > a,
+    > .link {
         &:not(:last-child)::after {
             margin-right: 6px;
             margin-left: 4px;

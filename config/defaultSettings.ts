@@ -1,10 +1,11 @@
 import { Settings as ProSettings } from '@ant-design/pro-layout';
-import Theme from './theme';
+import Theme from './theme.default';
 
 type DefaultSettings = ProSettings & {
     pwa: boolean;
     primaryColor?: string;
     siderWidth?: number;
+    theme?: string;
 };
 
 const proSettings: DefaultSettings = {
@@ -23,7 +24,7 @@ const proSettings: DefaultSettings = {
         locale: true,
     },
     pwa: false,
-    iconfontUrl: ''
+    iconfontUrl: '',
 };
 
 export type { DefaultSettings };

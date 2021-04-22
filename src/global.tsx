@@ -1,23 +1,11 @@
-import { DrawerForm } from '@ant-design/pro-form';
 import { Button, message, notification } from 'antd';
-
 import React from 'react';
-import { useIntl,getIntl } from 'umi';
+import { useIntl } from 'umi';
 import defaultSettings from '../config/defaultSettings';
 
 const { pwa } = defaultSettings;
 const isHttps = document.location.protocol === 'https:';
 
-setTimeout(()=>{
-    DrawerForm.defaultProps = {
-        submitter: {
-            searchConfig:{
-                submitText: getIntl().formatMessage({ id: 'common.ok' }),
-                resetText: getIntl().formatMessage({ id: 'common.cancel' }),
-            }
-        }
-    };
-});
 // if pwa is true
 if (pwa) {
     // Notify user if offline now
@@ -54,7 +42,7 @@ if (pwa) {
         const key = `open${Date.now()}`;
         const btn = (
             <Button
-                type={"primary"}
+                type={'primary'}
                 onClick={() => {
                     notification.close(key);
                     reloadSW();
@@ -68,8 +56,7 @@ if (pwa) {
             description: useIntl().formatMessage({ id: 'app.pwa.serviceworker.updated.hint' }),
             btn,
             key,
-            onClose: async () => {
-            },
+            onClose: async () => {},
         });
     });
 } else if ('serviceWorker' in navigator && isHttps) {
