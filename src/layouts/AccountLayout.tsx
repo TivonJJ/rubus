@@ -1,7 +1,7 @@
-import type { MenuDataItem,ProSettings } from '@ant-design/pro-layout';
+import type { MenuDataItem, ProSettings } from '@ant-design/pro-layout';
 import { getMenuData, getPageTitle } from '@ant-design/pro-layout';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-import type { ConnectProps} from 'umi';
+import type { ConnectProps } from 'umi';
 import { useIntl, connect } from 'umi';
 import React from 'react';
 import type { ConnectState } from '@/models/connect';
@@ -10,7 +10,8 @@ import styles from './AccountLayout.less';
 
 export type UserLayoutProps = {
     breadcrumbNameMap: Record<string, MenuDataItem>;
-} & Partial<ConnectProps> & ProSettings;
+} & Partial<ConnectProps> &
+    ProSettings;
 
 const UserLayout: React.FC<UserLayoutProps> = (props) => {
     const {
@@ -32,7 +33,7 @@ const UserLayout: React.FC<UserLayoutProps> = (props) => {
         formatMessage,
         breadcrumb,
         ...props,
-        title: formatMessage({id:props.title})
+        title: props.title === false ? false : formatMessage({ id: props.title }),
     });
     return (
         <HelmetProvider>
@@ -40,9 +41,7 @@ const UserLayout: React.FC<UserLayoutProps> = (props) => {
                 <title>{title}</title>
             </Helmet>
             <div className={styles.container}>
-                <div className={styles.content}>
-                    {children}
-                </div>
+                <div className={styles.content}>{children}</div>
                 <GlobalFooter className={styles.footer} />
             </div>
         </HelmetProvider>

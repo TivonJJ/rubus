@@ -9,17 +9,17 @@
     <% if(context.config?.define?.REACT_APP_ENV==='test'){ %>
         <style type="text/css">
             body::after{
-                content: "Test platform";
+                position: fixed;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                z-index: 9999999999999999;
+                display: block;
+                height: 23px;
                 color: #fff;
                 text-align: center;
-                display: block;
-                position: fixed;
-                left: 0;
-                bottom: 0;
-                right: 0;
-                height: 23px;
                 background: -webkit-gradient(linear, left 0, right 0, from(rgba(233, 35, 19, 0.6)), to(rgba(237, 101, 207, 0.6)));
-                z-index: 9999999999999999;
+                content: "Test platform";
             }
         </style>
     <% } %>

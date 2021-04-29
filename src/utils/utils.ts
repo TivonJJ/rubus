@@ -6,7 +6,7 @@ import joinPath from 'join-path';
  * @param text
  * @param digestType
  */
-export const md5 = (text: string, digestType: 'latin1' | 'hex' | 'base64' = 'hex'): string => {
+export const md5 = (text: string, digestType: 'base64' | 'hex' = 'hex'): string => {
     const hash = crypto.createHash('md5');
     hash.update(text);
     return hash.digest(digestType);
@@ -91,10 +91,10 @@ export function isPromise(obj: any): boolean {
 
 /**
  * 部署到非根目录时,通过这个方法获取静态资源的完整的路径
- * @param path 相对路径
+ * @param paths 路径
  */
-export function getResourcePath(path: string): string {
-    return joinPath(AppStartArgs.basePath || '/', path);
+export function getResourcePath(...paths: string[]): string {
+    return joinPath(AppStartArgs.basePath || '/', ...paths);
 }
 
 /**
@@ -162,7 +162,7 @@ export function objectPropsMapping(
     if (reverse) {
         mapping = reverseObjectKeyValue(mapping);
     }
-    // eslint-disable-next-line no-shadow
+    // eslint-disable-next-line no-shadow,@typescript-eslint/no-shadow
     const doMapping = (source: AnyObject | AnyObject[], mapping: AnyObject) => {
         if (Array.isArray(source)) {
             source.forEach((sourceItem) => {

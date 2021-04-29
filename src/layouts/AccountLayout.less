@@ -4,32 +4,22 @@
     display: flex;
     flex-direction: column;
     height: 100vh;
+    padding: 32px 0 24px;
     overflow: auto;
-    background: @layout-body-background;
+    background: @layout-body-background url('~@/assets/login-bg.jpg') no-repeat center fixed;
+    background-size: cover;
+
+    .footer {
+        color: #fff;
+        background: transparent;
+        * {
+            color: #fff;
+        }
+    }
 }
 
 .content {
     display: flex;
     flex: 1;
     align-items: center;
-}
-
-@media (min-width: @screen-md-min) {
-    .container {
-        background: url('~@/assets/login-bg.jpg') no-repeat center fixed;
-        background-size: cover;
-    }
-
-    .content {
-        padding: 32px 0 24px;
-    }
-
-    .footer{
-        color: #fff;
-        background: transparent;
-        *{
-            color: #fff;
-        }
-    }
-
 }

@@ -1,40 +1,49 @@
 import React from 'react';
-import { Button, Card } from 'antd';
+import { Card, Tag } from 'antd';
 import { connect } from 'umi';
 import type { ConnectState } from '@/models/connect';
 import type { ConnectProps } from '@/models/connect';
 import type { Settings as ProSettings } from '@ant-design/pro-layout';
-import { SettingDrawer } from '@ant-design/pro-layout';
 import styles from './index.less';
+import type { AppSettings } from '../../../../config/defaultSettings';
+import PaymentIcon from '@/components/PaymentIcon';
 
 type PropsType = ConnectProps & {
     settings: ProSettings;
 };
 
-const Index: React.FC<PropsType> = ({ settings, dispatch }) => {
-    const onSettingChange = (ns: ProSettings) => {
-        console.log(ns);
+const Index: React.FC<PropsType> = ({ dispatch }) => {
+    const setT = (st: Partial<AppSettings>) => {
         dispatch({
             type: 'settings/changeSetting',
-            payload: ns,
+            payload: st,
         });
     };
-    const setT = () => {
-        dispatch({
-            type: 'settings/changeSetting',
-            payload: {
-                primaryColor: 'dust',
-            },
+    const { umi_plugin_better_themeVar = [] } = window;
+    const changeTheme = (theme?: any) => {
+        setT({
+            theme: theme?.key,
         });
     };
     return (
         <Card bordered={false}>
+            <div>
+                <Tag color={'#1890ff'} onClick={() => changeTheme()}>
+                    默认
+                </Tag>
+                {umi_plugin_better_themeVar.map((item) => (
+                    <Tag
+                        key={item.key}
+                        color={item.modifyVars?.['@primary-color']}
+                        onClick={() => changeTheme(item)}
+                    >
+                        {item.key}
+                    </Tag>
+                ))}
+            </div>
+            <PaymentIcon code={'Alipay'} />
             <div className={'text-primary'}>Text Primary</div>
             <div className={styles.pr}>Primary</div>
-            <Button type={'primary'} onClick={setT}>
-                更换配置
-            </Button>
-            <SettingDrawer settings={settings} onSettingChange={onSettingChange} />
         </Card>
     );
 };

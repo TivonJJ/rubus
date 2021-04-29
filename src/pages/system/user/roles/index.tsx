@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Card, Col, Row, Spin } from 'antd';
-import { connect,useIntl } from 'umi';
+import { connect, useIntl } from 'umi';
 import type { ConnectProps, ConnectState } from '@/models/connect';
 import { removeEmptyProperties } from '@/utils/utils';
 import type { SearchRef } from './Search';
@@ -25,7 +25,7 @@ const Roles: React.FC<PropsType> = (props) => {
         sysAccountRolesModel: { roles },
         fetching,
     } = props;
-    const {formatMessage} = useIntl();
+    const { formatMessage } = useIntl();
     const searchRef = useRef<SearchRef>();
     const fetch = (params?: AnyObject) => {
         dispatch({
@@ -40,24 +40,31 @@ const Roles: React.FC<PropsType> = (props) => {
         fetch(searchRef.current?.getValues());
     };
     return (
-        <Card bordered={false}>
-            <Spin spinning={fetching}>
-                <Search onSearch={fetch} ref={searchRef} />
-                <div className={styles.total}>
-                    {formatMessage({id: 'page.system.user.role.table.title'},{total:roles.length})}
-                </div>
-                <Row gutter={16}>
-                    <Col span={8}>
-                        <RoleItem refresh={refresh} />
-                    </Col>
-                    {roles.map((role: RoleType) => (
-                        <Col span={8} key={role.role_id}>
-                            <RoleItem role={role} refresh={refresh} />
+        <Spin spinning={fetching}>
+            <div className={'card-group'}>
+                <Card>
+                    <Search onSearch={fetch} ref={searchRef} />
+                </Card>
+                <Card bordered={false}>
+                    <div className={styles.total}>
+                        {formatMessage(
+                            { id: 'page.system.user.role.table.title' },
+                            { total: roles.length },
+                        )}
+                    </div>
+                    <Row gutter={16}>
+                        <Col span={8}>
+                            <RoleItem refresh={refresh} />
                         </Col>
-                    ))}
-                </Row>
-            </Spin>
-        </Card>
+                        {roles.map((role: RoleType) => (
+                            <Col span={8} key={role.role_id}>
+                                <RoleItem role={role} refresh={refresh} />
+                            </Col>
+                        ))}
+                    </Row>
+                </Card>
+            </div>
+        </Spin>
     );
 };
 

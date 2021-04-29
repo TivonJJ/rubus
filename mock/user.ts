@@ -443,11 +443,11 @@ export default {
     'POST /api/basis/resource/list': mockResource,
     'POST /api/basis/resource/addOrUpdate': (req: Request, res: Response) => {
         const list = req.body.res_list;
-        list.forEach((item:any)=> {
-            if (!item.res_id){
-                item.res_id = Math.random()
+        list.forEach((item: any) => {
+            if (!item.res_id) {
+                item.res_id = Math.random();
             }
-        })
+        });
         fs.writeFile(
             require('path').join(__dirname, 'menu.json'),
             JSON.stringify(list),
@@ -467,5 +467,16 @@ export default {
                 }
             },
         );
+    },
+    'POST /api/basis/user/custom': (req: Request, res: Response) => {
+        setTimeout(() => {
+            res.send({
+                code: 0,
+                data: {
+                    theme: 'purple',
+                },
+                msg: '操作成功',
+            });
+        }, 1000);
     },
 };
