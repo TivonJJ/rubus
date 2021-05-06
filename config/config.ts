@@ -31,6 +31,7 @@ function getEnvConfig(): AnyObject {
 }
 
 export default defineConfig({
+    publicPath: startArgs.basePath,
     hash: true,
     antd: {},
     dva: {

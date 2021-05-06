@@ -1,7 +1,7 @@
 import type { Effect, Reducer } from 'umi';
-import type { MenuList, MenuItem} from '@/utils/menu';
+import type { MenuList, MenuItem } from '@/utils/menu';
 import { loop, recombineTreesDNA, treeToPlan } from '@/utils/menu';
-import { parseJSONSafe } from '@/utils/utils';
+import { parseJSONSafety } from '@/utils/utils';
 import { getMenus, setMenus } from './service';
 
 export type SysUserMenusModelState = {
@@ -40,7 +40,7 @@ const SysUserMenusModel: SysUserMenusModelType = {
         *fetchMenus({ payload }, { call, put }) {
             const menus = yield call(getMenus, payload);
             loop(menus, (menu) => {
-                menu.name = parseJSONSafe(menu.name, {});
+                menu.name = parseJSONSafety(menu.name, {});
             });
             yield put({
                 type: 'updateState',

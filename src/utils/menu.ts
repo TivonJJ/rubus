@@ -3,7 +3,7 @@ import joinPath from 'join-path';
 import cloneDeep from 'lodash/cloneDeep';
 import { getLocale } from 'umi';
 import type { MenuDataItem } from '@ant-design/pro-layout';
-import { parseJSONSafe } from '@/utils/utils';
+import { parseJSONSafety } from '@/utils/utils';
 import {
     BellOutlined,
     DashboardOutlined,
@@ -152,7 +152,7 @@ export function convertResourceMenu(menus: MenuList): MenuList {
     loop(menus, (menu, index, parent) => {
         const path = parent ? joinPath('/', parent.path, menu.path) : joinPath('/', menu.path);
         menu.path = path;
-        menu.name = parseJSONSafe(menu.name, {});
+        menu.name = parseJSONSafety(menu.name, {});
     });
     return extendResourceMenuMapping(menus);
 }

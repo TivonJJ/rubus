@@ -1,5 +1,5 @@
 import type { Theme } from '@/types/theme-better';
-import { getResourcePath } from '@/utils/utils';
+import { getPublicPath } from '@/utils/utils';
 
 type ThemeType = Theme | string | null | false;
 
@@ -54,7 +54,7 @@ class ThemeUtil {
                     localStorage.setItem(this.StorageKey, targetTheme.key);
                     resolve(theme);
                 };
-                ThemeStyleLink.href = getResourcePath('theme', targetTheme.fileName);
+                ThemeStyleLink.href = getPublicPath('theme', targetTheme.fileName);
             } else {
                 reject(new Error(`The theme "${theme}" doesn't exist`));
             }

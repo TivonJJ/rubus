@@ -25,7 +25,7 @@ export function removeEmptyProperties(
         trim?: boolean;
         deep?: boolean;
     } = {},
-): object | null {
+): Record<string, any> | null {
     if (!obj) return null;
     Object.keys(obj).forEach((key) => {
         const { ignores, deep = true } = options;
@@ -53,11 +53,15 @@ export function removeEmptyProperties(
  * @param obj 操作对象
  * @param shouldRemoveProps 需要移除的字段
  */
-export const removeProperties = (obj: AnyObject, shouldRemoveProps: string[] = []): AnyObject => {
-    const props = Array.isArray(shouldRemoveProps) ? shouldRemoveProps : [shouldRemoveProps];
-    props.forEach((key) => {
-        obj[key] = undefined;
-        delete obj[key];
+export const removeProperties = (obj: AnyObject, shouldRemoveProps: string[]): AnyObject => {
+    if (!shouldRemoveProps.length) return obj;
+    Object.keys(obj).forEach((key) => {
+        if (shouldRemoveProps.includes(key)) {
+            obj[key] = undefined;
+            delete obj[key];
+        } else if (typeof obj[key] === 'object') {
+            removeProperties(obj[key], shouldRemoveProps);
+        }
     });
     return obj;
 };
@@ -93,8 +97,8 @@ export function isPromise(obj: any): boolean {
  * 部署到非根目录时,通过这个方法获取静态资源的完整的路径
  * @param paths 路径
  */
-export function getResourcePath(...paths: string[]): string {
-    return joinPath(AppStartArgs.basePath || '/', ...paths);
+export function getPublicPath(...paths: string[]): string {
+    return joinPath(AppStartArgs.basePath, ...paths);
 }
 
 /**
@@ -130,7 +134,7 @@ export function toBoolean(val: any): boolean {
 }
 
 /**
- * 翻转对象Key和Value
+ * 镜像翻转对象Key和Value
  * @param obj
  */
 export const reverseObjectKeyValue = (obj: AnyObject): AnyObject => {
@@ -144,9 +148,9 @@ export const reverseObjectKeyValue = (obj: AnyObject): AnyObject => {
 };
 
 /**
- * 对象字段名映射转换
- * @param source
- * @param mapping
+ * 对象字段名根据配置映射转换
+ * @param source 源数据对象
+ * @param mapping 字段名转换映射配置
  * @param config
  */
 export function objectPropsMapping(
@@ -196,7 +200,7 @@ export function objectPropsMapping(
  * @param json JSON内容
  * @param defaultValue 默认值
  */
-export const parseJSONSafe = (json: string | AnyObject, defaultValue?: any) => {
+export const parseJSONSafety = (json: string | AnyObject, defaultValue?: any) => {
     if (typeof json === 'string') {
         try {
             return JSON.parse(json);
@@ -222,19 +226,23 @@ export const ellipsisText = (text: string, maxlength: number = Infinity): string
 };
 /**
  * 隐藏铭感信息
- * @param content
+ * @param content 文字内容
  * @param options
+ *          start: 起始保留位数 默认0
+ *          end: 结束保留位数 默认0
+ *          mask: 遮罩文字 默认*
+ *          maskCount: 遮罩个数 默认文字被遮罩的个数
  */
 export const maskText = (
     content: string,
-    options: { start?: number; end?: number; mask: string; maskCount?: number },
+    options: { start?: number; end?: number; mask?: string; maskCount?: number } = {},
 ) => {
     if (!content) return '';
     const { start = 0, end = 0, mask = '*', maskCount } = options;
     const startText = content.substr(0, start);
     const endText = content.substr(content.length - end);
     let count = maskCount;
-    // 如果不穿maskCount取截取字符的长度
+    // 如果不传maskCount取截取字符的长度
     if (!count) count = content.length - start - end;
     let str = startText;
     for (let i = 0; i < count; i++) {

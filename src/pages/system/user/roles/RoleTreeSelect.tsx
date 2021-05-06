@@ -1,11 +1,11 @@
-import React  from 'react';
+import React from 'react';
 import { getLocale, useRequest } from 'umi';
 import { Alert, Spin, Tree as AntTree } from 'antd';
 import type { MenuList } from '@/utils/menu';
 import { loop } from '@/utils/menu';
 import type { DataNode } from 'antd/lib/tree';
 import { TypeIconMap } from '@/constants/menu';
-import { parseJSONSafe } from '@/utils/utils';
+import { parseJSONSafety } from '@/utils/utils';
 import { getMenus } from './service';
 
 type Key = string | number;
@@ -29,7 +29,7 @@ const Tree: React.FC<IRoleTreeSelectProps> = (props) => {
     const { data: menus, error, loading: fetchingMenus } = useRequest(getMenus, {
         formatResult: (data = []) => {
             loop(data, (menu) => {
-                menu.name = parseJSONSafe(menu.name, {});
+                menu.name = parseJSONSafety(menu.name, {});
             });
             return data;
         },
