@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Tag } from 'antd';
+import { Alert, Card, Tag } from 'antd';
 import { connect } from 'umi';
 import type { ConnectState } from '@/models/connect';
 import type { ConnectProps } from '@/models/connect';
@@ -40,6 +40,7 @@ const Index: React.FC<PropsType> = ({ dispatch }) => {
                         {item.key}
                     </Tag>
                 ))}
+                {umi_plugin_better_themeVar.length <= 0 && <Alert message={'当前未配置多主题'} />}
             </div>
             <PaymentIcon code={'Alipay'} />
             <div className={'text-primary'}>Text Primary</div>

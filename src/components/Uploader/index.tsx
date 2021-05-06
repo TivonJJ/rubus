@@ -23,7 +23,7 @@ export type UploaderProps = {
 const Uploader = React.forwardRef((props: UploaderProps, ref) => {
     const { formatMessage } = useIntl();
     const renderDefaultChildren = () => (
-        <Button>{formatMessage({ id: 'component.uploader.upload' })}</Button>
+        <Button>{formatMessage({ id: 'components.uploader.upload' })}</Button>
     );
     const {
         children = renderDefaultChildren(),
@@ -149,7 +149,7 @@ const ImageUploader = React.forwardRef((props: ImageUploaderProps, ref) => {
                 <div>
                     <PlusOutlined />
                     <div style={{ marginTop: 8 }}>
-                        {formatMessage({ id: 'component.uploader.upload' })}
+                        {formatMessage({ id: 'components.uploader.upload' })}
                     </div>
                 </div>
             )

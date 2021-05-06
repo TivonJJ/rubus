@@ -2,14 +2,16 @@ import app from './zh-CN/app';
 import common from './zh-CN/common';
 import menu from './zh-CN/menu';
 import pwa from './zh-CN/pwa';
-import constants from './zh-CN/constants';
-import uploader from './zh-CN/component.uploader';
+import constantsAccount from './zh-CN/constants/account';
+import constantsMenu from './zh-CN/constants/menu';
+import componentsUploader from './zh-CN/components/uploader';
 
 export default {
     ...app,
     ...common,
     ...menu,
     ...pwa,
-    ...constants,
-    ...uploader,
+    ...constantsAccount,
+    ...constantsMenu,
+    ...componentsUploader,
 };

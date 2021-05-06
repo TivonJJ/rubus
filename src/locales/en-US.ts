@@ -2,14 +2,16 @@ import app from './en-US/app';
 import common from './en-US/common';
 import menu from './en-US/menu';
 import pwa from './en-US/pwa';
-import constants from './en-US/constants';
-import uploader from './en-US/component.uploader';
+import constantsAccount from './en-US/constants/account';
+import constantsMenu from './en-US/constants/menu';
+import componentsUploader from './en-US/components/uploader';
 
 export default {
     ...app,
     ...common,
     ...menu,
     ...pwa,
-    ...constants,
-    ...uploader,
+    ...constantsAccount,
+    ...constantsMenu,
+    ...componentsUploader,
 };

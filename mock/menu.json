@@ -47,6 +47,24 @@
     "res_id": 0.1469022521234693
   },
   {
+    "status": 1,
+    "$mark": 0.9954667071479437,
+    "dna": "0-0-2",
+    "res_type": "Menu",
+    "res_url": "intl",
+    "res_name": { "en-US": "International", "zh-CN": "国际化" },
+    "res_id": 0.9857837420301971
+  },
+  {
+    "status": 1,
+    "$mark": 0.3220165767404175,
+    "dna": "0-0-3",
+    "res_type": "Menu",
+    "res_url": "model-demo",
+    "res_name": { "en-US": "Model Useage", "zh-CN": "Model使用" },
+    "res_id": 0.8194431928755452
+  },
+  {
     "update_time": "2020-09-23 15:16:28",
     "addition3": null,
     "addition2": null,

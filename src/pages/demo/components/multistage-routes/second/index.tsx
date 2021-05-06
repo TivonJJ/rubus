@@ -17,6 +17,7 @@ const Index: React.FC = () => {
                     <h3 key={index}>{index}</h3>
                 ))}
             </Spin>
+            --------
         </Card>
     );
 };

@@ -41,6 +41,14 @@ const routes = [
                                 path: 'component',
                                 routes: [
                                     {
+                                        path: 'intl',
+                                        component: './demo/components/intl/index',
+                                    },
+                                    {
+                                        path: 'model-demo',
+                                        component: './demo/components/model-demo/index',
+                                    },
+                                    {
                                         path: 'theme',
                                         component: './demo/components/theme/index',
                                     },
