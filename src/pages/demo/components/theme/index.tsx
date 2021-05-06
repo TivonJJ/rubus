@@ -5,7 +5,7 @@ import type { ConnectState } from '@/models/connect';
 import type { ConnectProps } from '@/models/connect';
 import type { Settings as ProSettings } from '@ant-design/pro-layout';
 import styles from './index.less';
-import type { AppSettings } from '../../../../config/defaultSettings';
+import type { AppSettings } from '../../../../../config/defaultSettings';
 import PaymentIcon from '@/components/PaymentIcon';
 
 type PropsType = ConnectProps & {

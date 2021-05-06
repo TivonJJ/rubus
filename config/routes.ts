@@ -39,7 +39,24 @@ const routes = [
                         routes: [
                             {
                                 path: 'component',
-                                component: './demo/components/index',
+                                routes: [
+                                    {
+                                        path: 'theme',
+                                        component: './demo/components/theme/index',
+                                    },
+                                    {
+                                        path: 'multistage-routes',
+                                        component: './demo/components/multistage-routes/index',
+                                        multistage: true,
+                                        routes: [
+                                            {
+                                                path: 'second',
+                                                component:
+                                                    './demo/components/multistage-routes/second/index',
+                                            },
+                                        ],
+                                    },
+                                ],
                             },
                         ],
                     },

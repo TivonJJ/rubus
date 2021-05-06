@@ -78,6 +78,7 @@
     "safe-clone-deep": "^1.1.5",
     "umi": "^3.4.1",
     "umi-plugin-better-theme": "^1.0.5",
+    "umi-plugin-multistage-route": "^1.0.1",
     "umi-request": "^1.0.8",
     "use-merge-value": "^1.0.1",
     "wangeditor": "^4.5.3"
