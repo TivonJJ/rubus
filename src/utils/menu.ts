@@ -13,6 +13,9 @@ import {
     TeamOutlined,
 } from '@ant-design/icons';
 
+/**
+ * 菜单资源图标
+ */
 export const IconMap = {
     Bell: BellOutlined,
     Dashboard: DashboardOutlined,

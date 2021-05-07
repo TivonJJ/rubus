@@ -20,6 +20,10 @@ export type UploaderProps = {
     downloadPrefix?: string;
 } & Omit<UploadProps, 'onChange' | 'fileList' | 'defaultFileList'>;
 
+/**
+ * 上传组件
+ * 基于内部业务包装的上传组件
+ */
 const Uploader = React.forwardRef((props: UploaderProps, ref) => {
     const { formatMessage } = useIntl();
     const renderDefaultChildren = () => (
@@ -128,6 +132,9 @@ export type ImageUploaderProps = {
     viewerClassName?: string;
 } & Omit<UploaderProps, 'listType' | 'showUploadList'>;
 
+/**
+ * 上传组件图片上传
+ */
 const ImageUploader = React.forwardRef((props: ImageUploaderProps, ref) => {
     const { value, accept, viewerClassName, children, ...rest } = props;
     const [loading, setLoading] = useState<boolean>(false);

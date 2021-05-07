@@ -13,6 +13,11 @@ export type NumberFormatterProps = {
     emptyContent?: React.ReactNode;
 } & NumberFormatterOptions;
 
+/**
+ * 数字格式化
+ * @param props
+ * @constructor
+ */
 const NumberFormatter = (props: NumberFormatterProps) => {
     const { className, style, value, emptyContent = '-', ...rest } = props;
     const content = NumberFormatter.format(value, rest) || emptyContent;
@@ -23,6 +28,11 @@ const NumberFormatter = (props: NumberFormatterProps) => {
     );
 };
 
+/**
+ * 数字格式化静态函数
+ * @param value
+ * @param option
+ */
 NumberFormatter.format = (
     value?: string | number | null,
     option?: NumberFormatterOptions & FormatNumberOptions,

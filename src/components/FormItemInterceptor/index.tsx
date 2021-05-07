@@ -26,7 +26,8 @@ export type IDefaultPipes = {
 };
 
 /**
- * 预置处理管道
+ * Form 表单数据处理管道
+ * 如有的数据存储的字符串1，但是组件返回的又是数字1，需要对应则可通过此管道进行转换成同一类型
  */
 const DefaultPipes = {
     /**

@@ -50,7 +50,7 @@ export type RuTableInstance = {
 const tableInstanceSet: Record<string, RuTableInstance> = {};
 
 /**
- * 高级 Table表格
+ * 高级 Table表格，基于ProTable包装
  * @param props
  * @constructor
  */

@@ -7,6 +7,11 @@ export declare type MoneyFormatterOptions = Omit<NumberFormatterOptions, 'valueS
 
 export declare type MoneyFormatterProps = Omit<NumberFormatterProps, 'valueStyle'>;
 
+/**
+ * 货币格式化组件
+ * @param props
+ * @constructor
+ */
 const MoneyFormatter = (props: MoneyFormatterProps) => {
     const { className, style, value, ...rest } = props;
     return (
@@ -20,11 +25,19 @@ const MoneyFormatter = (props: MoneyFormatterProps) => {
 //     currencyDisplay: 'narrowSymbol'
 // }
 
+/**
+ * 货币转换地区码表
+ */
 MoneyFormatter.LocaleCurrencyMap = {
     'zh-CN': 'CNY',
     'en-US': 'USD',
 };
 
+/**
+ * 货币格式化静态函数
+ * @param value
+ * @param option
+ */
 MoneyFormatter.format = (value?: string | number | null, option?: MoneyFormatterOptions) => {
     const locale = getLocale();
     if (!option) option = {};

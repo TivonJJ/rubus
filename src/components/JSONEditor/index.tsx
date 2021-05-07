@@ -10,12 +10,15 @@ import df from 'deep-diff';
 export type JSONEditorInstance = Editor;
 
 export type JSONEditorProps = {
-    value?: any
-    disabled?: boolean
-    onChange?: (value?: object|null) => void
+    value?: any;
+    disabled?: boolean;
+    onChange?: (value?: AnyObject | null) => void;
 } & Omit<JSONEditorOptions, 'onChange'>;
 
-class JSONEditor extends React.Component<JSONEditorProps>{
+/**
+ * JSON编辑器表单组件
+ */
+class JSONEditor extends React.Component<JSONEditorProps> {
     static defaultProps = {
         mode: 'code',
         value: '',
@@ -23,58 +26,62 @@ class JSONEditor extends React.Component<JSONEditorProps>{
 
     containerRef = React.createRef<HTMLDivElement>();
 
-    editor: Editor|null = null;
+    editor: Editor | null = null;
 
     componentDidMount() {
         const local = getLocale();
-        if(this.containerRef && this.containerRef.current){
-            const editor = this.editor = new Editor(this.containerRef.current, {
-                modes: ['code', 'form', 'text', 'tree', 'view'],
-                language: local === 'zh-CN' ? 'zh-CN' : 'en',
-                ...this.props,
-                ace: ace as any,
-                onEditable: (node: any) => {
-                    if (this.props.onEditable) return this.props.onEditable(node);
-                    if (this.props.disabled) return false;
-                    return node;
-                },
-                onChange:()=>{
-                    if (this.props.onChange) {
-                        try {
-                            const text = editor.getText();
-                            if (text === '') {
-                                this.props.onChange(null);
-                            }
+        if (this.containerRef && this.containerRef.current) {
+            const editor = (this.editor = new Editor(
+                this.containerRef.current,
+                {
+                    modes: ['code', 'form', 'text', 'tree', 'view'],
+                    language: local === 'zh-CN' ? 'zh-CN' : 'en',
+                    ...this.props,
+                    ace: ace as any,
+                    onEditable: (node: any) => {
+                        if (this.props.onEditable) return this.props.onEditable(node);
+                        if (this.props.disabled) return false;
+                        return node;
+                    },
+                    onChange: () => {
+                        if (this.props.onChange) {
+                            try {
+                                const text = editor.getText();
+                                if (text === '') {
+                                    this.props.onChange(null);
+                                }
 
-                            const currentJson = editor.get();
-                            if (this.props.value !== currentJson) {
-                                this.props.onChange(currentJson);
+                                const currentJson = editor.get();
+                                if (this.props.value !== currentJson) {
+                                    this.props.onChange(currentJson);
+                                }
+                            } catch (err) {
+                                // do nothing
                             }
-                        } catch (err) {
-                            // do nothing
                         }
-                    }
+                    },
                 },
-            }, this.props.value);
+                this.props.value,
+            ));
         }
     }
 
     UNSAFE_componentWillReceiveProps(nextProps: Readonly<JSONEditorProps>) {
-        if(this.editor){
-            if(this.props.value !== nextProps.value){
-                try{
+        if (this.editor) {
+            if (this.props.value !== nextProps.value) {
+                try {
                     const json = this.editor.get();
-                    if(df.diff(json,nextProps.value)){
+                    if (df.diff(json, nextProps.value)) {
                         this.editor.update(nextProps.value);
                     }
-                }catch (e){
+                } catch (e) {
                     // do nothing
                 }
             }
-            if(this.props.mode !== nextProps.mode && nextProps.mode){
+            if (this.props.mode !== nextProps.mode && nextProps.mode) {
                 this.editor.setMode(nextProps.mode);
             }
-            if(this.props.mode !== nextProps.schema && nextProps.schema){
+            if (this.props.mode !== nextProps.schema && nextProps.schema) {
                 this.editor.setSchema(nextProps.schema);
             }
         }
@@ -85,11 +92,7 @@ class JSONEditor extends React.Component<JSONEditorProps>{
     }
 
     render() {
-        return (
-            <div
-                ref={this.containerRef}
-            />
-        );
+        return <div ref={this.containerRef} />;
     }
 }
 

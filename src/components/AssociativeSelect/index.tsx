@@ -1,4 +1,4 @@
-import type { UIEvent} from 'react';
+import type { UIEvent } from 'react';
 import React, { useEffect, useState } from 'react';
 import { Select } from 'antd';
 import type { SelectProps, SelectValue } from 'antd/lib/select';
@@ -12,19 +12,67 @@ export type AssociativeSelectData<DT> = {
 };
 
 export type AssociativeSelectProps<VT, DT> = {
+    /**
+     * label显示的字段名
+     */
     labelKey?: string;
+    /**
+     * value数据的字段名
+     */
     valueKey?: string;
+    /**
+     * 自定义 label 渲染
+     * @param item
+     * @param page
+     */
     labelRender?: (item: DT, page: AssociativeSelectData<DT>) => React.ReactNode;
+    /**
+     * 自定义value
+     * @param item
+     * @param page
+     */
     valueRender?: (item: DT, page: AssociativeSelectData<DT>) => React.ReactNode;
+    /**
+     * 自定义单项渲染
+     * @param item
+     * @param page
+     */
     itemRender?: (item: DT, page: AssociativeSelectData<DT>) => React.ReactNode;
+    /**
+     * 单个项的key
+     * @param item
+     */
     itemKey?: (item: DT) => string;
+    /**
+     * 联想搜索时关键词的键
+     */
     searchKey?: string;
+    /**
+     * 数据源获取
+     * @param params
+     */
     request: (params?: AnyObject) => Promise<any>;
+    /**
+     * 请求携带的参数，变化后会自动重新加载获取
+     */
     params?: AnyObject;
+    /**
+     * 每页数量
+     */
     pageSize?: number;
+    /**
+     * 当滑动到滚动条底部触发
+     * @param evt
+     * @param page
+     */
     onScrollBottom?: (evt: UIEvent<HTMLDivElement>, page: AssociativeSelectData<DT>) => void;
 } & SelectProps<VT>;
 
+/**
+ * 联想搜索+滚动分页下拉选择器
+ * @param props
+ * @constructor
+ */
 const AssociativeSelect = <VT extends SelectValue = SelectValue, DT extends {} = any>(
     props: AssociativeSelectProps<VT, DT>,
 ) => {

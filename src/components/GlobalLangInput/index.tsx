@@ -10,6 +10,12 @@ export type IGlobalLangInputProps = {
     disabled?: boolean;
 };
 
+/**
+ * 国际化多语言输入框
+ * 自动根据当前配置的语言生成多个输入框，返回JSON格式
+ * @param props
+ * @constructor
+ */
 const GlobalLangInput: React.FC<IGlobalLangInputProps> = (props) => {
     const { value, onChange, placeholder, required, disabled } = props;
     const supportLocals = getAllLocales();
