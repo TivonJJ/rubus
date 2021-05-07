@@ -5,6 +5,7 @@ import pwa from './zh-CN/pwa';
 import constantsAccount from './zh-CN/constants/account';
 import constantsMenu from './zh-CN/constants/menu';
 import componentsUploader from './zh-CN/components/uploader';
+import componentsGlobalLangInput from './zh-CN/components/globalLangInput';
 
 export default {
     ...app,
@@ -14,4 +15,5 @@ export default {
     ...constantsAccount,
     ...constantsMenu,
     ...componentsUploader,
+    ...componentsGlobalLangInput,
 };

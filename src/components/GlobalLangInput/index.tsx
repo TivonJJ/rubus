@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { Form, Input, Modal } from 'antd';
-import { getLocale, useIntl } from 'umi';
-
-const SupportedLangs = ['en-US', 'zh-CN'];
+import { getAllLocales, getLocale, useIntl } from 'umi';
 
 export type IGlobalLangInputProps = {
     value?: any;
     placeholder?: string;
     onChange?: (values: any) => void;
+    required?: boolean;
+    disabled?: boolean;
 };
 
 const GlobalLangInput: React.FC<IGlobalLangInputProps> = (props) => {
-    const { value, onChange, placeholder } = props;
+    const { value, onChange, placeholder, required, disabled } = props;
+    const supportLocals = getAllLocales();
     const { formatMessage } = useIntl();
     const [form] = Form.useForm();
     const [modalVisible, setModalVisible] = useState<boolean>();
@@ -32,17 +33,23 @@ const GlobalLangInput: React.FC<IGlobalLangInputProps> = (props) => {
     };
     return (
         <>
-            <Input readOnly value={localValue} placeholder={placeholder} onClick={showModal} />
+            <Input
+                readOnly
+                disabled={disabled}
+                value={localValue}
+                placeholder={placeholder}
+                onClick={showModal}
+            />
             <Modal
-                title={formatMessage({ id: 'page.system.user.menu.form.name.prompt' })}
+                title={formatMessage({ id: 'components.globalLangInput.title' })}
                 visible={modalVisible}
                 onCancel={hideModal}
                 onOk={handleOk}
                 maskClosable={false}
             >
                 <Form form={form}>
-                    {SupportedLangs.map((lang) => (
-                        <Form.Item key={lang} label={lang} name={lang} rules={[{ required: true }]}>
+                    {supportLocals.map((lang) => (
+                        <Form.Item key={lang} label={lang} name={lang} rules={[{ required }]}>
                             <Input />
                         </Form.Item>
                     ))}

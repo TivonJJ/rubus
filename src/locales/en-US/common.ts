@@ -1,5 +1,6 @@
 export default {
     'common.ok': 'Ok',
+    'common.apply': 'Apply',
     'common.cancel': 'Cancel',
     'common.sure': 'Sure',
     'common.on': 'On',

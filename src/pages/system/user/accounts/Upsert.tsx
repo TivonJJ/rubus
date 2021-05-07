@@ -33,7 +33,7 @@ const Upsert: React.FC<UpsertProps> = (props) => {
         <DrawerForm
             title={`${data ? '修改' : '新增'}用户`}
             onFinish={onFinish}
-            trigger={children}
+            trigger={children as JSX.Element}
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 18 }}
             form={form}

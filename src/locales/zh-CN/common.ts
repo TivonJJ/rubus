@@ -1,5 +1,6 @@
 export default {
     'common.ok': '确定',
+    'common.apply': '应用',
     'common.cancel': '取消',
     'common.sure': '好的',
     'common.on': '开',

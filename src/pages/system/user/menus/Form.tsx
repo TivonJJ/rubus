@@ -5,8 +5,8 @@ import type { ConnectProps, ConnectState } from '@/models/connect';
 import { Types } from '@/constants/menu';
 import FormItemInterceptor from '@/components/FormItemInterceptor';
 import type { SysUserMenusModelState } from './model';
-import GlobalLangInput from './GlobalLangInput';
 import { IconMap } from '@/utils/menu';
+import GlobalLangInput from '@/components/GlobalLangInput';
 
 type IConnectState = ConnectState & {
     sysUserMenusModel: SysUserMenusModelState;
@@ -107,6 +107,7 @@ const Form: React.FC<IFormProps> = (props) => {
                             placeholder={formatMessage({
                                 id: 'page.system.user.menu.form.name.placeholder',
                             })}
+                            required
                         />
                     </AntForm.Item>
                     <AntForm.Item

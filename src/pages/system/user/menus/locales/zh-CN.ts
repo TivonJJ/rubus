@@ -9,7 +9,6 @@ export default {
     'page.system.user.menu.form.type': '类型',
     'page.system.user.menu.form.name': '名称',
     'page.system.user.menu.form.name.placeholder': '资源名称、菜单标题',
-    'page.system.user.menu.form.name.prompt': '全球化名称',
     'page.system.user.menu.form.path': '资源地址',
     'page.system.user.menu.form.path.placeholder': '资源的相对地址',
     'page.system.user.menu.form.icon': '图标',
